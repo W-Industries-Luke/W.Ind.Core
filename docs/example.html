@@ -1,0 +1,1901 @@
+<?xml version="1.0"?>
+<doc> <assembly> <name>W.Ind.Core</name> </assembly> <members>
+<member name="T:W.Ind.Core.Config.JwtConfig">
+<summary>
+POCO <see langword="class"/> designed to map from the JWT section of a
+Configuration file
+</summary>
+<pre><code>        &lt;remarks&gt;
+        Extend this &lt;see langword=&quot;class&quot;/&gt; to map more options from your Configuration file&#39;s JWT section
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.JwtConfig.SecretKey&quot;&gt;
+        &lt;summary&gt;
+        JWT Key Value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.JwtConfig.Issuer&quot;&gt;
+        &lt;summary&gt;
+        JWT Issuer Value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.JwtConfig.Audience&quot;&gt;
+        &lt;summary&gt;
+        JWT Audience Value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.JwtConfig.ValidateIssuer&quot;&gt;
+        &lt;summary&gt;
+        JWT Validate Issuer value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.JwtConfig.ValidateAudience&quot;&gt;
+        &lt;summary&gt;
+        JWT Validate Audience value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.JwtConfig.ValidateIssuerSigningKey&quot;&gt;
+        &lt;summary&gt;
+        JWT Validate Issuer Signing Key value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Config.TemporalConfig&quot;&gt;
+        &lt;summary&gt;
+        A DTO &lt;see langword=&quot;class&quot;/&gt; that holds customizaton options for temporal tables
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.TemporalConfig.HistoryTableName&quot;&gt;
+        &lt;summary&gt;
+        Gets or sets a custom name for the history table
+        &lt;/summary&gt;
+        &lt;value&gt;Custom name for the history table&lt;/value&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;The resulting table name will be appended with &lt;c&gt;&quot;-History&quot;&lt;/c&gt;.&lt;/para&gt;
+        &lt;para&gt;This value will default to &lt;c&gt;&lt;see langword=&quot;typeof&quot;/&gt;(Entity).&lt;see cref=&quot;P:System.Reflection.MemberInfo.Name&quot;&gt;Name&lt;/see&gt;&lt;/c&gt;&lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.TemporalConfig.PeriodStartName&quot;&gt;
+        &lt;summary&gt;
+        Gets or sets a custom column name for the temporal table&#39;s period start time.
+        &lt;/summary&gt;
+        &lt;value&gt;Custom name for temporal table&#39;s period start column.&lt;/value&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Default &lt;c&gt;&quot;SysStartTime&quot;&lt;/c&gt;.&lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Config.TemporalConfig.PeriodEndName&quot;&gt;
+        &lt;summary&gt;
+        Gets or sets a custom column name for the temporal table&#39;s period end time.
+        &lt;/summary&gt;
+        &lt;value&gt;Custom name for temporal table&#39;s period end column.&lt;/value&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Default: &lt;c&gt;&quot;SysEndTime&quot;&lt;/c&gt;&lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Dto.ILoginRequest&quot;&gt;
+        &lt;summary&gt;
+        Base DTO &lt;see langword=&quot;interface&quot;/&gt; for Login Requests
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Deriving from this &lt;see langword=&quot;interface&quot;/&gt; allows you to pass more data into various Login methods
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginRequest.UserName&quot;&gt;
+        &lt;summary&gt;
+        Login UserName (or email)
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginRequest.Password&quot;&gt;
+        &lt;summary&gt;
+        Login Password
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginRequest.RememberMe&quot;&gt;
+        &lt;summary&gt;
+        Determines how long until the response token expires
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;&gt;
+        &lt;summary&gt;
+        Base DTO &lt;see langword=&quot;interface&quot;/&gt; containing response data from Login
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Deriving from this &lt;see langword=&quot;interface&quot;/&gt; allows you to return more data from a Login
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginResponse.Token&quot;&gt;
+        &lt;summary&gt;
+        JSON Web Token value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginResponse.Expires&quot;&gt;
+        &lt;summary&gt;
+        JSON Web Token expiration date
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginResponse.Success&quot;&gt;
+        &lt;summary&gt;
+        Indicates whether or not the JSON Web Token was successfully generated
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.ILoginResponse.LockedOut&quot;&gt;
+        &lt;summary&gt;
+        Indicates whether or not the User is currently locked out
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Dto.IUserRegistration&quot;&gt;
+        &lt;summary&gt;
+        Concrete DTO &lt;see langword=&quot;interface&quot;/&gt; for passing data on Register
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Derive from this &lt;see langword=&quot;interface&quot;/&gt; to pass more custom data to the Register method
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.IUserRegistration.UserName&quot;&gt;
+        &lt;summary&gt;
+        The desired UserName value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.IUserRegistration.Password&quot;&gt;
+        &lt;summary&gt;
+        The desired Password value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.IUserRegistration.Email&quot;&gt;
+        &lt;summary&gt;
+        Enterred email value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Dto.LoginRequest&quot;&gt;
+        &lt;summary&gt;
+        Concrete DTO &lt;see langword=&quot;class&quot;/&gt; for Login Requests
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Deriving from this &lt;see langword=&quot;class&quot;/&gt; allows you to pass more data into various Login methods
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginRequest.UserName&quot;&gt;
+        &lt;summary&gt;
+        Login UserName (or email)
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginRequest.Password&quot;&gt;
+        &lt;summary&gt;
+        Login Password
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginRequest.RememberMe&quot;&gt;
+        &lt;summary&gt;
+        Determines how long until the response token expires
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Dto.LoginResponse&quot;&gt;
+        &lt;summary&gt;
+        Concrete DTO &lt;see langword=&quot;class&quot;/&gt; containing response data from Login
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Deriving from this &lt;see langword=&quot;class&quot;/&gt; allows you to return more data from a Login
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginResponse.Token&quot;&gt;
+        &lt;summary&gt;
+        JSON Web Token value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginResponse.Expires&quot;&gt;
+        &lt;summary&gt;
+        JSON Web Token expiration date
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginResponse.Success&quot;&gt;
+        &lt;summary&gt;
+        Indicates whether or not the JSON Web Token was successfully generated
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginResponse.LockedOut&quot;&gt;
+        &lt;summary&gt;
+        Indicates whether or not the User is currently locked out
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.LoginResponse.NotAllowed&quot;&gt;
+        &lt;summary&gt;
+        Indicates whether or not the User is allow to login
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Dto.UserRegistration&quot;&gt;
+        &lt;summary&gt;
+        Concrete DTO &lt;see langword=&quot;class&quot;/&gt; for passing data on Register
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Derive from this &lt;see langword=&quot;class&quot;/&gt; to pass more custom data to the Register method
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.UserRegistration.UserName&quot;&gt;
+        &lt;summary&gt;
+        The desired UserName value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.UserRegistration.Password&quot;&gt;
+        &lt;summary&gt;
+        The desired Password value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Dto.UserRegistration.Email&quot;&gt;
+        &lt;summary&gt;
+        Enterred email value
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that both inherits from &lt;see cref=&quot;T:W.Ind.Core.Entity.EntityBase`1&quot;/&gt; and implements the &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;Used to define repetitive boilerplate properties outside of the actual entity &lt;see langword=&quot;class&quot;/&gt; file&lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;] and [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehaviorAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity AND because its Foreign Key is &lt;see langword=&quot;required&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.base.Auditable.AuditEntityBase`1.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.AuditRoleBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that both inherits from &lt;see cref=&quot;T:W.Ind.Core.Entity.RoleBase`1&quot;/&gt; and implements the &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;Used to define repetitive boilerplate properties outside of the actual entity &lt;see langword=&quot;class&quot;/&gt; file&lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;] and [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehaviorAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity AND because its Foreign Key is &lt;see langword=&quot;required&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleBase`1.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.AuditRoleClaimBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that both inherits from &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityRoleClaim`1&quot;/&gt; and implements the &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;Used to define repetitive boilerplate properties outside of the actual entity &lt;see langword=&quot;class&quot;/&gt; file&lt;/remarks&gt;
+        &lt;typeparam name=&quot;TRoleKey&quot;&gt;The data type of your &lt;c&gt;Role&lt;/c&gt; entity&#39;s Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;] and [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehaviorAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity AND because its Foreign Key is &lt;see langword=&quot;required&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditRoleClaimBase`1.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.AuditUserBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that both inherits from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt; and implements the &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;Used to define repetitive boilerplate properties outside of the actual entity &lt;see langword=&quot;class&quot;/&gt; file&lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;] and [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehaviorAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity AND because its Foreign Key is &lt;see langword=&quot;required&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserBase`1.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.AuditUserClaimBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that both inherits from &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUserClaim`1&quot;/&gt; and implements the &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;Used to define repetitive boilerplate properties outside of the actual entity &lt;see langword=&quot;class&quot;/&gt; file&lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUserKey&quot;&gt;The data type of your &lt;c&gt;User&lt;/c&gt; entity&#39;s Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;] and [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehaviorAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity AND because its Foreign Key is &lt;see langword=&quot;required&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserClaimBase`1.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.AuditUserRoleBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that both inherits from &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUserRole`1&quot;/&gt; and implements the &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Used to define repetitive boilerplate properties outside of the actual entity &lt;see langword=&quot;class&quot;/&gt; file
+        &lt;/para&gt;
+        &lt;para&gt;
+        In order to implement this, the PKs of your User and Role entities must be the same data type
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of your &lt;c&gt;User&lt;/c&gt; and &lt;c&gt;Role&lt;/c&gt; enties&#39; Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;] and [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each inheritting entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehaviorAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity AND because its Foreign Key is &lt;see langword=&quot;required&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined with the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] so there&#39;s no need to configure for each entity
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.AuditUserRoleBase`1.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.EntityBase`1&quot;&gt;
+        &lt;summary&gt;
+        The base &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IEntity`1&quot;/&gt; and implemented by all non-join entities
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Defined to specify the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.KeyAttribute&quot;/&gt;] on the &lt;see cref=&quot;P:W.Ind.Core.Entity.EntityBase`1.Id&quot;/&gt; Primary Key property
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.EntityBase`1.Id&quot;&gt;
+        &lt;summary&gt;
+        Defines an implicit Primary Key that matches type &lt;typeparamref name=&quot;TKey&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.RoleBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that inherits from &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityRole`1&quot;/&gt; 
+        and &lt;see cref=&quot;T:W.Ind.Core.Entity.IEntity`1&quot;/&gt; in order to define its own inheritable properties and reference generically
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Extend this &lt;see langword=&quot;class&quot;/&gt; to add custom columns to your &lt;c&gt;Roles&lt;/c&gt; table
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that inherits from &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUser`1&quot;/&gt; 
+        and &lt;see cref=&quot;T:W.Ind.Core.Entity.IEntity`1&quot;/&gt; in order to define its own inheritable properties and reference generically
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Extend this &lt;see langword=&quot;class&quot;/&gt; to add custom columns to your &lt;c&gt;Users&lt;/c&gt; table
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.IAuditable&quot;&gt;
+        &lt;summary&gt;
+        A base &lt;see langword=&quot;interface&quot;/&gt; that defines table columns required for audit logging
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Entities that implement this &lt;see langword=&quot;interface&quot;/&gt; will automatically be visible to the
+        &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleAudit(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.IAuditable}},System.Int64)&quot;/&gt; method on save
+        &lt;/para&gt;
+        &lt;para&gt;
+        Derive from this &lt;see langword=&quot;interface&quot;/&gt; for further customization
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.Timestamp&quot;&gt;
+        &lt;summary&gt;
+        Audit Log Timestamp
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Any &lt;see langword=&quot;class&quot;/&gt; implementing this should declare this a Timestamp column type via:
+        &lt;/para&gt;
+        &lt;para&gt;
+        (Preferred) Using the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.TimestampAttribute&quot;/&gt;] on an &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; that implements this &lt;see langword=&quot;interface&quot;/&gt;, or
+        &lt;/para&gt;
+        &lt;para&gt;
+        Within your &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; method for each entity individually
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.CreatedById&quot;&gt;
+        &lt;summary&gt;
+        The UserId (FK) of the User that created this record
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Any &lt;see langword=&quot;class&quot;/&gt; implementing this should declare this a Foriegn Key column type via:&lt;/para&gt;
+        &lt;para&gt;
+        (Preferred) Using the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] on an abstract class that implements this interface, or
+        &lt;/para&gt;
+        &lt;para&gt;
+        Within your &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; method for each entity individually
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.CreatedBy&quot;&gt;
+        &lt;summary&gt;
+        The navigation property pointing to the User who created this record
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Nullable so you aren&#39;t required to configure &lt;c&gt;.Navigation().AutoInclude()&lt;/c&gt; or &lt;c&gt;.DeleteBehavior(&lt;see cref=&quot;F:Microsoft.EntityFrameworkCore.DeleteBehavior.NoAction&quot;/&gt;)&lt;/c&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        If you want it non-nullable, you must at least specify the &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehavior&quot;/&gt; before migration
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.CreatedOn&quot;&gt;
+        &lt;summary&gt;
+        The &lt;see cref=&quot;T:System.DateTime&quot;/&gt; value representing when this entity was initially saved
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.ModifiedById&quot;&gt;
+        &lt;summary&gt;
+        The UserId (FK) of the User that last updated this record
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Any &lt;see langword=&quot;class&quot;/&gt; implementing this should declare this a Foriegn Key column type via:&lt;/para&gt;
+        &lt;para&gt;
+        (Preferred) Using the [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute&quot;/&gt;] on an abstract class that implements this interface, or
+        &lt;/para&gt;
+        &lt;para&gt;
+        Within your &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; method for each entity individually
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.ModifiedBy&quot;&gt;
+        &lt;summary&gt;
+        The navigation property pointing to the User who last updated this record
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Nullable so you aren&#39;t required to configure &lt;c&gt;.Navigation().AutoInclude()&lt;/c&gt; or &lt;c&gt;.DeleteBehavior(&lt;see cref=&quot;F:Microsoft.EntityFrameworkCore.DeleteBehavior.NoAction&quot;/&gt;)&lt;/c&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        If you want it non-nullable, you must at least specify the &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DeleteBehavior&quot;/&gt; before migration
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IAuditable.ModifiedOn&quot;&gt;
+        &lt;summary&gt;
+        The &lt;see cref=&quot;T:System.DateTime&quot;/&gt; value representing when this entity was last updated
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.IDate&quot;&gt;
+        &lt;summary&gt;
+        A base &lt;see langword=&quot;interface&quot;/&gt; used to identify any derived &lt;see langword=&quot;interface&quot;/&gt; via Generic&amp;lt;&lt;see cref=&quot;T:System.Type&quot;/&gt;&amp;gt; expression
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Derive from this &lt;see langword=&quot;interface&quot;/&gt; to reference its specific &lt;see cref=&quot;T:System.DateTime&quot;/&gt; properties through generic helper/service methods
+        &lt;/para&gt;
+        &lt;para&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.UtcDateHelper.SetUtcIfDataExists``1(W.Ind.Core.Entity.IDate)&quot;/&gt; for an example
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.IEndDate&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;interface&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt; that specifies any implementing entity will have an &lt;see cref=&quot;P:W.Ind.Core.Entity.IEndDate.EndDate&quot;/&gt; property
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Implement this on all entities with a &lt;c&gt;&lt;see langword=&quot;public&quot;/&gt; &lt;see cref=&quot;T:System.DateTime&quot;/&gt; EndDate&lt;/c&gt; property
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IEndDate.EndDate&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see cref=&quot;T:System.DateTime&quot;/&gt;? property representing an &lt;c&gt;EndDate&lt;/c&gt; table column
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        While nullable, you can still make this field required to EF via:
+        &lt;/para&gt;
+        &lt;para&gt;
+        The [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;], or
+        &lt;/para&gt;
+        &lt;para&gt;
+        Within your &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; method
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.IEnterredDate&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;interface&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt; that specifies any implementing entity will have an &lt;see cref=&quot;P:W.Ind.Core.Entity.IEnterredDate.EnterredDate&quot;/&gt; property
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Implement this on all entities with a &lt;c&gt;&lt;see langword=&quot;public&quot;/&gt; &lt;see cref=&quot;T:System.DateTime&quot;/&gt; EnterredDate&lt;/c&gt; property
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IEnterredDate.EnterredDate&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see cref=&quot;T:System.DateTime&quot;/&gt;? property representing an &lt;c&gt;EnterredDate&lt;/c&gt; table column
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        While nullable, you can still make this field required to EF via:
+        &lt;/para&gt;
+        &lt;para&gt;
+        The [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;], or
+        &lt;/para&gt;
+        &lt;para&gt;
+        Within your &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; method
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.IEntity`1&quot;&gt;
+        &lt;summary&gt;
+        Base &lt;see langword=&quot;inteface&quot;/&gt; implemented by non-join entity types to establish the type of its Primary Key
+        &lt;/summary&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type of its Primary Key&lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IEntity`1.Id&quot;&gt;
+        &lt;summary&gt;
+        Defines an implicit Primary Key with a &lt;see langword=&quot;type&quot;/&gt; that matches &lt;typeparamref name=&quot;TKey&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;&gt;
+        &lt;summary&gt;
+        Base &lt;see langword=&quot;interface&quot;/&gt; used to define a &lt;see langword=&quot;bool&quot;/&gt; &lt;see cref=&quot;P:W.Ind.Core.Entity.ISoftDelete.IsDeleted&quot;/&gt; column on the implementing entity
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Handling Soft Deletes:
+        &lt;example&gt;
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;void&quot;/&gt; &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DbContext&quot;/&gt;.SaveChanges() {
+            &lt;see cref=&quot;T:W.Ind.Core.Helper.ContextHelper&quot;/&gt;.&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;&gt;HandleSoftDelete&lt;/see&gt;(&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker&quot;/&gt;.&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot;&gt;Entries&lt;/see&gt;&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;&amp;gt;());
+            
+            &lt;see langword=&quot;return&quot;/&gt; &lt;see langword=&quot;base&quot;/&gt;.SaveChanges();
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.ISoftDelete.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        Defines a &lt;see langword=&quot;bool&quot;/&gt; &lt;c&gt;IsDeleted&lt;/c&gt; flag on any implementing entity/table
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.IStartDate&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;interface&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt; that specifies any implementing entity will have an &lt;see cref=&quot;P:W.Ind.Core.Entity.IStartDate.StartDate&quot;/&gt; property
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Implement this on all entities with a &lt;c&gt;&lt;see langword=&quot;public&quot;/&gt; &lt;see cref=&quot;T:System.DateTime&quot;/&gt; StartDate&lt;/c&gt; property
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.IStartDate.StartDate&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see cref=&quot;T:System.DateTime&quot;/&gt;? property representing an &lt;c&gt;StartDate&lt;/c&gt; table column
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        While nullable, you can still make this field required to EF via:
+        &lt;/para&gt;
+        &lt;para&gt;
+        The [&lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.RequiredAttribute&quot;/&gt;], or
+        &lt;/para&gt;
+        &lt;para&gt;
+        Within your &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; method
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.Role&quot;&gt;
+        &lt;summary&gt;
+        Concrete core entity &lt;see langword=&quot;class&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityRole`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Inherits from &lt;see langword=&quot;abstract&quot;/&gt; &lt;see cref=&quot;T:W.Ind.Core.Entity.AuditRoleBase`1&quot;/&gt; which implements &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; and &lt;see cref=&quot;T:W.Ind.Core.Entity.IEntity`1&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.Role.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;Role&lt;/c&gt; table&lt;/para&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.RoleClaim&quot;&gt;
+        &lt;summary&gt;
+        Concrete core entity &lt;see langword=&quot;class&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityRoleClaim`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Inherits from &lt;see langword=&quot;abstract&quot;/&gt; &lt;see cref=&quot;T:W.Ind.Core.Entity.AuditRoleClaimBase`1&quot;/&gt; which implements &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.RoleClaim.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;
+        &lt;/para&gt;
+        Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;RoleClaim&lt;/c&gt; table
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.User&quot;&gt;
+        &lt;summary&gt;
+        Concrete core entity &lt;see langword=&quot;class&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUser`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Inherits from &lt;see langword=&quot;abstract&quot;/&gt; &lt;see cref=&quot;T:W.Ind.Core.Entity.AuditUserBase`1&quot;/&gt; which implements &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt; and &lt;see cref=&quot;T:W.Ind.Core.Entity.IEntity`1&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Entity.User.#ctor&quot;&gt;
+        &lt;summary&gt;
+        Default Constructor
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.User.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;User&lt;/c&gt; table&lt;/para&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.UserClaim&quot;&gt;
+        &lt;summary&gt;
+        Concrete core entity &lt;see langword=&quot;class&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUserClaim`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Inherits from &lt;see langword=&quot;abstract&quot;/&gt; &lt;see cref=&quot;T:W.Ind.Core.Entity.AuditUserClaimBase`1&quot;/&gt; which implements &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.UserClaim.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;
+        &lt;/para&gt;
+        Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;UserClaim&lt;/c&gt; table
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.UserLogin&quot;&gt;
+        &lt;summary&gt;
+        Core entity &lt;see langword=&quot;type&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUserLogin`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.UserLogin.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;
+        &lt;/para&gt;
+        Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;UserLogin&lt;/c&gt; table
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.UserRole&quot;&gt;
+        &lt;summary&gt;
+        Concrete core entity &lt;see langword=&quot;class&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUserLogin`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Inherits from &lt;see langword=&quot;abstract&quot;/&gt; &lt;see cref=&quot;T:W.Ind.Core.Entity.AuditUserRoleBase`1&quot;/&gt; which implements &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.UserRole.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;
+        &lt;/para&gt;
+        Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;UserRole&lt;/c&gt; table
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Entity.UserToken&quot;&gt;
+        &lt;summary&gt;
+        Concrete core entity &lt;see langword=&quot;class&quot;/&gt; that can be used as an &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityUserToken`1&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Implements &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;, which is the only property defined here
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;P:W.Ind.Core.Entity.UserToken.IsDeleted&quot;&gt;
+        &lt;summary&gt;
+        &lt;para&gt;
+        Implemented from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;
+        &lt;/para&gt;
+        Adds an &lt;c&gt;IsDeleted&lt;/c&gt; flag to the &lt;c&gt;UserToken&lt;/c&gt; table
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;/&gt; for usage
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Helper.ContextHelper&quot;&gt;
+        &lt;summary&gt;
+        This &lt;see langword=&quot;static&quot;/&gt; helper class contains useful methods for defining a &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.DbContext&quot;/&gt;.
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.BuildTemporal``1(Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0})&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;static&quot;/&gt; method that configures a temporal table based off generic type &lt;typeparamref name=&quot;TEntity&quot;/&gt;.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;example&gt;
+        Usage:
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;void&quot;/&gt; onModelCreating(&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ModelBuilder&quot;/&gt; builder) {
+            builder.&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ModelBuilder.Entity``1&quot;&gt;Entity&lt;/see&gt;&amp;lt;&lt;typeparamref name=&quot;TEntity&quot;/&gt;&amp;gt;()
+                .&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.RelationalEntityTypeBuilderExtensions.ToTable``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0},System.Action{Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0}})&quot;&gt;ToTable&lt;/see&gt;(&lt;see cref=&quot;T:W.Ind.Core.Helper.ContextHelper&quot;/&gt;.&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.BuildTemporal``1(Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0})&quot;&gt;BuildTemporal&lt;/see&gt;)
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TEntity&quot;&gt;The entity type to build the Temporal table from.&lt;/typeparam&gt;
+        &lt;param name=&quot;builder&quot;&gt;TableBuilder instance exposed through the EF Core ModelBuilder&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.BuildTemporal``1(Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0},W.Ind.Core.Config.TemporalConfig)&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;static&quot;/&gt; method that configures a temporal table based off generic type &lt;typeparamref name=&quot;TEntity&quot;/&gt;.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        The resulting temporal table will have a custom name defined with &lt;paramref name=&quot;config&quot;/&gt;.&lt;see cref=&quot;P:W.Ind.Core.Config.TemporalConfig.HistoryTableName&quot;&gt;HistoryTableName&lt;/see&gt;
+        &lt;/para&gt;
+        &lt;example&gt;
+        Usage:
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;void&quot;/&gt; &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;&gt;onModelCreating&lt;/see&gt;(&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ModelBuilder&quot;/&gt; builder) {
+            builder&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ModelBuilder.Entity``1&quot;&gt;.Entity&lt;/see&gt;&amp;lt;&lt;typeparamref name=&quot;TEntity&quot;/&gt;&amp;gt;()
+                .&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.RelationalEntityTypeBuilderExtensions.ToTable``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0},System.Action{Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0}})&quot;&gt;ToTable&lt;/see&gt;(&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder&quot;/&gt; builder =&gt;
+                    &lt;see cref=&quot;T:W.Ind.Core.Helper.ContextHelper&quot;/&gt;.&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.BuildTemporal``1(Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0},W.Ind.Core.Config.TemporalConfig)&quot;&gt;BuildTemporal&lt;/see&gt;(builder, &quot;CustomHistoryTableName&quot;);
+                );
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TEntity&quot;&gt;Any entity with a corresponding SQL table.&lt;/typeparam&gt;
+        &lt;param name=&quot;builder&quot;&gt;&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder&quot;/&gt; instance, accessable through the &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.RelationalEntityTypeBuilderExtensions.ToTable``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0},System.Action{Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder{``0}})&quot;&gt;ToTable&lt;/see&gt;() method in &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt; &quot;OnModelCreating&quot;&lt;/param&gt;
+        &lt;param name=&quot;config&quot;&gt;Configuration options to customize this temporal table&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;static&quot;/&gt; method that handles when an Entity (that&#39;s derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;) is deleted.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Resets &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.EntityState&quot;/&gt; to &lt;see cref=&quot;F:Microsoft.EntityFrameworkCore.EntityState.Modified&quot;/&gt; and sets the &lt;see cref=&quot;P:W.Ind.Core.Entity.ISoftDelete.IsDeleted&quot;/&gt; flag to &lt;see langword=&quot;true&quot;/&gt;.
+        &lt;/para&gt;
+        &lt;example&gt;
+        Usage:
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;int&quot;/&gt; &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.SaveChanges&quot;&gt;SaveChanges&lt;/see&gt;() {
+            &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker&quot;/&gt;.&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot;&gt;Entries&lt;/see&gt;&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.ISoftDelete&quot;/&gt;&amp;gt;()
+                .&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleSoftDelete(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.ISoftDelete}})&quot;&gt;HandleSoftDelete&lt;/see&gt;();
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;entries&quot;&gt;&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot; /&gt;&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleAudit(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.IAuditable}},System.Int64)&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;static&quot;/&gt; method used to update the audit log fields provided by &lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Call &lt;c&gt;&lt;see cref=&quot;M:W.Ind.Core.Service.UserService`2.GetCurrent&quot;/&gt;&lt;/c&gt; to retrieve the current user&#39;s ID.
+        &lt;/para&gt;
+        &lt;example&gt;
+        Usage:
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;int&quot;/&gt; &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.SaveChanges&quot;&gt;SaveChanges&lt;/see&gt;() {
+            &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker&quot;/&gt;.&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot;&gt;Entries&lt;/see&gt;&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.IAuditable&quot;/&gt;&amp;gt;()
+                .&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.HandleAudit(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.IAuditable}},System.Int64)&quot;&gt;HandleAudit&lt;/see&gt;(&lt;see cref=&quot;M:W.Ind.Core.Service.UserService`2.GetCurrent&quot;/&gt;);
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;entries&quot;&gt;&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot;/&gt;&lt;/param&gt;
+        &lt;param name=&quot;currentUser&quot;&gt;&lt;see cref=&quot;M:W.Ind.Core.Service.UserService`2.GetCurrent&quot;/&gt;&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.ParseUtcDates(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.IDate}})&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;static&quot;/&gt; method used to parse an entity&#39;s &lt;see cref=&quot;T:System.DateTime&quot;/&gt; properties to UTC.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Useful when &lt;see langword=&quot;override&quot;&gt;overriding&lt;/see&gt; &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.SaveChanges&quot;/&gt;&lt;/para&gt;
+        &lt;example&gt;
+        Usage:
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;int&quot;/&gt; &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.SaveChanges&quot;&gt;SaveChanges&lt;/see&gt;() {
+            &lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker&quot;/&gt;.&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot;&gt;Entries&lt;/see&gt;&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt;&amp;gt;.&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.ParseUtcDates(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.IDate}})&quot;&gt;ParseUtcDates&lt;/see&gt;();
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;entries&quot;&gt;&quot;&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.Entries``1&quot;/&gt;&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.GetFromJsonFile``1(System.String)&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;static&quot;/&gt; method that reads, dererializes, and returns data from JSON files.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;The file path is relative to the startup project directory while referenced inside &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;/&gt;.&lt;/para&gt;
+        &lt;para&gt;Useful for seeding data.&lt;/para&gt;
+        &lt;example&gt;
+        Usage:
+        &lt;code&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;override&quot;/&gt; &lt;see langword=&quot;void&quot;/&gt; &lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.DbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)&quot;&gt;OnModelCreating&lt;/see&gt;(&lt;see cref=&quot;T:Microsoft.EntityFrameworkCore.ModelBuilder&quot;/&gt; builder) {
+            builder.&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.ModelBuilder.Entity``1&quot;&gt;Entity&lt;/see&gt;&amp;lt;&lt;typeparamref name=&quot;TEntity&quot;/&gt;&amp;gt;()
+                .&lt;see cref=&quot;M:Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder`1.HasData(System.Collections.Generic.IEnumerable{System.Object})&quot;&gt;HasData&lt;/see&gt;(&lt;see cref=&quot;T:W.Ind.Core.Helper.ContextHelper&quot;/&gt;.&lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.GetFromJsonFile``1(System.String)&quot;&gt;GetFromJsonFile&lt;/see&gt;(&lt;c&gt;&quot;seed/data.json&quot;&lt;/c&gt;));
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TEntity&quot;&gt;The resulting data type of the deserialized JSON&lt;/typeparam&gt;
+        &lt;param name=&quot;filePath&quot;&gt;Path is relative to startup project when called in your DbContext&#39;s &quot;OnModelCreating&quot; method&lt;/param&gt;
+        &lt;returns&gt;The JSON data deserialized as an instance of &lt;typeparamref name=&quot;TEntity&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when &lt;paramref name=&quot;filePath&quot;/&gt; is empty or contains any restricted characters&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.NullReferenceException&quot;&gt;Thrown when the deserialized &lt;typeparamref name=&quot;TEntity&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.IO.PathTooLongException&quot;&gt;Thrown when &lt;paramref name=&quot;filePath&quot;/&gt; is longer than 260 characters&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.IO.DirectoryNotFoundException&quot;&gt;Thrown when &lt;paramref name=&quot;filePath&quot;/&gt; points to any non-existent directory&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.UnauthorizedAccessException&quot;&gt;Thrown when method caller doesn&#39;t have read permissions for the specified file&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.NotSupportedException&quot;&gt;&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.ContextHelper.ParsePrimaryKey``1(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Used to parse an entity&#39;s Primary Key from a &lt;see langword=&quot;string&quot;/&gt; to an instance of &lt;typeparamref name=&quot;TKey&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Useful for parsing keys retrieved from &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;The data type this key should be parsed into&lt;/typeparam&gt;
+        &lt;param name=&quot;key&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; instance of a Primary Key value&lt;/param&gt;
+        &lt;returns&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.FormatException&quot;&gt;Thrown when the Primary Key &lt;see langword=&quot;type&quot;/&gt; is neither Integer based, nor &lt;see langword=&quot;string&quot;/&gt;/&lt;see cref=&quot;T:System.Guid&quot;/&gt;&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Helper.GenericTypeHelper&quot;&gt;
+        &lt;summary&gt;
+        This &lt;see langword=&quot;static&quot;/&gt; helper &lt;see langword=&quot;class&quot;/&gt; is used to help identify generic types
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.GenericTypeHelper.IsIntegerType``1&quot;&gt;
+        &lt;summary&gt;
+        Determines if &lt;see langword=&quot;typeof&quot;/&gt;(&lt;typeparamref name=&quot;T&quot;/&gt;) is integer based
+        &lt;/summary&gt;
+        &lt;remarks&gt;Meaning that it can only ever be a whole number value&lt;/remarks&gt;
+        &lt;typeparam name=&quot;T&quot;&gt;The generic &lt;see langword=&quot;type&quot;/&gt; to check against&lt;/typeparam&gt;
+        &lt;returns&gt;
+        &lt;para&gt;&lt;see langword=&quot;true&quot;/&gt;, if &lt;typeparamref name=&quot;T&quot;/&gt; is integer based&lt;/para&gt;
+        &lt;para&gt;&lt;see langword=&quot;false&quot;/&gt;, if &lt;typeparamref name=&quot;T&quot;/&gt; is not integer based&lt;/para&gt;
+        &lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.GenericTypeHelper.IsIntegerType(System.Type)&quot;&gt;
+        &lt;summary&gt;
+        Determines if &lt;paramref name=&quot;type&quot;/&gt; is integer based
+        &lt;/summary&gt;
+        &lt;remarks&gt;Meaning that it can only ever be a whole number value&lt;/remarks&gt;
+        &lt;returns&gt;
+        &lt;para&gt;&lt;see langword=&quot;true&quot;/&gt;, if &lt;paramref name=&quot;type&quot;/&gt; is integer based&lt;/para&gt;
+        &lt;para&gt;&lt;see langword=&quot;false&quot;/&gt;, if &lt;paramref name=&quot;type&quot;/&gt; is not integer based&lt;/para&gt;
+        &lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Helper.TokenHelper&quot;&gt;
+        &lt;summary&gt;
+        This &lt;see langword=&quot;static&quot;/&gt; helper class contains methods useful for JWT Validation
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.TokenHelper.GetInvalidatedTimeSpan(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Gets the &lt;see href=&quot;TimeSpan&quot;/&gt; from now until the &lt;paramref name=&quot;token&quot;/&gt; expires
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Useful for invalidating JWT in-memory until it naturally expires&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token&lt;/param&gt;
+        &lt;returns&gt;The &lt;see cref=&quot;T:System.TimeSpan&quot;/&gt; representing how long until this &lt;paramref name=&quot;token&quot;/&gt; naturally expires&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.InvalidOperationException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot;/&gt; is unreadable&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot; /&gt; is too long&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.TokenHelper.GetTokenExpiration(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Get the current Expiration Date of a JSON Web Token (if readable)
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;JSON Web Token&lt;/param&gt;
+        &lt;returns&gt;The expiration date of &lt;paramref name=&quot;token&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.InvalidOperationException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot;/&gt; is unreadable&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot; /&gt; is too long&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Helper.UtcDateHelper&quot;&gt;
+        &lt;summary&gt;
+        This &lt;see langword=&quot;static&quot;/&gt; helper class is used to identify and parse an entity&#39;s &lt;see cref=&quot;T:System.DateTime&quot;/&gt; properties to UTC
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Use with &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt; and any of it&#39;s deriving &lt;see langword=&quot;interface&quot;/&gt; to specify which &lt;see cref=&quot;T:System.DateTime&quot;/&gt; properties to parse
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Helper.UtcDateHelper.SetUtcIfDataExists``1(W.Ind.Core.Entity.IDate)&quot;&gt;
+        &lt;summary&gt;
+        Uses any &lt;see langword=&quot;interface&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt; to parse it&#39;s &lt;see cref=&quot;T:System.DateTime&quot;/&gt; properties to UTC
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Cast your entity into an &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt; with the &lt;see langword=&quot;as&quot;/&gt; keyword if it derives from any &lt;typeparamref name=&quot;TType&quot;/&gt; &lt;see langword=&quot;interface&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;
+        See &lt;see cref=&quot;M:W.Ind.Core.Helper.ContextHelper.ParseUtcDates(System.Collections.Generic.IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{W.Ind.Core.Entity.IDate}})&quot;/&gt; implementation for usage
+        &lt;/para&gt;
+        &lt;para&gt;
+        Loops through all &lt;see cref=&quot;T:System.DateTime&quot;/&gt; properties defined in &lt;typeparamref name=&quot;TType&quot;/&gt;
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TType&quot;&gt;Any &lt;see langword=&quot;interface&quot;/&gt; type that derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.IDate&quot;/&gt;.&lt;/typeparam&gt;
+        &lt;param name=&quot;entity&quot;&gt;Can cast any entity (using the &#39;as&#39; keyword) that implements &quot;IDate&quot;. Or an interface derived from &quot;IDate&quot;.&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Middleware.JwtBase`1&quot;&gt;
+        &lt;summary&gt;
+        An extensible &lt;see langword=&quot;abstract&quot;/&gt; base middleware &lt;see langword=&quot;class&quot;/&gt; for handling JWT
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Implementation:
+        &lt;example&gt;
+        &lt;code&gt;
+        &lt;see langword=&quot;public&quot;/&gt; &lt;see langword=&quot;async&quot;/&gt; &lt;see cref=&quot;T:System.Threading.Tasks.Task&quot;/&gt; InvokeAsync(&lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt; context) {
+            &lt;see langword=&quot;if&quot;/&gt; (&lt;see langword=&quot;await&quot;/&gt; &lt;see cref=&quot;M:W.Ind.Core.Middleware.JwtBase`1.ShouldSkip(Microsoft.AspNetCore.Http.HttpContext)&quot;/&gt;) 
+            {
+                &lt;see cref=&quot;F:W.Ind.Core.Middleware.JwtBase`1._next&quot;/&gt;(&lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt; context);
+                &lt;see langword=&quot;return&quot;/&gt;;
+            }
+            
+            &lt;see langword=&quot;await&quot;/&gt; &lt;see cref=&quot;!:ProcessToken(HttpContext)&quot;&gt;ProcessToken&lt;/see&gt;(context);
+            &lt;see langword=&quot;return&quot;/&gt;;
+        }
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Middleware.JwtBase`1._jwtConfig&quot;&gt;
+        &lt;summary&gt;
+        Preferably injected JWT Configuration options
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Middleware.JwtBase`1._next&quot;&gt;
+        &lt;summary&gt;
+        Middleware specific &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.RequestDelegate&quot;/&gt;
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Middleware.JwtBase`1._jwtInvalidator&quot;&gt;
+        &lt;summary&gt;
+        Injected instance of &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtInvalidator&quot;/&gt; singleton service
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,`0,W.Ind.Core.Service.IJwtInvalidator)&quot;&gt;
+        &lt;summary&gt;
+        Constructor with injected service args
+        &lt;/summary&gt;
+        &lt;param name=&quot;next&quot;&gt;Middleware specific &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.RequestDelegate&quot;/&gt;&lt;/param&gt;
+        &lt;param name=&quot;jwtConfig&quot;&gt;Preferably inject JWT Configuration options&lt;/param&gt;
+        &lt;param name=&quot;jwtInvalidator&quot;&gt;Injected instance of &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtInvalidator&quot;/&gt; singleton service&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.ShouldSkip(Microsoft.AspNetCore.Http.HttpContext)&quot;&gt;
+        &lt;summary&gt;
+        Checks via &lt;paramref name=&quot;context&quot;/&gt; if the current route should be skipped from token processing
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        You must implement this method on your inheritting middleware &lt;see langword=&quot;class&quot;/&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;context&quot;&gt;The current &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt; instance&lt;/param&gt;
+        &lt;returns&gt;
+        &lt;para&gt;&lt;see langword=&quot;true&quot;/&gt;, if token processing can be skipped&lt;/para&gt;
+        &lt;para&gt;&lt;see langword=&quot;false&quot;/&gt;, if token processing cannot be skipped&lt;/para&gt;
+        &lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.NotImplementedException&quot;&gt;You must &lt;see langword=&quot;override&quot;/&gt; this method to use it&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.GenerateToken(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})&quot;&gt;
+        &lt;summary&gt;
+        Generates a new &lt;see langword=&quot;string&quot;/&gt; JSON Web Token from the given User &lt;paramref name=&quot;claims&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;param name=&quot;claims&quot;&gt;&lt;/param&gt;
+        &lt;returns&gt;&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.GetPrincipalFromExpiredToken(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Returns a &lt;see cref=&quot;T:System.Security.Claims.ClaimsPrincipal&quot;/&gt; instance retreived from &lt;paramref name=&quot;token&quot;/&gt; (even when expired)
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token&lt;/param&gt;
+        &lt;returns&gt;&lt;see cref=&quot;T:System.Security.Claims.ClaimsPrincipal&quot;/&gt; from passed &lt;paramref name=&quot;token&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:Microsoft.IdentityModel.Tokens.SecurityTokenException&quot;&gt;Thrown when the validated &lt;see cref=&quot;T:Microsoft.IdentityModel.Tokens.SecurityToken&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt; or invalid&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.ProcessTokenAsync(Microsoft.AspNetCore.Http.HttpContext)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method that checks the current JWT value&#39;s validity in the given &lt;paramref name=&quot;context&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Sets the response &lt;c&gt;&quot;Authorization&quot;&lt;/c&gt; header to new token value if successful&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;context&quot;&gt;The current &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt; instance&lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.GetToken(Microsoft.AspNetCore.Http.HttpContext)&quot;&gt;
+        &lt;summary&gt;
+        Retreive the &lt;see langword=&quot;string&quot;/&gt; JSON Web Token from &lt;paramref name=&quot;context&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;param name=&quot;context&quot;&gt;The current &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt;&lt;/param&gt;
+        &lt;returns&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token value (if present)&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Middleware.JwtBase`1.SetToken(Microsoft.AspNetCore.Http.HttpContext,System.String)&quot;&gt;
+        &lt;summary&gt;
+        Resets the &lt;c&gt;&quot;Authorization&quot;&lt;/c&gt; response header to use &lt;paramref name=&quot;token&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;param name=&quot;context&quot;&gt;The current &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt;&lt;/param&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.JwtServiceBase`2&quot;&gt;
+        &lt;summary&gt;
+        &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; implemented by &lt;see cref=&quot;T:W.Ind.Core.Service.JwtService`2&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Contains &lt;see langword=&quot;protected&quot;/&gt; instance methods that can be invoked in any derived &lt;see langword=&quot;class&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Built for extensibility&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.JwtServiceBase`2._config&quot;&gt;
+        &lt;summary&gt;
+        Options for JWT mapped directly from the application&#39;s Configuration file
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtServiceBase`2.#ctor(W.Ind.Core.Config.JwtConfig)&quot;&gt;
+        &lt;summary&gt;
+        Base constructor
+        &lt;/summary&gt;
+        &lt;param name=&quot;config&quot;&gt;Mappped from Configuration and injected&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtServiceBase`2.ConfigureToken(`0,System.DateTime)&quot;&gt;
+        &lt;summary&gt;
+        Configures and returns a new JSON Web Token
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        To get the JSON Web Token as a &lt;see langword=&quot;string&quot;/&gt;:
+        &lt;/para&gt;
+        &lt;para&gt;
+        Pass the returned &lt;see cref=&quot;T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken&quot;/&gt; instance into &lt;see cref=&quot;M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)&quot;/&gt; as it&#39;s param
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;user&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;expires&quot;&gt;The expiration date to set&lt;/param&gt;
+        &lt;returns&gt;An instance of &lt;see cref=&quot;T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken&quot;/&gt;&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtServiceBase`2.GetUserClaims(`0)&quot;&gt;
+        &lt;summary&gt;
+        Gets the passed &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s &lt;see cref=&quot;T:System.Security.Claims.Claim&quot;/&gt;s in order to configure a JSON Web token
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Override this method to get more claims added to your JSON Web Token
+        &lt;/remarks&gt;
+        &lt;param name=&quot;user&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;returns&gt;An &lt;see cref=&quot;T:System.Array&quot;/&gt; of the &lt;paramref name=&quot;user&quot;/&gt;&#39;s &lt;see cref=&quot;T:System.Security.Claims.Claim&quot;/&gt;s&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.NullReferenceException&quot;&gt;Thrown when either &lt;paramref name=&quot;user&quot;/&gt; or &lt;c&gt;user.Id&lt;/c&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.UserServiceBase`2&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; implemented by &lt;see cref=&quot;T:W.Ind.Core.Service.UserService`2&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Handles &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; related tasks using &lt;see cref=&quot;N:Microsoft.AspNetCore.Identity&quot;/&gt;&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.UserServiceBase`2._userManager&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;readonly&quot;/&gt; field used to access &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; within derived &lt;see langword=&quot;class&quot;/&gt; implementation
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.UserServiceBase`2._signInManager&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;readonly&quot;/&gt; field used to access &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.SignInManager`1&quot;/&gt; within derived &lt;see langword=&quot;class&quot;/&gt; implementation
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.UserServiceBase`2._jwtService&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;readonly&quot;/&gt; field used to access &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtService`2&quot;/&gt; within derived &lt;see langword=&quot;class&quot;/&gt; implementation
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserServiceBase`2.#ctor(Microsoft.AspNetCore.Identity.UserManager{`0},Microsoft.AspNetCore.Identity.SignInManager{`0},W.Ind.Core.Service.IJwtService{`0,`1})&quot;&gt;
+        &lt;summary&gt;
+        Base Constructor
+        Base constructor for the &quot;UserService&quot; class that takes injected service dependencies.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Args are meant to be injected service dependencies
+        &lt;/remarks&gt;
+        &lt;param name=&quot;userManager&quot;&gt;
+        &lt;para&gt;Inject while configuring services in your &lt;c&gt;Program.cs&lt;/c&gt; or &lt;c&gt;Startup.cs&lt;/c&gt; file:&lt;/para&gt;
+        &lt;example&gt;
+        &lt;code&gt;
+        &lt;see langword=&quot;using&quot;/&gt; &lt;see cref=&quot;N:Microsoft.Extensions.DependencyInjection&quot;/&gt;;
+        
+        builder.Services.AddIdentity&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.User&quot;/&gt;, &lt;see cref=&quot;T:W.Ind.Core.Entity.Role&quot;/&gt;&amp;gt;(...);
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;jwtService&quot;&gt;Injected instance of &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtService`2&quot;/&gt; singleton&lt;/param&gt;
+        &lt;param name=&quot;signInManager&quot;&gt;
+        &lt;para&gt;Inject while configuring services in your &lt;c&gt;Program.cs&lt;/c&gt; or &lt;c&gt;Startup.cs&lt;/c&gt; file:&lt;/para&gt;
+        &lt;example&gt;
+        &lt;code&gt;
+        &lt;see langword=&quot;using&quot;/&gt; &lt;see cref=&quot;N:Microsoft.Extensions.DependencyInjection&quot;/&gt;;
+        
+        builder.Services.AddIdentity&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.User&quot;/&gt;, &lt;see cref=&quot;T:W.Ind.Core.Entity.Role&quot;/&gt;&amp;gt;(...);
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserServiceBase`2.EnsureUniqueEmailAsync(System.String)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method to validate if &lt;paramref name=&quot;email&quot;/&gt; is unique to the system
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Will &lt;see langword=&quot;throw&quot;/&gt; &lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;/&gt; or &lt;see cref=&quot;T:System.ArgumentNullException&quot;/&gt; on fail
+        &lt;/remarks&gt;
+        &lt;param name=&quot;email&quot;&gt;The email value to validate&lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;email&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when &lt;paramref name=&quot;email&quot;/&gt; is in use&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserServiceBase`2.EnsureUniqueNameAsync(System.String)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method to validate if &lt;paramref name=&quot;name&quot;/&gt; is unique to the system
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Will &lt;see langword=&quot;throw&quot;/&gt; &lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;/&gt; on fail
+        &lt;/remarks&gt;
+        &lt;param name=&quot;name&quot;&gt;The UserName value to validate&lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;name&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when &lt;paramref name=&quot;name&quot;/&gt; is in use&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserServiceBase`2.RegisterAsync``1(``0)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method that adds a new &lt;typeparamref name=&quot;TUser&quot;/&gt; to the System
+        &lt;/summary&gt;
+        &lt;typeparam name=&quot;TUserRegistration&quot;&gt;
+        &lt;para&gt;Any concrete &lt;see langword=&quot;class&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.IUserRegistration&quot;/&gt; to use as the &lt;paramref name=&quot;dto&quot;/&gt; parameter&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;param name=&quot;dto&quot;&gt;
+        &lt;para&gt;An instance of any concrete &lt;see langword=&quot;class&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.IUserRegistration&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Matches generic type &lt;typeparamref name=&quot;TUserRegistration&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;returns&gt;An insance of &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityResult&quot;/&gt; from the &lt;see cref=&quot;M:Microsoft.AspNetCore.Identity.UserManager`1.CreateAsync(`0,System.String)&quot;/&gt; method&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when either the Email or Password is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when the &lt;see cref=&quot;F:W.Ind.Core.Service.UserServiceBase`2._userManager&quot;/&gt; has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when either the Email or UserName is taken&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserServiceBase`2.ValidateLoginAsync``2(``0)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method that validates a &lt;typeparamref name=&quot;TLoginRequest&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Will check the number of consecutive failed login attempts and lockout the user after the 7th failed attempt
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TLoginRequest&quot;&gt;Any class derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginRequest&quot;/&gt;&lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TLoginResponse&quot;&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;&lt;/typeparam&gt;
+        &lt;param name=&quot;dto&quot;&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; instance that matches &lt;typeparamref name=&quot;TLoginRequest&quot;/&gt;&lt;/param&gt;
+        &lt;returns&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; instance that matches &lt;typeparamref name=&quot;TLoginResponse&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when UserName or Password is &lt;see langword=&quot;null&quot;/&gt; or empty&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when the &lt;see cref=&quot;F:W.Ind.Core.Service.UserServiceBase`2._userManager&quot;/&gt; has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when the user has been locked out&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserServiceBase`2.ValidatePasswordAsync``2(`0,``0)&quot;&gt;
+        &lt;summary&gt;
+        Validates if the password is valid for the given user
+        &lt;/summary&gt;
+        &lt;typeparam name=&quot;TLoginRequest&quot;&gt;Any concrete &lt;see langword=&quot;type&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginRequest&quot;/&gt;&lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TLoginResponse&quot;&gt;Any concrete &lt;see langword=&quot;type&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;&lt;/typeparam&gt;
+        &lt;param name=&quot;user&quot;&gt;An instance of &lt;typeparamref name=&quot;TUser&quot;/&gt;&lt;/param&gt;
+        &lt;param name=&quot;dto&quot;&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; instance of &lt;typeparamref name=&quot;TLoginRequest&quot;/&gt;&lt;/param&gt;
+        &lt;returns&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; instance that matches &lt;typeparamref name=&quot;TLoginResponse&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when the &lt;see cref=&quot;F:W.Ind.Core.Service.UserServiceBase`2._userManager&quot;/&gt; has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;user&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.IJwtInvalidator&quot;&gt;
+        &lt;summary&gt;
+        Base &lt;see langword=&quot;interface&quot;/&gt; implemented by the &lt;see cref=&quot;T:W.Ind.Core.Service.JwtInvalidator&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Used to invalidate unexpired JSON Web Tokens
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IJwtInvalidator.InvalidateToken(System.String,System.TimeSpan)&quot;&gt;
+        &lt;summary&gt;
+        Marks an unexpired JSON Web &lt;paramref name=&quot;token&quot;/&gt; as invalid
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token to invalidate&lt;/param&gt;
+        &lt;param name=&quot;expiry&quot;&gt;
+        &lt;para&gt;How long the token will be marked invalid&lt;/para&gt;
+        &lt;para&gt;The time it will take until the &lt;paramref name=&quot;token&quot;/&gt; naturally expires&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IJwtInvalidator.IsTokenInvalid(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Determines if the &lt;paramref name=&quot;token&quot;/&gt; has already been invalidated
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token&lt;/param&gt;
+        &lt;returns&gt;&lt;see langword=&quot;true&quot;/&gt; if the &lt;paramref name=&quot;token&quot;/&gt; is invalid&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.IJwtService`2&quot;&gt;
+        &lt;summary&gt;
+        An injectible (scoped) service to handle JWT-related functions
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Ideally for unauthenticated controller routes (such as &#39;Login&#39;)&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IJwtService`2.GenerateToken``1(`0,System.Boolean)&quot;&gt;
+        &lt;summary&gt;
+        Generates a JSON Web Token for the given &lt;typeparamref name=&quot;TUser&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Expiration options being either 30 minutes or 30 days from &lt;see cref=&quot;P:System.DateTime.UtcNow&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Use for login requests&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TLoginResponse&quot;&gt;The return type (any derived instance of &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;)&lt;/typeparam&gt;
+        &lt;param name=&quot;user&quot;&gt;
+        &lt;para&gt;An instance of the CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;rememberMe&quot;&gt;
+        &lt;para&gt;If &lt;see langword=&quot;true&quot;/&gt;, token expires in 30 days&lt;/para&gt;
+        &lt;para&gt;If &lt;see langword=&quot;false&quot;/&gt;, token expires in 30 minutes&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;returns&gt;A derived instance of &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown if the generated &lt;see cref=&quot;T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown if the generated token is not of type &lt;see cref=&quot;T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException&quot;&gt;Thrown if encryption ever fails&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IJwtService`2.InvalidateToken(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Invalidates &lt;paramref name=&quot;token&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token value&lt;/param&gt;
+        &lt;exception cref=&quot;T:System.InvalidOperationException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot;/&gt; is unreadable&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot; /&gt; is too long&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IJwtService`2.IsTokenInvalid(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Checks if &lt;paramref name=&quot;token&quot;/&gt; is invalid
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token value&lt;/param&gt;
+        &lt;returns&gt;
+        &lt;para&gt;&lt;see langword=&quot;true&quot;/&gt;, if &lt;paramref name=&quot;token&quot;/&gt; is invalid&lt;/para&gt;
+        &lt;para&gt;&lt;see langword=&quot;false&quot;/&gt;, if &lt;paramref name=&quot;token&quot;/&gt; is valid&lt;/para&gt;
+        &lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.IUserService`2&quot;&gt;
+        &lt;summary&gt;
+        A derived &lt;see langword=&quot;interface&quot;/&gt; for an injectable (Scoped) Service
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Handles &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; related tasks&lt;/para&gt;
+        &lt;para&gt;Derive from this &lt;see langword=&quot;interface&quot;/&gt; to add more functionality via interface injection&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;
+        The CLR type corresponding to your User entity type
+        &lt;/para&gt;
+        &lt;para&gt;Ensure this inherits from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IUserService`2.GetCurrent&quot;&gt;
+        &lt;summary&gt;
+        Gets the ID of the current user making this request
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Defaults to a pre-defined System user when the JSON Web Token is missing or invalid&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;returns&gt;A User ID&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;see cref=&quot;M:W.Ind.Core.Service.IUserService`2.GetSystem(System.String)&quot;/&gt; fails&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IUserService`2.GetSystem(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Gets the ID of a pre-defined System user for unauthenticated requests
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Useful for setting the &lt;see cref=&quot;P:W.Ind.Core.Entity.IAuditable.CreatedById&quot;/&gt; property on any auditable entity that can be created anonymously
+        &lt;/remarks&gt;
+        &lt;param name=&quot;systemUserName&quot;&gt;The UserName of the System user&lt;/param&gt;
+        &lt;returns&gt;System User&#39;s ID&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;systemUserName&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt; or empty when invoking &lt;c&gt;_userManager.FindByNameAsync&lt;/c&gt;&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.IUserServiceBase`2&quot;&gt;
+        &lt;summary&gt;
+        Base &lt;see langword=&quot;interface&quot;/&gt; implemented by &lt;see langword=&quot;abstract&quot;/&gt; &lt;see langword=&quot;class&quot;/&gt; &lt;see cref=&quot;T:W.Ind.Core.Service.UserServiceBase`2&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IUserServiceBase`2.EnsureUniqueEmailAsync(System.String)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method to validate if &lt;paramref name=&quot;email&quot;/&gt; is unique to the system
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Will &lt;see langword=&quot;throw&quot;/&gt; &lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;/&gt; or &lt;see cref=&quot;T:System.ArgumentNullException&quot;/&gt; on fail
+        &lt;/remarks&gt;
+        &lt;param name=&quot;email&quot;&gt;The email value to validate&lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;email&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when &lt;paramref name=&quot;email&quot;/&gt; is in use&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IUserServiceBase`2.EnsureUniqueNameAsync(System.String)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method to validate if &lt;paramref name=&quot;name&quot;/&gt; is unique to the system
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Will &lt;see langword=&quot;throw&quot;/&gt; &lt;see cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;/&gt; on fail
+        &lt;/remarks&gt;
+        &lt;param name=&quot;name&quot;&gt;The UserName value to validate&lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;name&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when &lt;paramref name=&quot;name&quot;/&gt; is in use&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IUserServiceBase`2.RegisterAsync``1(``0)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method that adds a new &lt;typeparamref name=&quot;TUser&quot;/&gt; to the System
+        &lt;/summary&gt;
+        &lt;typeparam name=&quot;TUserRegistration&quot;&gt;
+        &lt;para&gt;Any concrete &lt;see langword=&quot;class&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.IUserRegistration&quot;/&gt; to use as the &lt;paramref name=&quot;dto&quot;/&gt; parameter&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;param name=&quot;dto&quot;&gt;
+        &lt;para&gt;An instance of any concrete &lt;see langword=&quot;class&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.IUserRegistration&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Matches generic type &lt;typeparamref name=&quot;TUserRegistration&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;returns&gt;An insance of &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.IdentityResult&quot;/&gt; from the &lt;see cref=&quot;M:Microsoft.AspNetCore.Identity.UserManager`1.CreateAsync(`0,System.String)&quot;/&gt; method&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when either the Email or Password is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when either the Email or UserName is taken&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.IUserServiceBase`2.ValidateLoginAsync``2(``0)&quot;&gt;
+        &lt;summary&gt;
+        An &lt;see langword=&quot;async&quot;/&gt; method that validates a &lt;typeparamref name=&quot;TLoginRequest&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Will check the number of consecutive failed login attempts and lockout the user after the 7th failed attempt
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TLoginRequest&quot;&gt;Any class derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginRequest&quot;/&gt;&lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TLoginResponse&quot;&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;&lt;/typeparam&gt;
+        &lt;param name=&quot;dto&quot;&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; instance that matches &lt;typeparamref name=&quot;TLoginRequest&quot;/&gt;&lt;/param&gt;
+        &lt;returns&gt;A concrete &lt;see langword=&quot;type&quot;/&gt; instance that matches &lt;typeparamref name=&quot;TLoginResponse&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when UserName or Password is &lt;see langword=&quot;null&quot;/&gt; or empty&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ComponentModel.DataAnnotations.ValidationException&quot;&gt;Thrown when the user has been locked out&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.JwtService`2&quot;&gt;
+        &lt;summary&gt;
+        An injectible (scoped) service to handle JWT-related functions
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Ideally for unauthenticated controller routes (such as &#39;Login&#39;)&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.JwtService`2._jwtInvalidator&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;protected&quot;/&gt; field containing the service reference for &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtInvalidator&quot;/&gt; (singleton)
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtService`2.#ctor(W.Ind.Core.Config.JwtConfig,W.Ind.Core.Service.IJwtInvalidator)&quot;&gt;
+        &lt;summary&gt;
+        Constructor
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Injected instance of &lt;see cref=&quot;T:W.Ind.Core.Config.JwtConfig&quot;/&gt; &lt;paramref name=&quot;config&quot;/&gt; is passed along to the &lt;see langword=&quot;abstract&quot;/&gt; parent &lt;see href=&quot;JwtServiceBase&quot;/&gt;&#39;s constructor
+        &lt;/remarks&gt;
+        &lt;param name=&quot;config&quot;&gt;Preferably injected config options&lt;/param&gt;
+        &lt;param name=&quot;jwtInvalidator&quot;&gt;Preferably injected singleton service&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtService`2.GenerateToken``1(`0,System.Boolean)&quot;&gt;
+        &lt;summary&gt;
+        Generates a JSON Web Token for the given &lt;typeparamref name=&quot;TUser&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Expiration options being either 30 minutes or 30 days from &lt;see cref=&quot;P:System.DateTime.UtcNow&quot;/&gt;&lt;/para&gt;
+        &lt;para&gt;Use for login requests&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TLoginResponse&quot;&gt;The return type (any derived instance of &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;)&lt;/typeparam&gt;
+        &lt;param name=&quot;user&quot;&gt;
+        &lt;para&gt;An instance of the CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;rememberMe&quot;&gt;If true, token expiration set for 30 days from now. Otherwise it defaults to 30 minutes.&lt;/param&gt;
+        &lt;returns&gt;A derived instance of &lt;see cref=&quot;T:W.Ind.Core.Dto.ILoginResponse&quot;/&gt;&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown if the generated &lt;see cref=&quot;T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown if the generated token is not of type &lt;see cref=&quot;T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken&quot;/&gt;&lt;/exception&gt;
+        &lt;exception cref=&quot;T:Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException&quot;&gt;Thrown if encryption fails for any reason&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtService`2.InvalidateToken(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Uses instance of &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtInvalidator&quot;/&gt; singleton service to invalidate &lt;paramref name=&quot;token&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt;? JSON Web Token value&lt;/param&gt;
+        &lt;exception cref=&quot;T:System.InvalidOperationException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot;/&gt; is unreadable&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when &lt;paramref name=&quot;token&quot; /&gt; is too long&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtService`2.IsTokenInvalid(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Uses instance of &lt;see cref=&quot;T:W.Ind.Core.Service.IJwtInvalidator&quot;/&gt; singleton service to check if &lt;paramref name=&quot;token&quot;/&gt; is invalid
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt;? JSON Web Token value&lt;/param&gt;
+        &lt;returns&gt;
+        &lt;para&gt;&lt;see langword=&quot;true&quot;/&gt;, if &lt;paramref name=&quot;token&quot;/&gt; is invalid&lt;/para&gt;
+        &lt;para&gt;&lt;see langword=&quot;false&quot;/&gt;, if &lt;paramref name=&quot;token&quot;/&gt; is valid&lt;/para&gt;
+        &lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.UserService`2&quot;&gt;
+        &lt;summary&gt;
+        A &lt;see langword=&quot;class&quot;/&gt; derived from &lt;see cref=&quot;T:W.Ind.Core.Service.UserServiceBase`2&quot;/&gt; and &lt;see cref=&quot;T:W.Ind.Core.Service.IUserService`2&quot;/&gt; 
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Handles &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; related tasks using &lt;see cref=&quot;N:Microsoft.AspNetCore.Identity&quot;/&gt;
+        &lt;/remarks&gt;
+        &lt;typeparam name=&quot;TUser&quot;&gt;
+        &lt;para&gt;The CLR &lt;see langword=&quot;type&quot;/&gt; corresponding to your User entity/table&lt;/para&gt; 
+        &lt;para&gt;Ensure this &lt;see langword=&quot;type&quot;/&gt; derives from &lt;see cref=&quot;T:W.Ind.Core.Entity.UserBase`1&quot;/&gt;&lt;/para&gt;
+        &lt;/typeparam&gt;
+        &lt;typeparam name=&quot;TKey&quot;&gt;
+        The data type of &lt;typeparamref name=&quot;TUser&quot;/&gt;&#39;s Primary Key
+        &lt;/typeparam&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.UserService`2._contextAccessor&quot;&gt;
+        &lt;summary&gt;
+        &lt;see langword=&quot;protected&quot;/&gt; &lt;see langword=&quot;readonly&quot;/&gt; field used to access &lt;see cref=&quot;T:Microsoft.AspNetCore.Http.HttpContext&quot;/&gt; within derived classes
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Used to get the authentication token from HTTP &quot;Authorization&quot; Header
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserService`2.#ctor(Microsoft.AspNetCore.Identity.UserManager{`0},Microsoft.AspNetCore.Identity.SignInManager{`0},W.Ind.Core.Service.IJwtService{`0,`1},Microsoft.AspNetCore.Http.IHttpContextAccessor)&quot;&gt;
+        &lt;summary&gt;
+        Constructor
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Injects &lt;paramref name=&quot;userManager&quot;/&gt; and &lt;paramref name=&quot;jwtService&quot;/&gt; to pass along to base constructor&lt;/para&gt;
+        &lt;para&gt;Injects &lt;paramref name=&quot;contextAccessor&quot;/&gt; to set on this class&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;userManager&quot;&gt;
+        &lt;para&gt;&lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance&lt;/para&gt; 
+        &lt;para&gt;&lt;typeparamref name=&quot;TUser&quot;/&gt; being the same &lt;see langword=&quot;type&quot;/&gt; as &lt;see cref=&quot;T:W.Ind.Core.Service.UserService`2&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;signInManager&quot;&gt;
+        &lt;para&gt;Inject while configuring services in your &lt;c&gt;Program.cs&lt;/c&gt; or &lt;c&gt;Startup.cs&lt;/c&gt; file:&lt;/para&gt;
+        &lt;example&gt;
+        &lt;code&gt;
+        &lt;see langword=&quot;using&quot;/&gt; &lt;see cref=&quot;N:Microsoft.Extensions.DependencyInjection&quot;/&gt;;
+        
+        builder.Services.AddIdentity&amp;lt;&lt;see cref=&quot;T:W.Ind.Core.Entity.User&quot;/&gt;, &lt;see cref=&quot;T:W.Ind.Core.Entity.Role&quot;/&gt;&amp;gt;(...);
+        &lt;/code&gt;
+        &lt;/example&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;jwtService&quot;&gt;
+        &lt;para&gt;&lt;see cref=&quot;T:W.Ind.Core.Service.IJwtService`2&quot;/&gt; instance&lt;/para&gt;
+        &lt;para&gt;&lt;typeparamref name=&quot;TUser&quot;/&gt; being the same &lt;see langword=&quot;type&quot;/&gt; as &lt;see cref=&quot;T:W.Ind.Core.Service.UserService`2&quot;/&gt;&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;param name=&quot;contextAccessor&quot;&gt;
+        &lt;para&gt;&lt;see cref=&quot;T:Microsoft.AspNetCore.Http.IHttpContextAccessor&quot;/&gt; instance&lt;/para&gt;
+        &lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserService`2.GetCurrent&quot;&gt;
+        &lt;summary&gt;
+        Gets the ID of the current user making this request
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;Utilizes &lt;see cref=&quot;F:W.Ind.Core.Service.UserService`2._contextAccessor&quot;/&gt; to retrive the JWT claim for the current user&#39;s ID&lt;/para&gt;
+        &lt;para&gt;Defaults to a pre-defined System user when the JSON Web Token is missing or invalid&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;returns&gt;A User ID&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when GetSystem() fails&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.UserService`2.GetSystem(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Gets the ID of a pre-defined System user for unauthenticated requests
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Useful for setting the &lt;see cref=&quot;P:W.Ind.Core.Entity.IAuditable.CreatedById&quot;/&gt; property on any auditable entity that can be created anonymously
+        &lt;/remarks&gt;
+        &lt;param name=&quot;systemUserName&quot;&gt;The UserName of the System user&lt;/param&gt;
+        &lt;returns&gt;System User&#39;s ID&lt;/returns&gt;
+        &lt;exception cref=&quot;T:System.ObjectDisposedException&quot;&gt;Thrown when &lt;see cref=&quot;T:Microsoft.AspNetCore.Identity.UserManager`1&quot;/&gt; instance has already been disposed&lt;/exception&gt;
+        &lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;paramref name=&quot;systemUserName&quot;/&gt; is &lt;see langword=&quot;null&quot;/&gt; or empty when invoking &lt;c&gt;_userManager.FindByNameAsync&lt;/c&gt;&lt;/exception&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;T:W.Ind.Core.Service.JwtInvalidator&quot;&gt;
+        &lt;summary&gt;
+        A derived Hosted Service class to be injected into custom Middleware.
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Inject this as a Hosted Service, and not a Scoped Service.
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.JwtInvalidator._invalidTokens&quot;&gt;
+        &lt;summary&gt;
+        Stores invalid tokens in-memory until they expire.
+        &lt;/summary&gt;
+        &lt;value&gt;
+        &lt;para&gt;The Key will contain a JSON Web Token &lt;see cref=&quot;T:System.String&quot;/&gt;.&lt;/para&gt;
+        &lt;para&gt;The Value is a &lt;see cref=&quot;T:System.DateTime&quot;/&gt; representing when this token can be removed.&lt;/para&gt;
+        &lt;/value&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;F:W.Ind.Core.Service.JwtInvalidator._cleanupTimer&quot;&gt;
+        &lt;summary&gt;
+        &lt;see cref=&quot;T:System.Threading.Timer&quot;/&gt; instance used to check on invalid tokens
+        &lt;/summary&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtInvalidator.#ctor&quot;&gt;
+        &lt;summary&gt;
+        Default Constructor
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Starts a &lt;see cref=&quot;T:System.Threading.Timer&quot;/&gt; with the callback removing expired tokens from &lt;see cref=&quot;F:W.Ind.Core.Service.JwtInvalidator._invalidTokens&quot;/&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtInvalidator.Dispose&quot;&gt;
+        &lt;summary&gt;
+        Derived from &lt;see cref=&quot;T:System.IDisposable&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Sets &lt;see href=&quot;_cleanupTimer&quot;/&gt; interval to &lt;see cref=&quot;F:System.Threading.Timeout.Infinite&quot;/&gt; before disposing
+        &lt;/para&gt;
+        &lt;para&gt;
+        Calls &lt;see cref=&quot;M:System.GC.SuppressFinalize(System.Object)&quot;/&gt; so further abstraction is still an option
+        &lt;/para&gt;
+        &lt;/remarks&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtInvalidator.InvalidateToken(System.String,System.TimeSpan)&quot;&gt;
+        &lt;summary&gt;
+        Marks an unexpired JSON Web &lt;paramref name=&quot;token&quot;/&gt; as invalid
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Attempts to add &lt;paramref name=&quot;token&quot;/&gt; param to the &lt;see cref=&quot;F:W.Ind.Core.Service.JwtInvalidator._invalidTokens&quot;/&gt; property with (&lt;see cref=&quot;P:System.DateTime.UtcNow&quot;/&gt; + &lt;paramref name=&quot;expiry&quot;/&gt; param) as the value
+        &lt;/remarks&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token to invalidate&lt;/param&gt;
+        &lt;param name=&quot;expiry&quot;&gt;
+        &lt;para&gt;How long the &lt;paramref name=&quot;token&quot;/&gt; will be marked invalid&lt;/para&gt;
+        &lt;para&gt;Time it takes until the &lt;paramref name=&quot;token&quot;/&gt; naturally expires&lt;/para&gt;
+        &lt;/param&gt;
+        &lt;returns&gt;Treat as &lt;see langword=&quot;void&quot;/&gt;&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtInvalidator.IsTokenInvalid(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Determines if the &lt;paramref name=&quot;token&quot;/&gt; has already been invalidated
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        Simply checks if &lt;see cref=&quot;F:W.Ind.Core.Service.JwtInvalidator._invalidTokens&quot;/&gt; already contains a key for the &lt;paramref name=&quot;token&quot;/&gt; param
+        &lt;/remarks&gt;
+        &lt;param name=&quot;token&quot;&gt;&lt;see langword=&quot;string&quot;/&gt; JSON Web Token&lt;/param&gt;
+        &lt;returns&gt;&lt;see langword=&quot;true&quot;/&gt; if the &lt;paramref name=&quot;token&quot;/&gt; is invalid&lt;/returns&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtInvalidator.CleanupExpiredTokens(System.Object)&quot;&gt;
+        &lt;summary&gt;
+        A callback method to remove expired tokens from &lt;see cref=&quot;F:W.Ind.Core.Service.JwtInvalidator._invalidTokens&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;remarks&gt;
+        &lt;para&gt;
+        Invoked by &lt;see cref=&quot;F:W.Ind.Core.Service.JwtInvalidator._cleanupTimer&quot;/&gt;
+        &lt;/para&gt;
+        &lt;para&gt;Removes entries where the value is &amp;lt;= &lt;see cref=&quot;P:System.DateTime.UtcNow&quot;/&gt;&lt;/para&gt;
+        &lt;/remarks&gt;
+        &lt;param name=&quot;state&quot;&gt;The arg passed into the callback. Unused in this scenario.&lt;/param&gt;
+    &lt;/member&gt;
+    &lt;member name=&quot;M:W.Ind.Core.Service.JwtInvalidator.GetCacheKey(System.String)&quot;&gt;
+        &lt;summary&gt;
+        Gets the interpolated Key value used to store an invalid &lt;paramref name=&quot;token&quot;/&gt;
+        &lt;/summary&gt;
+        &lt;param name=&quot;token&quot;&gt;JSON Web Token &lt;see langword=&quot;string&quot;/&gt;&lt;/param&gt;
+        &lt;returns&gt;The corresponding key (&lt;see langword=&quot;string&quot;/&gt;) for an invalid token&lt;/returns&gt;
+    &lt;/member&gt;
+&lt;/members&gt;</code></pre>
+<p></doc></p>
