@@ -11,13 +11,14 @@
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageId>W.Ind.Core</PackageId>
-	<Version>0.9.85</Version>
+	<PackageProjectUrl>https://github.com/W-Industries-Luke/W.Ind.Core</PackageProjectUrl>
+	<Version>0.9.88</Version>
 	<Authors>W. Industries; Luke Weaver</Authors>
 	<Company>W. Industries</Company>
 	<Description>A set of helpful services and derived classes to seamlessly integrate with EF Core 8 and AspNetCore Identity. Create an IdentityDbContext out of the box with simplified ModelBuilder options for temporal tables to simplify audit logging.</Description>
 	<PackageTags>.NET Core 8;EF Core 8;AspNetCore;JWT;Identity</PackageTags>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<LicenseUrl>https://opensource.org/licenses/MIT</LicenseUrl>
+	<License>https://opensource.org/licenses/MIT</License>
   </PropertyGroup>
 
   <ItemGroup>
