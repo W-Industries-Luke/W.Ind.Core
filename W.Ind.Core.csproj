@@ -19,6 +19,7 @@
 	<PackageTags>.NET Core 8;EF Core 8;AspNetCore;JWT;Identity</PackageTags>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<License>https://opensource.org/licenses/MIT</License>
+	<Copyright>Copyright (c) 2024 W. Industries</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
