@@ -1,96 +1,40 @@
-﻿# <center id="title">W. Industries Core Architecture - <b>`W.Ind.Core`</b></center>
-
-<center><b><em>Solutions Built From the Ground Up</em></b></center>
-<br />
-
-
-<table border="0" width="100%">
-    <thead>
-        <tr>
-            <th scope="col">
-                <center>
-                    <details>
-                        <summary>
-                            <a href="#quick-start">1. Quick Start</a>
-                        </summary>
-                        <br>
-                        <a href="#define-context"><div>2. Define</div></a>
-                        <br>
-                        <a href="#install-packages"><div>3. Install</div></a>
-                        <br>
-                        <a href="#configure-services"><div>4. Configure</div></a>
-                        <br>
-                        <a href="#seed-user"><div>5. Audit/Seed</div></a>
-                        <br>
-                        <a href="#create-migration"><div>6. Migrate</div></a>
-                        <br>
-                        <a href="#somedbcontextcs"><div>7. `DbContext.cs`</div></a>
-                        <br>
-                        <a href="#programcs"><div>8. `Program.cs`</div></a>
-                        <br>
-                    </details>
-                </center>
-            </th>
-            <th scope="col">
-                <center>
-                    <details>
-                        <summary>
-                            <a href="#authcontroller">9. AuthController</a>
-                        </summary>
-                        <br>
-                        <a href="#implement-register"><div>10. '/register'</div></a>
-                        <br>
-                        <a href="#implement-login"><div>11. '/login'</div></a>
-                        <br>
-                    </details>
-                </center>
-            </th>
-            <th scope="col">
-                <center>
-                    <details>
-                        <summary>
-                            <a href="#handling-tokens">12. Handle Tokens</a>
-                        </summary>
-                        <br>
-                        <a href="#define-middleware"><div>13. Middleware</div></a>
-                        <br>
-                        <a href="#logout"><div>14. '/logout'</div></a>
-                        <br>
-                    </details>
-                </center>
-            </th>
-            <th scope="col">
-                <center>
-                    <a href="#extend"><div>15. Extensions</div</a>
-                <center>
-            </th>
-            <th scope="col">
-                <center>
-                    <a href="#roadmap"><div>Road Map</div></a>
-                <center>
-            </th>
-        </tr>
-    </thead>
-</table>
+﻿> # **`W.Ind.Core`** - W. Industries: Core Architecture
+> ***Solutions Built From the Ground Up***  
+  
+> ### Table of Contents
+> |1. [Quick Start](#quick-start)|9. [`AuthController`](#authcontroller)|13. [Token Middleware](#handling-tokens)|17. [Extend](#extend)|[Roadmap](#roadmap-v1) |
+> |   :----:  |    :----:    |    :----:   | :----: |  :----: |
+> |2. [Define](#define-context)|10. [Define](#1-define-the-authcontroller)|14. [Define](#define-middleware)|    |     |
+> |3. [API Dependencies](#install-packages)|11. [`/register`](#2-implement-register)|15. [Testing](#testing-middleware)|
+> |4. [Configure](#configure-services)|12. [`/login`](#3-implement-login)|16. [`\logout`](#logout)|
+> |5. [Audit/Seed](#seed-user-required-for-audit-logging)|
+> |6. [Migrate](#createrun-migration)|
+> |7. [`DbContext.cs`](#somedbcontextcs)|
+> |8. [`Program.cs`](#programcs)|
+>  
 
 ## About
 
-Hit the ground running in <b>.NET 8</b> when you create an <b>EF Core</b> database, backed by <b>`Microsoft.AspNetCore.Identity`</b>. With extentible (pre-defined) core entity classes, you can immediately define your `IdentityDbContext` class after installation. Extensive intellisense/xml documentation. As well as simplified services, static helper classes, & base middleware defined for handling common use-cases. Such as:
+Hit the ground running in **.NET 8** when you create an **EF Core** database, backed by **`Microsoft.AspNetCore.Identity`**. Using it's pre-defined core entity classes, you can immediately create your `IdentityDbContext` class after installation. Highly extendible with extensive intellisense/xml documentation. Simplified services, static helper classes, & base middleware defined for handling common use-cases. Such as:
 
-- Temporal Audit Logging
-- Easy Soft Delete implementation
-- JWT Generation/Validation/Invalidation
-- Generic UTC DateTime parsing
-- Auth handling
+> *Generic Temporal Audit Logging*  
+  
+> *Generic Soft Deletes*  
+  
+> *Generic UTC DateTime Parsing*  
+  
+> *JWT Bearer Token Generation/Validation/Invalidation*    
+  
+> *Authentication/Authorization Handling*  
 
 
 ## Quick Start
 
-### <b id="define-context">Define IdentityDbContext</b>
+### **Define IdentityDbContext**
 
-Once installed, you have the ability to <em>immediately</em> define a Context class that inherits from `IdentityDbContext`
-
-
+Once installed, you *immediately* have the ability to define an `IdentityDbContext` class out of the box  
+  
+*Example:*
 ```cs
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -112,17 +56,17 @@ public class SomeDbContext : IdentityDbContext<User, Role, long, UserClaim, User
 }
 ```
 ---
-### <b id="install-packages">Install Packages</b>
+### **API Dependencies**
 
 Before configuring services to use this `DbContext`. There are a couple packages you should install in your API/Controller layer:
-- <b><em>(latest)</em></b> `Microsoft.AspNetCore.Authentication.JwtBearer`
-- <b><em>(latest)</em></b> `Microsoft.EntityFrameworkCore.Design`
-- If your `DbContext` is located in a separate project, add a reference to the project containing it
+- ***(latest)*** `Microsoft.AspNetCore.Authentication.JwtBearer`
+- ***(latest)*** `Microsoft.EntityFrameworkCore.Design`
+- **Note:** If your `DbContext` is located in a separate project, add a reference to the project containing it
 
 ---
-### <b id="configure-services">Configure Services</b>
+### **Configure Services**
 
-Once packages are installed. Go to your `Program.cs` file and configure the following services:
+Once packages are installed. Go to that project's `Program.cs` file (or `Startup.cs` if necessary) and configure the following services:
 
 ```cs
 using Microsoft.AspNetCore.Identity;
@@ -154,16 +98,17 @@ builder.Services.AddIdentity<User, Role>()
 // Add DbContext (Default Connection)
 builder.Services.AddDbContext<SomeDbContext>(o => 
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-```
-<center><a href="#title"><sub>[Top]</sub></a></center>
+```  
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  
+---
 
-<br>
+### **Seed User** (Required for Audit Logging)
 
-### <b id="seed-user">Seed User</b> (Required for Audit Logging)
+A seeded System User is **required** to perform audit logs which reference the User who created a record. This is the **default** behavior for most concrete `W.Core.Ind.Entity` classes. Meaning you need a migration that seeds a System User.
 
-A seeded System User is <b>required</b> to perform audit logs which reference the User who created a record. This is the <b>default</b> behavior for most concrete `W.Core.Ind.Entity` classes. Meaning you need a migration that seeds a System User.
-
-<b>Note:</b> <em>You can change this default behavior and choose not to use Audit Logging by re-implementing those core entity's `abstract` base parent classes and omitting the `IAuditable` implementation <sub>(see [Extensions](#extend))</sub></em>
+**Note:** *You can change this default behavior and choose not to use Audit Logging by re-implementing those core entity's `abstract` base parent classes and omitting the `IAuditable` implementation (see [Extensions](#extend))*
 
 Data can be seeded via JSON file using the `ContextHelper.GetFromJsonFile<TEntity>("filePath")` method
 
@@ -196,10 +141,9 @@ At the same time, we can finish setting up audit logs using the same static `Con
     "SecurityStamp": "98441edc-a147-4144-b722-d533e3f0183e"
   }
 ]
-```
-<center>
-<b>Note:</b> The Password is "password"
-</center>
+```  
+
+**Note:** The Password is "password"  
 
 ---
 2. Override your `DbContext.OnModelCreating` method
@@ -224,7 +168,8 @@ protected override void OnModelCreating(ModelBuilder builder)
         .HasData(ContextHelper.GetFromJsonFile<List<User>>("Seed/Users.json")));
 }
 ```
----
+---  
+
 3. Complete Audit Log Setup
 ```cs
 // Override your DbContext's SaveChanges/SaveChangesAsync methods
@@ -239,13 +184,13 @@ public override async Task<int> SaveChangesAsync(CancelationToken cancelationTok
     return await base.SaveChangesAsync(cancelationToken);
 }
 ```
-<center><a href="#title"><sub>[Top]</sub></a></center>
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  
+---
+### **Create/Run Migration**
 
-<br>
-
-### <b id="create-migration">Create Migration/Update Database</b>
-
-<b>Create Initial Migration</b>
+**Create Initial**
 
 Using CLI (assuming you have `dotnet ef` CLI tools installed) navigate to the project folder containing your `DbContext` class and add your initial migration:
 ```ps
@@ -255,7 +200,7 @@ dotnet ef migrations add "Initial"
 dotnet ef migrations add "Initial" -s "../YourStartupProject"
 ```
 
-<b>Update Database</b>
+**Update Database**
 
 Once you've verified the migration was added successfully. In the same directory, run the CLI command `dotnet ef database update`:
 ```ps
@@ -263,19 +208,19 @@ dotnet ef database update
 
 # Run when DbContext is located outside your startup project
 dotnet ef database update -s "../StartupProject"
-```
+```  
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  
 
-<center><a href="#title"><sub>[Top]</sub></a></center>
-
-<br>
-
+---
 ### Database Created
 
-You've now completed setting up your identity backed database with core auth entities configured to handle both soft deletes, and audit logging. In case you weren't keeping track, that whole process required less than 100 lines of C# code over the span of 2 files `Program.cs` and `SomeDbContext`. The rest of the changes were related to either:
-1. [API layer dependencies](#install-packages)
-2. [Your Configuration/appSettings file](#configure-services) <em>(see comment)</em>
-3. [Copying/Inserting Seed Data file(s)](#seed-user)
-4. [Adding your migration via `dotnet ef` CLI](#initial-migration)
+You've now completed setting up your identity backed database with core auth entities configured to handle both soft deletes, and audit logging. In case you weren't keeping track, that whole process required less than 100 lines of C# code over the span of 2 files (`Program.cs` and your `DbContext` class file). The rest of the changes were related to either:
+1. [Installing API layer dependencies](#install-packages)
+2. [Your Configuration/appSettings file](#configure-services) *(see 'NOTE:' comment)*
+3. [Copying/Inserting Seed Data file(s)](#seed-user-required-for-audit-logging)
+4. [Adding your migration via `dotnet ef` CLI](#createrun-migration)
 
 Here's an expanded look at all the C# file changes made up until this point:
 
@@ -364,18 +309,24 @@ builder.Services.AddIdentity<User, Role>(options => options.User.RequireUniqueEm
 builder.Services.AddDbContext<SomeDbContext>(o => 
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 ```
+In the next section, we'll cover setting up your `AuthController` to both register Users to your database and validating User logins.
 
-<center><a href="#title"><sub>[Top]</sub></a></center>
-
-<br>
-
+  
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  
+---
 ## `AuthController`
 
 After the database is created you can begin implementing your `AuthController`. The two simplest examples would be with your `/register` and `/login` routes. Here, we'll go over how to implement these routes with the injected `UserService`.
 
-1. <b>Define the `AuthController`</b>
+### 1. **Define the `AuthController`**
 
 ```cs
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using W.Ind.Core.Dto;
 using W.Ind.Core.Entity;
 using W.Ind.Core.Service;
 
@@ -383,7 +334,7 @@ using W.Ind.Core.Service;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    // Inject UserService<TUser, TKey>
+    // Injected UserService<TUser, TKey>
     protected readonly IUserService<User, long> _userService;
 
     public AuthController(IUserService<User, long> userService) 
@@ -393,9 +344,9 @@ public class AuthController : ControllerBase
 }
 ```
 ---
-2. <b id="implement-register">Implement `/register`</b>
+### 2. **Implement `/register`**
 ```cs
-// Add this method to your Auth Controller
+// Add this method/Route to your Auth Controller
 [AllowAnonymous]
 [HttpPost("register")]
 public async Task<ActionResult<IdentityResult>> RegisterAsync(UserRegistration request)
@@ -413,10 +364,10 @@ public async Task<ActionResult<IdentityResult>> RegisterAsync(UserRegistration r
 ```
 Once created, you can register a new user to your system through this endpoint (`/api/auth/register`). Simply run the app and send the HTTP request, or integrate it into an existing HTTP Testing module.
 
-*NOTE:* <em>You can extend the `UserRegistraton` DTO to include more custom data, and override the `UserService.Register` method to use that class. <sub>(see [Extensions](#extend))</sub></em>
+*NOTE:* *You can extend the `UserRegistraton` DTO to include more custom data, and override the `UserService.Register` method to use that class. <sub>(see [Extensions](#extend))</sub>*
 
 ---
-3. <b id="implement-login">Implement `/login`</b>
+### 3. **Implement `/login`**
 ```cs
 [AllowAnonymous]
 [HttpPost("login")]
@@ -435,17 +386,19 @@ public async Task<ActionResult<LoginResponse>> LoginAsync(LoginRequest request)
 ```
 Once created, you can login as an existing user through this endpoint (`/api/auth/login`). Simply run the app and send the HTTP request, or integrate it into an existing HTTP Testing module.
 
-*NOTE:* <em>You can extend the `LoginRequest` & `LoginResponse` DTOs to include more custom data, and override the `UserService.ValidateLoginAsync` method to use those fields. <sub>(see [Extensions](#extend))</sub></em>
+**NOTE:** *You can extend the `LoginRequest` & `LoginResponse` DTOs to include more custom data, and override the `UserService.ValidateLoginAsync` method to use those fields. <sub>(see [Extensions](#extend))</sub>*
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
 
-<center><a href="#title"><sub>[Top]</sub></a></center>
-
-<br>
+---
+  
 
 ## Handling Tokens
 
-#### Define Middleware
+To handle Authenticated HTTP requests, you'll need to setup a middleware class that validates & re-issues JWT `'Bearer'` tokens upon request. Middleware is essential for handling these types of tasks before the controller method is even invoked. Which is why this package comes with a pre-defined abstract class, '**W.Ind.Core.Middleware.**`JwtAccessBase`' to greatly simplify this process.
 
-To access routes where JWT validation is required. You will need to implement a custom middleware class that processes your token, and generates a new token to return to the client for each HTTP request. You can simplify this process by implementing the base class, <b>W.Ind.Core.Middleware.</b>`JwtAccessBase`:
+### Define Middleware
+
 ```cs
 using Microsoft.AspNetCore.Authorization;
 using W.Ind.Core.Config;
@@ -457,8 +410,7 @@ using W.Ind.Core.Middleware;
 public class JwtAccessMiddleware : JwtAccessBase<JwtConfig>
 {
     public JwtAccessMiddleware(RequestDelegate next, JwtConfig config, IJwtInvalidator invalidator) 
-        : base(next, config, invalidator) 
-    { }
+        : base(next, config, invalidator) { }
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -483,8 +435,8 @@ public class JwtAccessMiddleware : JwtAccessBase<JwtConfig>
     }
 }
 ```
-<b>Note:</b> <em>You can `override` any methods defined in `JwtAccessBase` for extensible implementation</em>
-### <b>Use Middleware</b>
+**Note:** *You can `override` any methods defined in `JwtAccessBase` for extensible implementation*
+### **Use Middleware**
 
 Go back to your `Program.cs` file and configure your app to use `JwtAccessMiddleware`
 ```cs
@@ -496,8 +448,10 @@ app.UseMiddleware<JwtAccessMiddleware>();
 app.Run();
 ```
 
-#### <b id="logout">Testing - `/logout`</b>
+### **Testing Middleware**
 To test out this custom middleware, you can add a new route to your `AuthController` for logging out. This will handle invalidating the current token, as well as ensuring no new token is sent to the client.
+
+#### `/logout`
 
 ```cs
 protected readonly IUserService<User, long> _userService;
@@ -532,98 +486,31 @@ public IActionResult LogoutAsync()
 }
 ```
 You can now test `/logout` simply by running the app and sending the HTTP request, or integrating it into an existing HTTP Testing module.
-
-<center><a href="#title"><sub>[Top]</sub></a></center>
-
-<br>
-
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  
+---
 ## Extend 
-With this package, you're free to extend/override any and all non-static classes and interfaces it comes with. Generic type parameters are included throughout the project that allow you to use derived custom child classes as with base services/helpers. Package includes very thorough XML documentation & symbols loaded a robust intellisense experience. Inspect the package source code for a full understanding on what's happening under the hood. 
-<br>
-<br>
-<center><b>Examples coming soon...</b></center>
-<br>
-<br>
+
+With this package, you're free to extend/override any and all non-static classes and interfaces it comes with. Generic type parameters are included throughout the project that allow you to use derived custom child classes as with base services/helpers. This package includes very thorough XML documentation & symbols loaded for a robust intellisense experience. Inspect the package source code for a full understanding on what's happening under the hood.  
+
+**Examples coming soon...**  
 
 ---
+  
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  
+---
+## Roadmap (v1)
 
-<center><a href="#title"><sub>[Top]</sub></a></center>
-<br>
+|Category|Name|Details|Commits|Status|Date Completed|Version
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|**EXPAND**|*User Service*| **Introduce:** Email Verification (SMTP Service), TwoFactor Authentication, & Role/Claim Services | N/A | Incomplete | TBD | TBD
+|**EXPAND**|*JWT Support*| **Introduce:** Refresh Tokens, TwoFactor Tokens, Ext. Login Tokens. **Refactor:** Existing JWT Service/Middleware | N/A | Incomplete | TBD | TBD
+|**README**|*Update #Extend Section*| **Walkthrough:** Extension Classes, Using Generics, Implementing Interfaces, Exploring Source | N/A | Incomplete | TBD | TBD |
+|**README**|*Create #Debug Section*|**Walkthrough:** Debugging Source Code, Best Practices| N/A | Incomplete | TBD | TBD |
+|**DOCS**|*Publish Official Site*| **Explore:** XML -> MD options (determine complexity) | N/A | Incomplete | TBD | TBD 
+---  
 
-## Roadmap
-
-<center><b>V1</b></center>
-<table border="1" width="100%">
-    <thead>
-        <tr>
-            <th><center>Description</center</th>
-            <th><center>Tasks</center></th>
-            <th><center>Status</center></th>
-            <th><center>Date Completed</center></th>
-            <th><center>Version</center></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><center><em><b>Expand User Service</b></em></center></td>
-            <td><center><em><br>
-                <div>- <b>Introduce:</b> Email Verification (SMTP Service)</div>
-                <br>
-                <div>- <b>Introduce:</b> TwoFactor Authentication</div>
-                <br>
-                <div>- <b>Introduce:</b> Role Service</div>
-                <br>
-                <div>- <b>Expand:</b> Claims Provider</div>
-            <br></em></center></td>
-            <td><center><input type="checkbox" disabled /></center></td>
-            <td><center>TBD</center></td>
-            <td><center>TBD</center></td>
-        </tr>
-        <tr>
-            <td><center><em><b>Expand JWT Support</b></em></center></td>
-            <td><center><em><br>
-                <div>- <b>Support:</b> Refresh Tokens</div>
-                <br>
-                <div>- <b>Support:</b> TwoFactor Tokens</div>
-                <br>
-                <div>- <b>Support:</b> External Login Tokens</div>
-                <br>
-                <div>- <b>Related:</b> Base Middleware</div>
-                <br />
-                <div>- <b>Refactor:</b> Existing JWT Services</div>
-            <br></em></center></td>
-            <td><center><input type="checkbox" disabled /></center></td>
-            <td><center>TBD</center></td>
-            <td><center>TBD</center></td>
-        </tr>
-        <tr>
-            <td><center><em><b>Update README #Extensions Section</b></div></em></center></td>
-            <td><center><em><br>
-                <div>- <b>Walkthrough:</b> Extension Classes</div>
-                <br>
-                <div>- <b>Walkthrough:</b> Extensions & Generics</div>
-                <br>
-                <div>- <b>Walkthrough:</b> Interface Implementation</div>
-                <br>
-                <div>- <b>Walkthrough:</b> Exploring Source Code</div>
-            <br></em></center></td>
-            <td><center><input type="checkbox" disabled /></center></td>
-            <td><center>TBD</center></td>
-            <td><center>TBD</center></td>
-        </tr>
-        <tr>
-            <td><center><em><b>Publish Official Docs Site</b></em></center></td>
-            <td><center><em><br>
-                <div>- Explore XML to MD options</div>
-                <br>
-                <div>- Determine complexity</div>
-            <br></em></center></td>
-            <td><center><input type="checkbox" disabled /></center></td>
-            <td><center>TBD</center></td>
-            <td><center>TBD</center></td>
-        </tr>
-        <tr></tr>
-    </tbody>
-</table>
-<center><a href="#title"><sub>[Top]</sub></a></center>
-<br>
+[*\[Top\]*](#windcore---w-industries-core-architecture)  
+  

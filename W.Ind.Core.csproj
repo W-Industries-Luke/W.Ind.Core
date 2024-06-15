@@ -13,7 +13,7 @@
 	<PackageId>W.Ind.Core</PackageId>
 	<PackageProjectUrl>https://github.com/W-Industries-Luke/W.Ind.Core</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/W-Industries-Luke/W.Ind.Core</RepositoryUrl>
-	<Version>0.9.88-rc</Version>
+	<Version>0.9.95</Version>
 	<Authors>W. Industries; Luke Weaver</Authors>
 	<Company>W. Industries</Company>
 	<Description>A set of helpful services and derived classes to seamlessly integrate with EF Core 8 and AspNetCore Identity. Create an IdentityDbContext out of the box with simplified ModelBuilder options for temporal tables to simplify audit logging.</Description>
