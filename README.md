@@ -60,14 +60,23 @@
                 </center>
             </th>
             <th scope="col">
-                <center>
-                    <a href="#extend"><div>15. Extensions</div</a>
-                <center>
+                <details>
+                    <summary>
+                        <center>
+                            <a href="#extend"><div>15. Extensions</div</a>
+                        <center>
+                    </summary>
+                </details>
             </th>
             <th scope="col">
-                <center>
-                    <a href="#roadmap"><div>Road Map</div></a>
-                <center>
+                <details>
+                    <summary>
+                        <center>
+                            <a href="#roadmap"><div>Road Map</div></a>
+                        <center>
+                    </summary>
+                    <br>
+                </details>
             </th>
         </tr>
     </thead>
