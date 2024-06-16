@@ -3,10 +3,10 @@
 namespace W.Ind.Core.Service;
 
 /// <summary>
-/// A derived Hosted Service class to be injected into custom Middleware.
+/// A derived Singleton Service class to be injected into custom Middleware.
 /// </summary>
 /// <remarks>
-/// Inject this as a Hosted Service, and not a Scoped Service.
+/// Inject this as a Singleton Service, and not a Scoped Service.
 /// </remarks>
 public class JwtInvalidator : IJwtInvalidator
 {
