@@ -13,7 +13,14 @@
 	<PackageId>W.Ind.Core</PackageId>
 	<PackageProjectUrl>https://github.com/W-Industries-Luke/W.Ind.Core</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/W-Industries-Luke/W.Ind.Core</RepositoryUrl>
-	<Version>0.9.95</Version>
+	<PackageReleaseNotes>
+		- PATCH
+		- Corrected XML Documentation for JWT Invalidator Service
+		- Created separate README.md files for Git markdown previewer and Nuget markdown previewer
+		- Ensured all links were correct in both README.md files
+		- Forward: Will continue publishing new features and refactors shortly
+	</PackageReleaseNotes>
+	<Version>0.9.96</Version>
 	<Authors>W. Industries; Luke Weaver</Authors>
 	<Company>W. Industries</Company>
 	<Description>A set of helpful services and derived classes to seamlessly integrate with EF Core 8 and AspNetCore Identity. Create an IdentityDbContext out of the box with simplified ModelBuilder options for temporal tables to simplify audit logging.</Description>
@@ -24,13 +31,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="docs\**" />
-    <EmbeddedResource Remove="docs\**" />
-	<None Include="README.md" Pack="true" PackagePath="" />
-    <None Remove="docs\**" />
+    <None Remove="README.md" />
   </ItemGroup>
 
   <ItemGroup>
+	  <None Include="nuget/README.md" Pack="true" PackagePath="/" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.34" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.39" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
@@ -44,6 +49,11 @@
     <Using Include="W.Ind.Core.Entity" />
     <Using Include="W.Ind.Core.Helper" />
     <Using Include="W.Ind.Core.Service" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="nuget\README.md" Pack="true" PackagePath="/" />
+    <None Update="nuget\README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>

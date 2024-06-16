@@ -4,8 +4,8 @@
 > ### Table of Contents
 > |1. [Quick Start](#quick-start)|9. [`AuthController`](#authcontroller)|13. [Token Middleware](#handling-tokens)|17. [Extend](#extend)|[Roadmap](#roadmap-v1) |
 > |   :----:  |    :----:    |    :----:   | :----: |  :----: |
-> |2. [Define](#define-context)|10. [Define](#1-define-the-authcontroller)|14. [Define](#define-middleware)|    |     |
-> |3. [API Dependencies](#install-packages)|11. [`/register`](#2-implement-register)|15. [Testing](#testing-middleware)|
+> |2. [Define](#define-identitydbcontext)|10. [Define](#1-define-the-authcontroller)|14. [Define](#define-middleware)|    |     |
+> |3. [API Dependencies](#api-dependencies)|11. [`/register`](#2-implement-register)|15. [Testing](#testing-middleware)|
 > |4. [Configure](#configure-services)|12. [`/login`](#3-implement-login)|16. [`\logout`](#logout)|
 > |5. [Audit/Seed](#seed-user-required-for-audit-logging)|
 > |6. [Migrate](#createrun-migration)|
@@ -13,7 +13,7 @@
 > |8. [`Program.cs`](#programcs)|
 >  
 
-## About
+## **About**
 
 Hit the ground running in **.NET 8** when you create an **EF Core** database, backed by **`Microsoft.AspNetCore.Identity`**. Using it's pre-defined core entity classes, you can immediately create your `IdentityDbContext` class after installation. Highly extendible with extensive intellisense/xml documentation. Simplified services, static helper classes, & base middleware defined for handling common use-cases. Such as:
 
@@ -28,7 +28,7 @@ Hit the ground running in **.NET 8** when you create an **EF Core** database, ba
 > *Authentication/Authorization Handling*  
 
 
-## Quick Start
+## **Quick Start**
 
 ### **Define IdentityDbContext**
 
@@ -214,7 +214,7 @@ dotnet ef database update -s "../StartupProject"
   
 
 ---
-### Database Created
+## Database Created
 
 You've now completed setting up your identity backed database with core auth entities configured to handle both soft deletes, and audit logging. In case you weren't keeping track, that whole process required less than 100 lines of C# code over the span of 2 files (`Program.cs` and your `DbContext` class file). The rest of the changes were related to either:
 1. [Installing API layer dependencies](#install-packages)
@@ -224,7 +224,7 @@ You've now completed setting up your identity backed database with core auth ent
 
 Here's an expanded look at all the C# file changes made up until this point:
 
-#### `SomeDbContext.cs`
+### `SomeDbContext.cs`
 ```cs
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -277,7 +277,7 @@ public class SomeDbContext : IdentityDbContext<User, Role, long, UserClaim, User
 }
 ```
 ---
-#### `Program.cs`
+### `Program.cs`
 
 ```cs
 using Microsoft.AspNetCore.Identity;
@@ -364,7 +364,7 @@ public async Task<ActionResult<IdentityResult>> RegisterAsync(UserRegistration r
 ```
 Once created, you can register a new user to your system through this endpoint (`/api/auth/register`). Simply run the app and send the HTTP request, or integrate it into an existing HTTP Testing module.
 
-*NOTE:* *You can extend the `UserRegistraton` DTO to include more custom data, and override the `UserService.Register` method to use that class. <sub>(see [Extensions](#extend))</sub>*
+*NOTE:* *You can extend the `UserRegistraton` DTO to include more custom data, and override the `UserService.Register` method to use that class (see [Extensions](#extend))*
 
 ---
 ### 3. **Implement `/login`**
@@ -386,7 +386,7 @@ public async Task<ActionResult<LoginResponse>> LoginAsync(LoginRequest request)
 ```
 Once created, you can login as an existing user through this endpoint (`/api/auth/login`). Simply run the app and send the HTTP request, or integrate it into an existing HTTP Testing module.
 
-**NOTE:** *You can extend the `LoginRequest` & `LoginResponse` DTOs to include more custom data, and override the `UserService.ValidateLoginAsync` method to use those fields. <sub>(see [Extensions](#extend))</sub>*
+**NOTE:** *You can extend the `LoginRequest` & `LoginResponse` DTOs to include more custom data, and override the `UserService.ValidateLoginAsync` method to use those fields. (see [Extensions](#extend))*
   
 [*\[Top\]*](#windcore---w-industries-core-architecture)  
 
@@ -505,11 +505,12 @@ With this package, you're free to extend/override any and all non-static classes
 
 |Category|Name|Details|Commits|Status|Date Completed|Version
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-|**EXPAND**|*User Service*| **Introduce:** Email Verification (SMTP Service), TwoFactor Authentication, & Role/Claim Services | N/A | Incomplete | TBD | TBD
-|**EXPAND**|*JWT Support*| **Introduce:** Refresh Tokens, TwoFactor Tokens, Ext. Login Tokens. **Refactor:** Existing JWT Service/Middleware | N/A | Incomplete | TBD | TBD
-|**README**|*Update #Extend Section*| **Walkthrough:** Extension Classes, Using Generics, Implementing Interfaces, Exploring Source | N/A | Incomplete | TBD | TBD |
+|**EXPAND**|*User Service*| **Introduce:** Email Verification (SMTP Service), TwoFactor Authentication, & Role/Claim Services | N/A | Incomplete | TBD | TBD |
+|**EXPAND**|*JWT Support*| **Introduce:** Refresh Tokens, TwoFactor Tokens, Ext. Login Tokens. **Refactor:** Existing JWT Service/Middleware| N/A | Incomplete | TBD | TBD |
+|**README**|*Update #Extend Section*|**Walkthrough:** Extension Classes, Using Generics, Implementing Interfaces, Exploring Source | N/A | Incomplete | TBD | TBD |
 |**README**|*Create #Debug Section*|**Walkthrough:** Debugging Source Code, Best Practices| N/A | Incomplete | TBD | TBD |
-|**DOCS**|*Publish Official Site*| **Explore:** XML -> MD options (determine complexity) | N/A | Incomplete | TBD | TBD 
+|**DOCS**|*Publish Official Site*| **Explore:** XML -> MD options (determine complexity) | N/A | Incomplete | TBD | TBD |
+
 ---  
 
 [*\[Top\]*](#windcore---w-industries-core-architecture)  
