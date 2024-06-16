@@ -1,16 +1,16 @@
-﻿> # **`W.Ind.Core`** - W. Industries: Core Architecture
+﻿> # W. Industries: Core Architecture
 > ***Solutions Built From the Ground Up***  
   
 > ### Table of Contents
 > |1. [Quick Start](#quick-start)|9. [`AuthController`](#authcontroller)|13. [Token Middleware](#handling-tokens)|17. [Extend](#extend)|[Roadmap](#roadmap-v1) |
 > |   :----:  |    :----:    |    :----:   | :----: |  :----: |
 > |2. [Define](#define-identitydbcontext)|10. [Define](#1-define-the-authcontroller)|14. [Define](#define-middleware)|    |     |
-> |3. [API Dependencies](#api-dependencies)|11. [`/register`](#2-implement-register)|15. [Testing](#testing-middleware)|
-> |4. [Configure](#configure-services)|12. [`/login`](#3-implement-login)|16. [`\logout`](#logout)|
-> |5. [Audit/Seed](#seed-user-required-for-audit-logging)|
-> |6. [Migrate](#createrun-migration)|
-> |7. [`DbContext.cs`](#somedbcontextcs)|
-> |8. [`Program.cs`](#programcs)|
+> |3. [API Dependencies](#api-dependencies)|11. [`/register`](#2-implement-register)|15. [Testing](#testing-middleware)|    |    |
+> |4. [Configure](#configure-services)|12. [`/login`](#3-implement-login)|16. [`\logout`](#logout)|    |    |
+> |5. [Audit/Seed](#seed-user-required-for-audit-logging)|   |   |   |   |
+> |6. [Migrate](#createrun-migration)|   |   |   |   |
+> |7. [`DbContext.cs`](#somedbcontextcs)|   |   |   |   |
+> |8. [`Program.cs`](#programcs)|   |   |   |   |
 >  
 
 ## **About**
@@ -100,7 +100,7 @@ builder.Services.AddDbContext<SomeDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 ```  
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
 ---
 
@@ -185,7 +185,7 @@ public override async Task<int> SaveChangesAsync(CancelationToken cancelationTok
 }
 ```
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
 ---
 ### **Create/Run Migration**
@@ -210,7 +210,7 @@ dotnet ef database update
 dotnet ef database update -s "../StartupProject"
 ```  
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
 
 ---
@@ -313,7 +313,7 @@ In the next section, we'll cover setting up your `AuthController` to both regist
 
   
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
 ---
 ## `AuthController`
@@ -388,7 +388,7 @@ Once created, you can login as an existing user through this endpoint (`/api/aut
 
 **NOTE:** *You can extend the `LoginRequest` & `LoginResponse` DTOs to include more custom data, and override the `UserService.ValidateLoginAsync` method to use those fields. (see [Extensions](#extend))*
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
 
 ---
   
@@ -487,7 +487,7 @@ public IActionResult LogoutAsync()
 ```
 You can now test `/logout` simply by running the app and sending the HTTP request, or integrating it into an existing HTTP Testing module.
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
 ---
 ## Extend 
@@ -498,7 +498,7 @@ With this package, you're free to extend/override any and all non-static classes
 
 ---
   
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
 ---
 ## Roadmap (v1)
@@ -513,5 +513,5 @@ With this package, you're free to extend/override any and all non-static classes
 
 ---  
 
-[*\[Top\]*](#windcore---w-industries-core-architecture)  
+[*\[Top\]*](#w-industries-core-architecture)  
   
