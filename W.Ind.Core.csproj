@@ -13,6 +13,14 @@
 	<PackageId>W.Ind.Core</PackageId>
 	<PackageProjectUrl>https://github.com/W-Industries-Luke/W.Ind.Core</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/W-Industries-Luke/W.Ind.Core</RepositoryUrl>
+	<PackageReleaseNotes>
+		- PATCH
+		- Corrected XML Documentation for JWT Invalidator Service
+		- Created separate README.md files for Git markdown previewer and Nuget markdown previewer
+		- Ensured all links were correct in both README.md files
+		
+		Notes: Will continue publishing new features and refactors shortly
+	</PackageReleaseNotes>
 	<Version>0.9.96</Version>
 	<Authors>W. Industries; Luke Weaver</Authors>
 	<Company>W. Industries</Company>
