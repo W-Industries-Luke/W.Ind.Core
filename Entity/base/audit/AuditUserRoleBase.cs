@@ -1,9 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace W.Ind.Core.Entity;
+
+public abstract class AuditUserRoleBase 
+    : AuditUserRoleBase<User>, IAuditable;
+
+public abstract class AuditUserRoleBase<TUser> 
+    : AuditUserRoleBase<long, TUser>, IAuditable<TUser>
+    where TUser : UserBase<long>;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityUserRole{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
@@ -17,7 +23,9 @@ namespace W.Ind.Core.Entity;
 /// </para>
 /// </remarks>
 /// <typeparam name="TKey">The data type of your <c>User</c> and <c>Role</c> enties' Primary Key</typeparam>
-public abstract class AuditUserRoleBase<TKey> : IdentityUserRole<TKey>, IAuditable where TKey : IEquatable<TKey>
+public abstract class AuditUserRoleBase<TKey, TUser> 
+    : IdentityUserRole<TKey>, IAuditable<TKey, TUser>
+    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>
 {
     /// <summary>
     /// Derived from <see cref="IAuditable"/>
@@ -36,7 +44,7 @@ public abstract class AuditUserRoleBase<TKey> : IdentityUserRole<TKey>, IAuditab
     /// </remarks>
     [Required]
     [ForeignKey(nameof(CreatedBy))]
-    public long CreatedById { get; set; }
+    public TKey CreatedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -45,7 +53,7 @@ public abstract class AuditUserRoleBase<TKey> : IdentityUserRole<TKey>, IAuditab
     /// Defined with the [<see cref="DeleteBehaviorAttribute"/>] so there's no need to configure for each entity AND because its Foreign Key is <see langword="required"/>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
-    public User? CreatedBy { get; set; }
+    public TUser? CreatedBy { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -54,12 +62,13 @@ public abstract class AuditUserRoleBase<TKey> : IdentityUserRole<TKey>, IAuditab
     /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
     /// </remarks>
     [ForeignKey(nameof(ModifiedBy))]
-    public long? ModifiedById { get; set; }
+    public TKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
     /// </summary>
-    public User? ModifiedBy { get; set; }
+    [DeleteBehavior(DeleteBehavior.NoAction)]
+    public TUser? ModifiedBy { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>

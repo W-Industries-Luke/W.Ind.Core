@@ -1,16 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace W.Ind.Core.Entity;
+
+public abstract class AuditRoleClaimBase 
+    : AuditRoleClaimBase<User>, IAuditable, IEntity<int>;
+
+public abstract class AuditRoleClaimBase<TUser> 
+    : AuditRoleClaimBase<long, TUser>, IAuditable<TUser>, IEntity<int>
+    where TUser : UserBase<long>;
+
+public abstract class AuditRoleClaimBase<TRoleKey, TUser> 
+    : AuditRoleClaimBase<TRoleKey, TUser, TRoleKey>, IAuditable<TRoleKey, TUser>, IEntity<int>
+    where TRoleKey : IEquatable<TRoleKey> where TUser : UserBase<TRoleKey>;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityRoleClaim{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
 /// </summary>
 /// <remarks>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</remarks>
 /// <typeparam name="TRoleKey">The data type of your <c>Role</c> entity's Primary Key</typeparam>
-public abstract class AuditRoleClaimBase<TRoleKey>: IdentityRoleClaim<TRoleKey>, IAuditable where TRoleKey : IEquatable<TRoleKey>
+public abstract class AuditRoleClaimBase<TRoleKey, TUser, TUserKey> 
+    : IdentityRoleClaim<TRoleKey>, IAuditable<TUserKey, TUser>, IEntity<int> 
+    where TRoleKey : IEquatable<TRoleKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// Derived from <see cref="IAuditable"/>
@@ -29,7 +41,7 @@ public abstract class AuditRoleClaimBase<TRoleKey>: IdentityRoleClaim<TRoleKey>,
     /// </remarks>
     [Required]
     [ForeignKey(nameof(CreatedBy))]
-    public long CreatedById { get; set; }
+    public TUserKey CreatedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -38,7 +50,7 @@ public abstract class AuditRoleClaimBase<TRoleKey>: IdentityRoleClaim<TRoleKey>,
     /// Defined with the [<see cref="DeleteBehaviorAttribute"/>] so there's no need to configure for each entity AND because its Foreign Key is <see langword="required"/>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
-    public User? CreatedBy { get; set; }
+    public TUser? CreatedBy { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -47,12 +59,13 @@ public abstract class AuditRoleClaimBase<TRoleKey>: IdentityRoleClaim<TRoleKey>,
     /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
     /// </remarks>
     [ForeignKey(nameof(ModifiedBy))]
-    public long? ModifiedById { get; set; }
+    public TUserKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
     /// </summary>
-    public User? ModifiedBy { get; set; }
+    [DeleteBehavior(DeleteBehavior.NoAction)]
+    public TUser? ModifiedBy { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>

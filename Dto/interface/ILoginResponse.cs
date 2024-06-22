@@ -1,22 +1,24 @@
 ﻿namespace W.Ind.Core.Dto;
 
+public interface ILoginResponse : ILoginResponse<TokenResponse>;
+
 /// <summary>
 /// Base DTO <see langword="interface"/> containing response data from Login
 /// </summary>
 /// <remarks>
 /// Deriving from this <see langword="interface"/> allows you to return more data from a Login
 /// </remarks>
-public interface ILoginResponse
+public interface ILoginResponse<TTokenResponse> where TTokenResponse : ITokenResponse
 {
     /// <summary>
-    /// JSON Web Token value
+    /// JWT Access Token data
     /// </summary>
-    string? Token { get; set; }
+    TTokenResponse? AccessToken { get; set; }
 
     /// <summary>
-    /// JSON Web Token expiration date
+    /// JWT Refresh Token data
     /// </summary>
-    DateTime? Expires { get; set; }
+    TTokenResponse? RefreshToken { get; set; }
 
     /// <summary>
     /// Indicates whether or not the JSON Web Token was successfully generated
@@ -26,5 +28,12 @@ public interface ILoginResponse
     /// <summary>
     /// Indicates whether or not the User is currently locked out
     /// </summary>
-    public bool LockedOut { get; set; }
+    bool LockedOut { get; set; }
+
+    bool NotAllowed { get; set; }
+
+    /// <summary>
+    /// Indicates whether or not the login email/username exists on a User record
+    /// </summary>
+    bool NotFound { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,6 +6,12 @@ using System.Text;
 using W.Ind.Core.Config;
 
 namespace W.Ind.Core.Middleware;
+
+public abstract class JwtAccessBase : JwtAccessBase<JwtConfig>
+{
+    public JwtAccessBase(RequestDelegate next, JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) 
+        : base(next, jwtConfig, jwtInvalidator) { }
+}
 
 /// <summary>
 /// An extensible <see langword="abstract"/> base middleware <see langword="class"/> for handling JWT
@@ -120,7 +125,7 @@ public abstract class JwtAccessBase<TConfig> where TConfig : JwtConfig
     /// <returns>Treat as <see langword="void"/></returns>
     protected virtual async Task ProcessTokenAsync(HttpContext context)
     {
-        var token = context.GetBearerToken();
+        var token = context.GetAccessToken();
         if (token != null)
         {
             if (_jwtInvalidator.IsTokenInvalid(token)) 

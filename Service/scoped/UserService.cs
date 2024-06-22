@@ -4,6 +4,18 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace W.Ind.Core.Service;
 
+public class UserService : UserService<User>
+{
+    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService<User> jwtService, IHttpContextAccessor contextAccessor)
+        : base(userManager, signInManager, jwtService, contextAccessor) { }
+}
+
+public class UserService<TUser> : UserService<long, TUser> where TUser : UserBase<long>, new()
+{
+    public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser> jwtService, IHttpContextAccessor contextAccessor)
+        : base(userManager, signInManager, jwtService, contextAccessor) { }
+}
+
 /// <summary>
 /// A <see langword="class"/> derived from <see cref="UserServiceBase{TUser,TKey}"/> and <see cref="IUserService{TUser,TKey}"/> 
 /// </summary>
@@ -17,7 +29,9 @@ namespace W.Ind.Core.Service;
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserService<TUser, TKey> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public class UserService<TKey, TUser> 
+    : UserServiceBase<TKey, TUser>, IUserService<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
 {
     /// <summary>
     /// <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="HttpContext"/> within derived classes
@@ -55,7 +69,7 @@ public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserServi
     /// <param name="contextAccessor">
     /// <para><see cref="IHttpContextAccessor"/> instance</para>
     /// </param>
-    public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser, TKey> jwtService, IHttpContextAccessor contextAccessor) 
+    public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TKey, TUser> jwtService, IHttpContextAccessor contextAccessor) 
         : base(userManager, signInManager, jwtService)
     {
         _contextAccessor = contextAccessor;

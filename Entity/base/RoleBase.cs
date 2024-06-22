@@ -2,6 +2,8 @@
 
 namespace W.Ind.Core.Entity;
 
+public abstract class RoleBase : RoleBase<long>;
+
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that inherits from <see cref="IdentityRole{TKey}"/> 
 /// and <see cref="IEntity{TKey}"/> in order to define its own inheritable properties and reference generically

@@ -1,15 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace W.Ind.Core.Entity;
+
+public abstract class AuditRoleBase 
+    : AuditRoleBase<User>, IAuditable, IEntity;
+
+public abstract class AuditRoleBase<TUser> 
+    : AuditRoleBase<long, TUser>, IAuditable<long, TUser>, IEntity
+    where TUser : UserBase<long>;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="RoleBase{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
 /// </summary>
 /// <remarks>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</remarks>
 /// <typeparam name="TKey">The data type of its Primary Key</typeparam>
-public abstract class AuditRoleBase<TKey> : RoleBase<TKey>, IAuditable, IEntity<TKey> where TKey : IEquatable<TKey>
+public abstract class AuditRoleBase<TKey, TUser> 
+    : AuditRoleBase<TKey, TUser, TKey>, IAuditable<TKey, TUser>, IEntity<TKey>
+    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+
+public abstract class AuditRoleBase<TKey, TUser, TUserKey> 
+    : RoleBase<TKey>, IAuditable<TUserKey, TUser>, IEntity<TKey>
+    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// Derived from <see cref="IAuditable"/>
@@ -28,7 +40,7 @@ public abstract class AuditRoleBase<TKey> : RoleBase<TKey>, IAuditable, IEntity<
     /// </remarks>
     [Required]
     [ForeignKey(nameof(CreatedBy))]
-    public long CreatedById { get; set; }
+    public TUserKey CreatedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -37,7 +49,7 @@ public abstract class AuditRoleBase<TKey> : RoleBase<TKey>, IAuditable, IEntity<
     /// Defined with the [<see cref="DeleteBehaviorAttribute"/>] so there's no need to configure for each entity AND because its Foreign Key is <see langword="required"/>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
-    public User? CreatedBy { get; set; }
+    public TUser? CreatedBy { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -46,12 +58,13 @@ public abstract class AuditRoleBase<TKey> : RoleBase<TKey>, IAuditable, IEntity<
     /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
     /// </remarks>
     [ForeignKey(nameof(ModifiedBy))]
-    public long? ModifiedById { get; set; }
+    public TUserKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
     /// </summary>
-    public User? ModifiedBy { get; set; }
+    [DeleteBehavior(DeleteBehavior.NoAction)]
+    public TUser? ModifiedBy { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>
@@ -62,5 +75,4 @@ public abstract class AuditRoleBase<TKey> : RoleBase<TKey>, IAuditable, IEntity<
     /// Implemented from <see cref="IAuditable"/>
     /// </summary>
     public DateTime? ModifiedOn { get; set; }
-
 }

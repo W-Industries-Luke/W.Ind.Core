@@ -1,5 +1,9 @@
 ﻿namespace W.Ind.Core.Service;
 
+public interface IUserService : IUserService<User>;
+
+public interface IUserService<TUser> : IUserService<long, TUser> where TUser : UserBase<long>, new();
+
 /// <summary>
 /// A derived <see langword="interface"/> for an injectable (Scoped) Service
 /// </summary>
@@ -16,7 +20,9 @@
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public interface IUserService<TUser, TKey> : IUserServiceBase<TUser, TKey> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public interface IUserService<TKey, TUser> 
+    : IUserServiceBase<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
 {
     /// <summary>
     /// Gets the ID of the current user making this request

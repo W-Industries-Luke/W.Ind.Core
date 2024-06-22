@@ -4,6 +4,23 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace W.Ind.Core.Service;
 
+public class JwtService : JwtService<User>
+{
+    public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
+}
+
+public class JwtService<TUser> : JwtService<long, TUser> where TUser : UserBase<long>, new()
+{
+    public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
+}
+
+public class JwtService<TKey, TUser>
+    : JwtService<TKey, TUser, JwtConfig>
+    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>, new()
+{
+    public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
+}
+
 /// <summary>
 /// An injectible (scoped) service to handle JWT-related functions
 /// </summary>
@@ -20,7 +37,7 @@ namespace W.Ind.Core.Service;
 /// /// <typeparam name="TConfig">
 /// The <see langword="type"/> of your JWT Configuration Options DTO
 /// </typeparam>
-public class JwtService<TUser, TKey, TConfig> : JwtServiceBase<TUser, TKey, TConfig>, IJwtService<TUser, TKey> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey> where TConfig : JwtConfig
+public class JwtService<TKey, TUser, TConfig> : JwtServiceBase<TKey, TUser, TConfig>, IJwtService<TKey, TUser> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey> where TConfig : JwtConfig
 {
     /// <summary>
     /// A <see langword="protected"/> field containing the service reference for <see cref="IJwtInvalidator"/> (singleton)
@@ -41,28 +58,44 @@ public class JwtService<TUser, TKey, TConfig> : JwtServiceBase<TUser, TKey, TCon
     }
 
     /// <summary>
-    /// Generates a JSON Web Token for the given <typeparamref name="TUser"/>
+    /// Generates an Access Token for JWT validation with the given <typeparamref name="TUser"/>
     /// </summary>
     /// <remarks>
     /// <para>Expiration options being either 30 minutes or 30 days from <see cref="DateTime.UtcNow"/></para>
     /// <para>Use for login requests</para>
     /// </remarks>
-    /// <typeparam name="TLoginResponse">The return type (any derived instance of <see cref="ILoginResponse"/>)</typeparam>
+    /// <typeparam name="TTokenResponse">The return type (any derived instance of <see cref="ITokenResponse"/>)</typeparam>
     /// <param name="user">
     /// <para>An instance of the CLR <see langword="type"/> corresponding to your User entity/table</para> 
     /// <para>Ensure this <see langword="type"/> derives from <see cref="UserBase{TUser}"/></para>
     /// </param>
     /// <param name="rememberMe">If true, token expiration set for 30 days from now. Otherwise it defaults to 30 minutes.</param>
-    /// <returns>A derived instance of <see cref="ILoginResponse"/></returns>
+    /// <returns>A derived instance of <see cref="ITokenResponse"/></returns>
     /// <exception cref="ArgumentNullException">Thrown if the generated <see cref="JwtSecurityToken"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Thrown if the generated token is not of type <see cref="JwtSecurityToken"/></exception>
     /// <exception cref="Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException">Thrown if encryption fails for any reason</exception>
-    public virtual TLoginResponse GenerateToken<TLoginResponse>(TUser user, bool rememberMe = false) 
-        where TLoginResponse : class, ILoginResponse, new()
+    public virtual TTokenResponse GenerateAccessToken<TTokenResponse>(TUser user, DateTime expires) 
+        where TTokenResponse : ITokenResponse, new()
     {
-        DateTime expires = rememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddMinutes(30);
-        JwtSecurityToken token = ConfigureToken(user, expires);
-        return new TLoginResponse { Token = new JwtSecurityTokenHandler().WriteToken(token), Expires = expires, Success = true };
+        JwtSecurityToken token = ConfigureAccessToken(user, expires);
+
+        return new TTokenResponse { Token = new JwtSecurityTokenHandler().WriteToken(token), Expires = expires };
+    }
+
+    public virtual TokenResponse GenerateAccessToken(TUser user, DateTime expires)
+    {
+        return GenerateAccessToken<TokenResponse>(user, expires);
+    }
+
+    public virtual TTokenResponse GenerateRefreshToken<TTokenResponse>() 
+        where TTokenResponse : ITokenResponse, new()
+    {
+        return new TTokenResponse { Token = Guid.NewGuid().ToString(), Expires = DateTime.UtcNow.AddDays(7) };
+    }
+
+    public virtual TokenResponse GenerateRefreshToken() 
+    {
+        return GenerateRefreshToken<TokenResponse>();
     }
 
     /// <summary>
@@ -95,4 +128,8 @@ public class JwtService<TUser, TKey, TConfig> : JwtServiceBase<TUser, TKey, TCon
         }
         return true;
     }
+
+    public virtual bool UseBearerToken { get { return _jwtConfig.UseBearerToken; } }
+
+    public virtual bool UseRefreshToken { get { return _jwtConfig.UseRefreshToken; } }
 }

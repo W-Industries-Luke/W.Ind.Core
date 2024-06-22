@@ -11,6 +11,23 @@ namespace W.Ind.Core.Helper;
 /// </remarks>
 public static class ConfigurationHelper
 {
+    public static IServiceCollection ConfigureWicServices(this IServiceCollection services, JwtConfig config)
+    {
+        return services.ConfigureWicServices<User>(config);
+    }
+
+    public static IServiceCollection ConfigureWicServices<TUser>(this IServiceCollection services, JwtConfig config)
+        where TUser : UserBase<long>, new()
+    {
+        return services.ConfigureWicServices<long, TUser>(config);
+    }
+
+    public static IServiceCollection ConfigureWicServices<TKey, TUser>(this IServiceCollection services, JwtConfig config)
+        where TKey : IEquatable<TKey> where TUser : UserBase<TKey>, new()
+    {
+        return services.ConfigureWicServices<TKey, TUser, JwtConfig>(config);
+    }
+
     /// <summary>
     /// A <see langword="static"/> extension method used to configure <see cref="Core"/> services in one method
     /// </summary>
@@ -20,14 +37,14 @@ public static class ConfigurationHelper
     /// <param name="services"><c>builder.Services</c></param>
     /// <param name="config">An instance of <typeparamref name="TConfig"/> mapped from your Configuration file</param>
     /// <returns>The same <see cref="IServiceCollection"/> that called this method</returns>
-    public static IServiceCollection ConfigureWicServices<TConfig, TUser, TKey>(this IServiceCollection services, TConfig config) 
-        where TConfig : JwtConfig where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+    public static IServiceCollection ConfigureWicServices<TKey, TUser, TConfig>(this IServiceCollection services, TConfig config) 
+        where TConfig : JwtConfig where TKey : IEquatable<TKey> where TUser : UserBase<TKey>, new()
     {
         services.AddHttpContextAccessor();
         services.AddSingleton(config);
         services.AddSingleton<IJwtInvalidator, JwtInvalidator>();
-        services.AddScoped<IJwtService<TUser, TKey>, JwtService<TUser, TKey, TConfig>>();
-        services.AddScoped<IUserService<TUser, TKey>, UserService<TUser, TKey>>();
+        services.AddScoped<IJwtService<TKey, TUser>, JwtService<TKey, TUser, TConfig>>();
+        services.AddScoped<IUserService<TKey, TUser>, UserService<TKey, TUser>>();
         return services;
     }
 }

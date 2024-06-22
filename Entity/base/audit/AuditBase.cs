@@ -1,26 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
 namespace W.Ind.Core.Entity;
 
-public abstract class AuditUserClaimBase 
-    : AuditUserClaimBase<User>, IAuditable, IEntity<int>;
+public abstract class AuditBase 
+    : AuditBase<User>, IAuditable;
 
-public abstract class AuditUserClaimBase<TUser> 
-    : AuditUserClaimBase<long, TUser>, IAuditable<long, TUser>, IEntity<int>
+public abstract class AuditBase<TUser> 
+    : AuditBase<long, TUser>, IAuditable<TUser> 
     where TUser : UserBase<long>;
 
-/// <summary>
-/// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityUserClaim{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
-/// </summary>
-/// <remarks>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</remarks>
-/// <typeparam name="TUserKey">The data type of your <c>User</c> entity's Primary Key</typeparam>
-public abstract class AuditUserClaimBase<TUserKey, TUser> 
-    : IdentityUserClaim<TUserKey>, IAuditable<TUserKey, TUser>, IEntity<int> 
+public abstract class AuditBase<TUserKey, TUser> 
+    : IAuditable<TUserKey, TUser> 
     where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
-    /// <summary>
     /// Derived from <see cref="IAuditable"/>
     /// </summary>
     /// <remarks>

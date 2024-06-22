@@ -1,65 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace W.Ind.Core.Entity;
+
+public abstract class AuditEntityBase 
+    : AuditEntityBase<User>, IAuditable, IEntity;
+
+public abstract class AuditEntityBase<TUser> 
+    : AuditEntityBase<long, TUser>, IAuditable<TUser>, IEntity 
+    where TUser : UserBase<long>;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="EntityBase{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
 /// </summary>
 /// <remarks>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</remarks>
 /// <typeparam name="TKey">The data type of its Primary Key</typeparam>
-public abstract class AuditEntityBase<TKey> : EntityBase<TKey>, IAuditable, IEntity<TKey> where TKey : IEquatable<TKey>
+public abstract class AuditEntityBase<TKey, TUser> 
+    : AuditEntityBase<TKey, TUser, TKey>, IAuditable<TKey, TUser>, IEntity<TKey> 
+    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+
+public abstract class AuditEntityBase<TKey, TUser, TUserKey> 
+    : AuditBase<TUserKey, TUser>, IAuditable<TUserKey, TUser>, IEntity<TKey> 
+    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey> 
 {
-    /// <summary>
-    /// Derived from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="TimestampAttribute"/>] so there's no need to configure for each inheritting entity
-    /// </remarks>
-    [Timestamp]
-    public byte[] Timestamp { get; set; }
-
-    /// <summary>
-    /// Derived from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="RequiredAttribute"/>] and [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each inheritting entity
-    /// </remarks>
-    [Required]
-    [ForeignKey(nameof(CreatedBy))]
-    public long CreatedById { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="DeleteBehaviorAttribute"/>] so there's no need to configure for each entity AND because its Foreign Key is <see langword="required"/>
-    /// </remarks>
-    [DeleteBehavior(DeleteBehavior.NoAction)]
-    public User? CreatedBy { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
-    /// </remarks>
-    [ForeignKey(nameof(ModifiedBy))]
-    public long? ModifiedById { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    public User? ModifiedBy { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    public DateTime CreatedOn { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    public DateTime? ModifiedOn { get; set; }
+    [Key]
+    public TKey Id { get; set; }
 }

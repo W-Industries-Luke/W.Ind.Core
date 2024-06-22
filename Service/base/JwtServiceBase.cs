@@ -6,8 +6,23 @@ using System.Text;
 
 namespace W.Ind.Core.Service;
 
+public abstract class JwtServiceBase : JwtServiceBase<User>
+{
+    public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
+}
+
+public abstract class JwtServiceBase<TUser> : JwtServiceBase<long, TUser> where TUser : UserBase<long>
+{
+    public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
+}
+
+public abstract class JwtServiceBase<TKey, TUser> : JwtServiceBase<TKey, TUser, JwtConfig> where TUser : UserBase<TKey> where TKey : IEquatable<TKey>
+{
+    public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
+}
+
 /// <summary>
-/// <see langword="abstract"/> <see langword="class"/> implemented by <see cref="JwtService{TUser,TKey}"/>
+/// <see langword="abstract"/> <see langword="class"/> implemented by <see cref="JwtService{TUser, TKey, TConfig}"/>
 /// </summary>
 /// <remarks>
 /// <para>Contains <see langword="protected"/> instance methods that can be invoked in any derived <see langword="class"/></para>
@@ -23,24 +38,24 @@ namespace W.Ind.Core.Service;
 /// <typeparam name="TConfig">
 /// The <see langword="type"/> of your JWT Configuration Options DTO
 /// </typeparam>
-public abstract class JwtServiceBase<TUser, TKey, TConfig> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey> where TConfig : JwtConfig
+public abstract class JwtServiceBase<TKey, TUser, TConfig> where TUser : UserBase<TKey> where TKey : IEquatable<TKey> where TConfig : JwtConfig
 {
     /// <summary>
     /// Options for JWT mapped directly from the application's Configuration file
     /// </summary>
-    protected readonly JwtConfig _jwtConfig;
+    protected readonly TConfig _jwtConfig;
 
     /// <summary>
     /// Base constructor
     /// </summary>
     /// <param name="config">Mappped from Configuration and injected</param>
-    public JwtServiceBase(JwtConfig config) 
+    public JwtServiceBase(TConfig config) 
     {
         _jwtConfig = config;
     }
 
     /// <summary>
-    /// Configures and returns a new JSON Web Token
+    /// Configures and returns an Access Token for JWT validation
     /// </summary>
     /// <remarks>
     /// <para>
@@ -56,7 +71,7 @@ public abstract class JwtServiceBase<TUser, TKey, TConfig> where TUser : UserBas
     /// </param>
     /// <param name="expires">The expiration date to set</param>
     /// <returns>An instance of <see cref="JwtSecurityToken"/></returns>
-    protected virtual JwtSecurityToken ConfigureToken(TUser user, DateTime expires)
+    protected virtual JwtSecurityToken ConfigureAccessToken(TUser user, DateTime expires)
     {        
         Claim[] claims = GetUserClaims(user);
         
@@ -96,5 +111,4 @@ public abstract class JwtServiceBase<TUser, TKey, TConfig> where TUser : UserBas
 
         return claims;
     }
-
 }

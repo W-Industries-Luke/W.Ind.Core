@@ -102,6 +102,16 @@ public static class ContextHelper
         }
     }
 
+    public static void HandleAudit(this IEnumerable<EntityEntry<IAuditable>> entires, long currentUser)
+    {
+        entires.HandleAudit(currentUser);
+    }
+
+    public static void HandleAudit<TUser>(this IEnumerable<EntityEntry<IAuditable<long, TUser>>> entries, long currentUser) where TUser : UserBase<long>
+    {
+        entries.HandleAudit<long, TUser>(currentUser);
+    }
+
     /// <summary>
     /// A <see langword="static"/> method used to update the audit log fields provided by <see cref="IAuditable"/>.
     /// </summary>
@@ -121,7 +131,8 @@ public static class ContextHelper
     /// </remarks>
     /// <param name="entries"><see cref="ChangeTracker.Entries{IAuditable}()"/></param>
     /// <param name="currentUser"><see cref="UserService{TUser,TKey}.GetCurrent"/></param>
-    public static void HandleAudit(this IEnumerable<EntityEntry<IAuditable>> entries, long currentUser)
+    public static void HandleAudit<TKey, TUser>(this IEnumerable<EntityEntry<IAuditable<TKey, TUser>>> entries, TKey currentUser)
+        where TKey : IEquatable<TKey> where TUser : UserBase<TKey>
     {
         var now = DateTime.UtcNow;
 

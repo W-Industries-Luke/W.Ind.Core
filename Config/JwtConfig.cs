@@ -37,4 +37,8 @@ public class JwtConfig
     /// JWT Validate Issuer Signing Key value
     /// </summary>
     public bool ValidateIssuerSigningKey { get; set; } = false;
+
+    public bool UseBearerToken { get; set; } = true;
+
+    public bool UseRefreshToken { get; set; } = false;
 }

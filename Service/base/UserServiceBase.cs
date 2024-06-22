@@ -4,6 +4,19 @@ using W.Ind.Core.Dto;
 
 namespace W.Ind.Core.Service;
 
+public abstract class UserServiceBase : UserServiceBase<User>
+{
+    public UserServiceBase(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtService)
+    : base(userManager, signInManager, jwtService) { }
+
+}
+
+public abstract class UserServiceBase<TUser> : UserServiceBase<long, TUser> where TUser : UserBase<long>, new()
+{
+    public UserServiceBase(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser> jwtService)
+        : base(userManager, signInManager, jwtService) { }
+}
+
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> implemented by <see cref="UserService{TUser, TKey}"/>
 /// </summary>
@@ -17,7 +30,7 @@ namespace W.Ind.Core.Service;
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKey> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUser> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
 {
     /// <summary>
     /// A <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="UserManager{TUser}"/> within derived <see langword="class"/> implementation
@@ -30,9 +43,9 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
     protected readonly SignInManager<TUser> _signInManager;
 
     /// <summary>
-    /// A <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="IJwtService{TUser, TKey}"/> within derived <see langword="class"/> implementation
+    /// A <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="IJwtService{TKey, TUser}"/> within derived <see langword="class"/> implementation
     /// </summary>
-    protected readonly IJwtService<TUser, TKey> _jwtService;
+    protected readonly IJwtService<TKey, TUser> _jwtService;
 
     /// <summary>
     /// Base Constructor
@@ -62,43 +75,16 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
     /// </code>
     /// </example>
     /// </param>
-    public UserServiceBase(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser, TKey> jwtService)
+    public UserServiceBase(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TKey, TUser> jwtService)
     {
         _userManager = userManager;
         _jwtService = jwtService;
         _signInManager = signInManager;
     }
 
-    /// <summary>
-    /// An <see langword="async"/> method to validate if <paramref name="email"/> is unique to the system
-    /// </summary>
-    /// <remarks>
-    /// Will <see langword="throw"/> <see cref="ValidationException"/> or <see cref="ArgumentNullException"/> on fail
-    /// </remarks>
-    /// <param name="email">The email value to validate</param>
-    /// <returns>Treat as <see langword="void"/></returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="email"/> is <see langword="null"/></exception>
-    /// <exception cref="ValidationException">Thrown when <paramref name="email"/> is in use</exception>
-    public virtual async Task EnsureUniqueEmailAsync(string email)
+    public virtual async Task<IdentityResult> RegisterAsync(UserRegistration dto)
     {
-        if (String.IsNullOrWhiteSpace(email)) { throw new ArgumentNullException("Email is empty"); }
-        if (await _userManager.FindByEmailAsync(email) != null) { throw new ValidationException("Email in use"); }
-    }
-
-    /// <summary>
-    /// An <see langword="async"/> method to validate if <paramref name="name"/> is unique to the system
-    /// </summary>
-    /// <remarks>
-    /// Will <see langword="throw"/> <see cref="ValidationException"/> on fail
-    /// </remarks>
-    /// <param name="name">The UserName value to validate</param>
-    /// <returns>Treat as <see langword="void"/></returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/> is <see langword="null"/></exception>
-    /// <exception cref="ValidationException">Thrown when <paramref name="name"/> is in use</exception>
-    public virtual async Task EnsureUniqueNameAsync(string name)
-    {
-        if (String.IsNullOrWhiteSpace(name)) { throw new ArgumentNullException("UserName is empty"); }
-        if (await _userManager.FindByNameAsync(name) != null) { throw new ValidationException("UserName in use"); }
+        return await RegisterAsync<UserRegistration>(dto);
     }
 
     /// <summary>
@@ -117,9 +103,6 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
     /// <exception cref="ValidationException">Thrown when either the Email or UserName is taken</exception>
     public virtual async Task<IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) where TUserRegistration : class, IUserRegistration
     {
-        await EnsureUniqueEmailAsync(dto.Email);
-        await EnsureUniqueNameAsync(dto.UserName);
-
         IdentityResult result;
         TUser user = new TUser
         {
@@ -138,6 +121,25 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
         return result;
     }
 
+    public virtual async Task<LoginResponse> ValidateLoginAsync(LoginRequest dto)
+    {
+        var response = await ValidateLoginAsync<TokenResponse>(dto) as LoginResponse;
+
+        return response!;
+    }
+
+    public virtual async Task<LoginResponse<TTokenResponse>> ValidateLoginAsync<TTokenResponse>(LoginRequest dto)
+        where TTokenResponse : class, ITokenResponse, new()
+    {
+        return await ValidateLoginAsync<LoginResponse<TTokenResponse>, TTokenResponse>(dto);
+    }
+
+    public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginResponse, TTokenResponse>(LoginRequest dto)
+        where TLoginResponse : class, ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new()
+    {
+        return await ValidateLoginAsync<LoginRequest, TLoginResponse, TTokenResponse>(dto);
+    }
+
     /// <summary>
     /// An <see langword="async"/> method that validates a <typeparamref name="TLoginRequest"/>
     /// </summary>
@@ -151,8 +153,8 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
     /// <exception cref="ArgumentNullException">Thrown when UserName or Password is <see langword="null"/> or empty</exception>
     /// <exception cref="ObjectDisposedException">Thrown when the <see cref="_userManager"/> has already been disposed</exception>
     /// <exception cref="ValidationException">Thrown when the user has been locked out</exception>
-    public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse>(TLoginRequest dto)
-        where TLoginRequest : class, ILoginRequest where TLoginResponse : class, ILoginResponse, new()
+    public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse, TTokenResponse>(TLoginRequest dto)
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : ITokenResponse, new()
     {
         TLoginResponse response = new TLoginResponse();
         try
@@ -162,7 +164,7 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
             {
                 if (!await _userManager.IsLockedOutAsync(user))
                 {
-                    response = await ValidatePasswordAsync<TLoginRequest, TLoginResponse>(user, dto);
+                    response = await ValidatePasswordAsync<TLoginRequest, TLoginResponse, TTokenResponse>(user, dto);
                 }
                 else
                 {
@@ -170,6 +172,8 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
                 }
             }
 
+            response.NotFound = true;
+            
             return response;
         }
         catch (ArgumentNullException) { throw; }
@@ -188,8 +192,8 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
     /// <returns>A concrete <see langword="type"/> instance that matches <typeparamref name="TLoginResponse"/></returns>
     /// <exception cref="ObjectDisposedException">Thrown when the <see cref="_userManager"/> has already been disposed</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="user"/> is <see langword="null"/></exception>
-    protected virtual async Task<TLoginResponse> ValidatePasswordAsync<TLoginRequest, TLoginResponse>(TUser user, TLoginRequest dto)
-    where TLoginRequest : class, ILoginRequest where TLoginResponse : class, ILoginResponse, new()
+    protected virtual async Task<TLoginResponse> ValidatePasswordAsync<TLoginRequest, TLoginResponse, TTokenResponse>(TUser user, TLoginRequest dto)
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse: ITokenResponse, new()
     {
         SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
         TLoginResponse response = new TLoginResponse();
@@ -197,11 +201,28 @@ public abstract class UserServiceBase<TUser, TKey> : IUserServiceBase<TUser, TKe
         if (signInResult.Succeeded)
         {
             await _userManager.ResetAccessFailedCountAsync(user);
-            return _jwtService.GenerateToken<TLoginResponse>(user, dto.RememberMe);
+
+            response = new TLoginResponse { Success = true };
+
+            response.AccessToken = _jwtService.UseBearerToken ? _jwtService.GenerateAccessToken<TTokenResponse>(user, AccessTokenExpiration(dto.RememberMe)) : default(TTokenResponse?);
+            response.RefreshToken = _jwtService.UseRefreshToken ? _jwtService.GenerateRefreshToken<TTokenResponse>() : default(TTokenResponse?);
+
+            return response;
         }
 
+        response.NotAllowed = signInResult.IsNotAllowed;
         response.LockedOut = signInResult.IsLockedOut;
 
         return response;
     }
+
+    /// <summary>
+    /// A <see langword="protected"/> method for determining how long until the access token expires
+    /// </summary>
+    /// <remarks>
+    /// <see langword="override"/> this method to customize the possible expiration dates
+    /// </remarks>
+    /// <param name="rememberMe">The value of the <c>Remember Me</c> checkbox on login</param>
+    /// <returns>The <see cref="DateTime"/> representation of a new Access Token's expiration date</returns>
+    protected virtual DateTime AccessTokenExpiration(bool rememberMe) => rememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddMinutes(30);
 }

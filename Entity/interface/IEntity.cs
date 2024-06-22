@@ -1,5 +1,7 @@
 ﻿namespace W.Ind.Core.Entity;
 
+public interface IEntity : IEntity<long>;
+
 /// <summary>
 /// Base <see langword="inteface"/> implemented by non-join entity types to establish the type of its Primary Key
 /// </summary>

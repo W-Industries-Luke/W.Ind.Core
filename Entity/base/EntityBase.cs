@@ -2,6 +2,8 @@
 
 namespace W.Ind.Core.Entity;
 
+public abstract class EntityBase : EntityBase<long>;
+
 /// <summary>
 /// The base <see langword="abstract"/> <see langword="class"/> derived from <see cref="IEntity{TKey}"/> and implemented by all non-join entities
 /// </summary>
