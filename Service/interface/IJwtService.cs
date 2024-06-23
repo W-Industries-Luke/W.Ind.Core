@@ -21,7 +21,8 @@ public interface IJwtService<TUser>
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public interface IJwtService<TKey, TUser> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public interface IJwtService<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// Generates a JSON Web Token for the given <typeparamref name="TUser"/>

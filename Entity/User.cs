@@ -12,15 +12,15 @@
 /// </para>
 /// </remarks>
 public class User 
-    : User<User>, ISoftDelete, IAuditable, IEntity;
+    : User<User>, ISoftDelete, IAuditable, IEntity<long>;
 
 public class User<TUser> 
-    : User<long, TUser>, ISoftDelete, IAuditable<TUser>, IEntity 
+    : User<long, TUser>, ISoftDelete, IAuditable<TUser>, IEntity<long> 
     where TUser : UserBase<long>;
 
 public class User<TKey, TUser> 
     : AuditUserBase<TKey, TUser>, ISoftDelete, IAuditable<TKey, TUser>, IEntity<TKey>
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>
 {
     /// <summary>
     /// <para>Implemented from <see cref="ISoftDelete"/></para>

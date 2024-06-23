@@ -15,7 +15,9 @@ public class UserClaim : UserClaim<User>, ISoftDelete, IAuditable;
 
 public class UserClaim<TUser> : UserClaim<long, TUser> where TUser : UserBase<long>;
 
-public class UserClaim<TUserKey, TUser> : AuditUserClaimBase<TUserKey, TUser>, ISoftDelete where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey> 
+public class UserClaim<TUserKey, TUser> 
+    : AuditUserClaimBase<TUserKey, TUser>, ISoftDelete 
+    where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey> 
 {
     /// <summary>
     /// <para>

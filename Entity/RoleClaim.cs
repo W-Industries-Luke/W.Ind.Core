@@ -15,9 +15,13 @@ public class RoleClaim : RoleClaim<User>, ISoftDelete, IAuditable;
 
 public class RoleClaim<TUser>: RoleClaim<long, TUser>, ISoftDelete, IAuditable<long, TUser> where TUser : UserBase<long>;
 
-public class RoleClaim<TKey, TUser> : RoleClaim<TKey, TUser, TKey>, ISoftDelete, IAuditable<TKey, TUser> where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+public class RoleClaim<TKey, TUser> 
+    : RoleClaim<TKey, TUser, TKey>, ISoftDelete, IAuditable<TKey, TUser>
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
-public class RoleClaim<TKey, TUser, TUserKey> : AuditRoleClaimBase<TKey, TUser, TUserKey>, ISoftDelete, IAuditable<TUserKey, TUser> where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+public class RoleClaim<TKey, TUser, TUserKey> 
+    : AuditRoleClaimBase<TKey, TUser, TUserKey>, ISoftDelete, IAuditable<TUserKey, TUser> 
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// <para>

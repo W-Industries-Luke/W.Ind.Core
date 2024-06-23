@@ -4,13 +4,13 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace W.Ind.Core.Service;
 
-public class UserService : UserService<User>
+public class UserService : UserService<User>, IUserService
 {
     public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService<User> jwtService, IHttpContextAccessor contextAccessor)
         : base(userManager, signInManager, jwtService, contextAccessor) { }
 }
 
-public class UserService<TUser> : UserService<long, TUser> where TUser : UserBase<long>, new()
+public class UserService<TUser> : UserService<long, TUser>, IUserService<TUser> where TUser : UserBase<long>, new()
 {
     public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser> jwtService, IHttpContextAccessor contextAccessor)
         : base(userManager, signInManager, jwtService, contextAccessor) { }
@@ -31,7 +31,7 @@ public class UserService<TUser> : UserService<long, TUser> where TUser : UserBas
 /// </typeparam>
 public class UserService<TKey, TUser> 
     : UserServiceBase<TKey, TUser>, IUserService<TKey, TUser> 
-    where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="HttpContext"/> within derived classes

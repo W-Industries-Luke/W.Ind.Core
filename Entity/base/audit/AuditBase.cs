@@ -12,7 +12,7 @@ public abstract class AuditBase<TUser>
 
 public abstract class AuditBase<TUserKey, TUser> 
     : IAuditable<TUserKey, TUser> 
-    where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// Derived from <see cref="IAuditable"/>
     /// </summary>
@@ -40,15 +40,6 @@ public abstract class AuditBase<TUserKey, TUser>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public TUser? CreatedBy { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
-    /// </remarks>
-    [ForeignKey(nameof(ModifiedBy))]
-    public TUserKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>

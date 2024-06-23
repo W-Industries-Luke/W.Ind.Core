@@ -16,11 +16,11 @@ public abstract class AuditEntityBase<TUser>
 /// <typeparam name="TKey">The data type of its Primary Key</typeparam>
 public abstract class AuditEntityBase<TKey, TUser> 
     : AuditEntityBase<TKey, TUser, TKey>, IAuditable<TKey, TUser>, IEntity<TKey> 
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
 public abstract class AuditEntityBase<TKey, TUser, TUserKey> 
     : AuditBase<TUserKey, TUser>, IAuditable<TUserKey, TUser>, IEntity<TKey> 
-    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey> 
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey> 
 {
     [Key]
     public TKey Id { get; set; }

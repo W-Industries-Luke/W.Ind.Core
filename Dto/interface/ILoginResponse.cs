@@ -2,23 +2,9 @@
 
 public interface ILoginResponse : ILoginResponse<TokenResponse>;
 
-/// <summary>
-/// Base DTO <see langword="interface"/> containing response data from Login
-/// </summary>
-/// <remarks>
-/// Deriving from this <see langword="interface"/> allows you to return more data from a Login
-/// </remarks>
-public interface ILoginResponse<TTokenResponse> where TTokenResponse : ITokenResponse
+public interface ILoginResponse<TTokenResponse>
 {
-    /// <summary>
-    /// JWT Access Token data
-    /// </summary>
-    TTokenResponse? AccessToken { get; set; }
-
-    /// <summary>
-    /// JWT Refresh Token data
-    /// </summary>
-    TTokenResponse? RefreshToken { get; set; }
+    List<TTokenResponse> Tokens { get; set; }
 
     /// <summary>
     /// Indicates whether or not the JSON Web Token was successfully generated

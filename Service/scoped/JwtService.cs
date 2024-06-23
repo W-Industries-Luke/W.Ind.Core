@@ -4,19 +4,21 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace W.Ind.Core.Service;
 
-public class JwtService : JwtService<User>
+public class JwtService : JwtService<User>, IJwtService
 {
     public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
 }
 
-public class JwtService<TUser> : JwtService<long, TUser> where TUser : UserBase<long>, new()
+public class JwtService<TUser> 
+    : JwtService<long, TUser>, IJwtService<TUser>
+    where TUser : UserBase<long>, new()
 {
     public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
 }
 
 public class JwtService<TKey, TUser>
-    : JwtService<TKey, TUser, JwtConfig>
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>, new()
+    : JwtService<TKey, TUser, JwtConfig>, IJwtService<TKey, TUser>
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
 {
     public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
 }
@@ -37,7 +39,9 @@ public class JwtService<TKey, TUser>
 /// /// <typeparam name="TConfig">
 /// The <see langword="type"/> of your JWT Configuration Options DTO
 /// </typeparam>
-public class JwtService<TKey, TUser, TConfig> : JwtServiceBase<TKey, TUser, TConfig>, IJwtService<TKey, TUser> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey> where TConfig : JwtConfig
+public class JwtService<TKey, TUser, TConfig> 
+    : JwtServiceBase<TKey, TUser, TConfig>, IJwtService<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey> where TConfig : JwtConfig
 {
     /// <summary>
     /// A <see langword="protected"/> field containing the service reference for <see cref="IJwtInvalidator"/> (singleton)
@@ -79,7 +83,7 @@ public class JwtService<TKey, TUser, TConfig> : JwtServiceBase<TKey, TUser, TCon
     {
         JwtSecurityToken token = ConfigureAccessToken(user, expires);
 
-        return new TTokenResponse { Token = new JwtSecurityTokenHandler().WriteToken(token), Expires = expires };
+        return new TTokenResponse { Token = new JwtSecurityTokenHandler().WriteToken(token), Expires = expires, TokenType = Enum.TokenTypes.Access };
     }
 
     public virtual TokenResponse GenerateAccessToken(TUser user, DateTime expires)
@@ -90,7 +94,7 @@ public class JwtService<TKey, TUser, TConfig> : JwtServiceBase<TKey, TUser, TCon
     public virtual TTokenResponse GenerateRefreshToken<TTokenResponse>() 
         where TTokenResponse : ITokenResponse, new()
     {
-        return new TTokenResponse { Token = Guid.NewGuid().ToString(), Expires = DateTime.UtcNow.AddDays(7) };
+        return new TTokenResponse { Token = Guid.NewGuid().ToString(), Expires = DateTime.UtcNow.AddDays(7), TokenType = Enum.TokenTypes.Refresh };
     }
 
     public virtual TokenResponse GenerateRefreshToken() 

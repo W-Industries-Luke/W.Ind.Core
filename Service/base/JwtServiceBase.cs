@@ -6,17 +6,22 @@ using System.Text;
 
 namespace W.Ind.Core.Service;
 
-public abstract class JwtServiceBase : JwtServiceBase<User>
+public abstract class JwtServiceBase 
+    : JwtServiceBase<User>
 {
     public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
 }
 
-public abstract class JwtServiceBase<TUser> : JwtServiceBase<long, TUser> where TUser : UserBase<long>
+public abstract class JwtServiceBase<TUser> 
+    : JwtServiceBase<long, TUser> 
+    where TUser : UserBase<long>
 {
     public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
 }
 
-public abstract class JwtServiceBase<TKey, TUser> : JwtServiceBase<TKey, TUser, JwtConfig> where TUser : UserBase<TKey> where TKey : IEquatable<TKey>
+public abstract class JwtServiceBase<TKey, TUser> 
+    : JwtServiceBase<TKey, TUser, JwtConfig> 
+    where TUser : UserBase<TKey> where TKey : struct, IEquatable<TKey>
 {
     public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
 }
@@ -38,7 +43,8 @@ public abstract class JwtServiceBase<TKey, TUser> : JwtServiceBase<TKey, TUser, 
 /// <typeparam name="TConfig">
 /// The <see langword="type"/> of your JWT Configuration Options DTO
 /// </typeparam>
-public abstract class JwtServiceBase<TKey, TUser, TConfig> where TUser : UserBase<TKey> where TKey : IEquatable<TKey> where TConfig : JwtConfig
+public abstract class JwtServiceBase<TKey, TUser, TConfig> 
+    where TUser : UserBase<TKey> where TKey : struct, IEquatable<TKey> where TConfig : JwtConfig
 {
     /// <summary>
     /// Options for JWT mapped directly from the application's Configuration file

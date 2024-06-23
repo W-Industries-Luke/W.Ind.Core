@@ -15,9 +15,9 @@ namespace W.Ind.Core.Entity;
 /// Derive from this <see langword="interface"/> for further customization
 /// </para>
 /// </remarks>
-public interface IAuditable : IAuditable<User>;
+public interface IAuditable : IAuditable<User>, IAuditable<long, User>;
 
-public interface IAuditable<TUser> : IAuditable<long, TUser> where TUser : UserBase<long> { }
+public interface IAuditable<TUser> : IAuditable<long, TUser> where TUser : UserBase<long>;
 
 
 /// <summary>
@@ -34,7 +34,7 @@ public interface IAuditable<TUser> : IAuditable<long, TUser> where TUser : UserB
 /// </remarks>
 /// <typeparam name="TUser">User entity <see langword="type"/> (derives from <see cref="UserBase{TKey}"/>)</typeparam>
 /// <typeparam name="TKey">The Primary Key <see langword="type"/> of <typeparamref name="TUser"/></typeparam>
-public interface IAuditable<TKey, TUser> where TKey : IEquatable<TKey> where TUser : UserBase<TKey>
+public interface IAuditable<TKey, TUser> where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>
 {
     /// <summary>
     /// The <see cref="DateTime"/> value representing when this entity was initially saved
@@ -58,6 +58,8 @@ public interface IAuditable<TKey, TUser> where TKey : IEquatable<TKey> where TUs
     /// Within your <see cref="DbContext.OnModelCreating(ModelBuilder)"/> method for each entity individually
     /// </para>
     /// </remarks>
+    [Required]
+    [ForeignKey(nameof(CreatedBy))]
     TKey CreatedById { get; set; }
 
     /// <summary>
@@ -71,9 +73,11 @@ public interface IAuditable<TKey, TUser> where TKey : IEquatable<TKey> where TUs
     /// If you want it non-nullable, you must at least specify the <see cref="DeleteBehavior"/> before migration
     /// </para>
     /// </remarks>
+    [DeleteBehavior(DeleteBehavior.NoAction)]
     TUser? CreatedBy { get; set; }
 
-    TKey? ModifiedById { get; set; }
+    //[ForeignKey(nameof(ModifiedBy))]
+    //TKey? ModifiedById { get; set; }
 
     /// <summary>
     /// The navigation property pointing to the <typeparamref name="TUser"/> who last updated this record
@@ -86,6 +90,7 @@ public interface IAuditable<TKey, TUser> where TKey : IEquatable<TKey> where TUs
     /// If you want it non-nullable, you must at least specify the <see cref="DeleteBehavior"/> before migration
     /// </para>
     /// </remarks>
+    [DeleteBehavior(DeleteBehavior.NoAction)]
     TUser? ModifiedBy { get; set; }
 
     /// <summary>
@@ -102,5 +107,6 @@ public interface IAuditable<TKey, TUser> where TKey : IEquatable<TKey> where TUs
     /// Within your <see cref="DbContext.OnModelCreating(ModelBuilder)"/> method for each entity individually
     /// </para>
     /// </remarks>
+    [Timestamp]
     byte[] Timestamp { get; set; }
 }

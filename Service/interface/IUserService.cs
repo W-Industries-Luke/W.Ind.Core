@@ -22,7 +22,7 @@ public interface IUserService<TUser> : IUserService<long, TUser> where TUser : U
 /// </typeparam>
 public interface IUserService<TKey, TUser> 
     : IUserServiceBase<TKey, TUser> 
-    where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// Gets the ID of the current user making this request

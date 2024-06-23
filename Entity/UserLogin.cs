@@ -12,7 +12,7 @@ public class UserLogin : UserLogin<long>, ISoftDelete;
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class UserLogin<TKey> : IdentityUserLogin<TKey>, ISoftDelete where TKey : IEquatable<TKey>
+public class UserLogin<TKey> : IdentityUserLogin<TKey>, ISoftDelete where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// <para>

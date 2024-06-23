@@ -13,7 +13,7 @@ public abstract class AuditRoleClaimBase<TUser>
 
 public abstract class AuditRoleClaimBase<TRoleKey, TUser> 
     : AuditRoleClaimBase<TRoleKey, TUser, TRoleKey>, IAuditable<TRoleKey, TUser>, IEntity<int>
-    where TRoleKey : IEquatable<TRoleKey> where TUser : UserBase<TRoleKey>;
+    where TRoleKey : struct, IEquatable<TRoleKey> where TUser : UserBase<TRoleKey>;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityRoleClaim{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
@@ -22,7 +22,7 @@ public abstract class AuditRoleClaimBase<TRoleKey, TUser>
 /// <typeparam name="TRoleKey">The data type of your <c>Role</c> entity's Primary Key</typeparam>
 public abstract class AuditRoleClaimBase<TRoleKey, TUser, TUserKey> 
     : IdentityRoleClaim<TRoleKey>, IAuditable<TUserKey, TUser>, IEntity<int> 
-    where TRoleKey : IEquatable<TRoleKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TRoleKey : struct, IEquatable<TRoleKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// Derived from <see cref="IAuditable"/>
@@ -51,15 +51,6 @@ public abstract class AuditRoleClaimBase<TRoleKey, TUser, TUserKey>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public TUser? CreatedBy { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
-    /// </remarks>
-    [ForeignKey(nameof(ModifiedBy))]
-    public TUserKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>

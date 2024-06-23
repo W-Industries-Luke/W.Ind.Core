@@ -12,11 +12,11 @@ public abstract class AuditRefreshTokenBase<TUser>
 
 public abstract class AuditRefreshTokenBase<TKey, TUser> 
     : AuditRefreshTokenBase<TKey, TUser, TKey>, IAuditable<TKey, TUser>, IEntity<TKey>
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
 public abstract class AuditRefreshTokenBase<TKey, TUser, TUserKey> 
     : AuditEntityBase<TKey, TUser, TUserKey>, IAuditable<TUserKey, TUser>, IEntity<TKey>
-    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// The <see langword="string"/> token value

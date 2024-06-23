@@ -20,11 +20,11 @@ public class Role<TUser>
 
 public class Role<TKey, TUser> 
     : Role<TKey, TUser, TKey>, ISoftDelete, IAuditable<TKey, TUser>, IEntity<TKey> 
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
 public class Role<TKey, TUser, TUserKey> 
     : AuditRoleBase<TKey, TUser, TUserKey>, ISoftDelete, IAuditable<TUserKey, TUser> , IEntity<TKey> 
-    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// <para>Implemented from <see cref="ISoftDelete"/></para>

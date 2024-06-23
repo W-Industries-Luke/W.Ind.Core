@@ -1,24 +1,23 @@
 ﻿namespace W.Ind.Core.Dto;
 
-public class LoginResponse : LoginResponse<TokenResponse>, ILoginResponse<TokenResponse>;
-
 /// <summary>
 /// Concrete DTO <see langword="class"/> containing response data from Login
 /// </summary>
 /// <remarks>
 /// Deriving from this <see langword="class"/> allows you to return more data from a Login
 /// </remarks>
-public class LoginResponse<TTokenResponse>: ILoginResponse<TTokenResponse> where TTokenResponse : ITokenResponse, new()
+public class LoginResponse : LoginResponse<TokenResponse>, ILoginResponse, ILoginResponse<TokenResponse> 
 {
-    /// <summary>
-    /// References a JWT Access Token value with expiration
-    /// </summary>
-    public TTokenResponse? AccessToken { get; set; }
+    public static LoginResponse FromGenericType(LoginResponse<TokenResponse> dto)
+    {
+        return new LoginResponse { Success = dto.Success, LockedOut = dto.LockedOut, NotAllowed = dto.NotAllowed, NotFound = dto.NotFound, Tokens = dto.Tokens };
+    }
+}
 
-    /// <summary>
-    /// References a JWT Refresh Token value with expiration
-    /// </summary>
-    public TTokenResponse? RefreshToken { get; set; }
+public class LoginResponse<TTokenResponse> : ILoginResponse<TTokenResponse> 
+    where TTokenResponse : ITokenResponse, new()
+{
+    public List<TTokenResponse> Tokens { get; set; } = new List<TTokenResponse>();
 
     /// <summary>
     /// Indicates whether or not the JSON Web Token was successfully generated

@@ -12,4 +12,4 @@ public abstract class UserBase : UserBase<long>;
 /// Extend this <see langword="class"/> to add custom columns to your <c>Users</c> table
 /// </remarks>
 /// <typeparam name="TKey">The data type of its Primary Key</typeparam>
-public abstract class UserBase<TKey> : IdentityUser<TKey>, IEntity<TKey> where TKey : IEquatable<TKey> { }
+public abstract class UserBase<TKey> : IdentityUser<TKey>, IEntity<TKey> where TKey : struct, IEquatable<TKey> { }

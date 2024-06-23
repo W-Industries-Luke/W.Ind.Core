@@ -17,11 +17,11 @@ public abstract class AuditRoleBase<TUser>
 /// <typeparam name="TKey">The data type of its Primary Key</typeparam>
 public abstract class AuditRoleBase<TKey, TUser> 
     : AuditRoleBase<TKey, TUser, TKey>, IAuditable<TKey, TUser>, IEntity<TKey>
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey>;
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
 public abstract class AuditRoleBase<TKey, TUser, TUserKey> 
     : RoleBase<TKey>, IAuditable<TUserKey, TUser>, IEntity<TKey>
-    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// Derived from <see cref="IAuditable"/>
@@ -50,15 +50,6 @@ public abstract class AuditRoleBase<TKey, TUser, TUserKey>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public TUser? CreatedBy { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
-    /// </remarks>
-    [ForeignKey(nameof(ModifiedBy))]
-    public TUserKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>

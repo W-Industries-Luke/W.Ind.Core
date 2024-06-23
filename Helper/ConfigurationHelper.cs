@@ -13,17 +13,23 @@ public static class ConfigurationHelper
 {
     public static IServiceCollection ConfigureWicServices(this IServiceCollection services, JwtConfig config)
     {
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IJwtService, JwtService>();
+        
         return services.ConfigureWicServices<User>(config);
     }
 
     public static IServiceCollection ConfigureWicServices<TUser>(this IServiceCollection services, JwtConfig config)
         where TUser : UserBase<long>, new()
     {
+        services.AddScoped<IJwtService<TUser>, JwtService<TUser>>();
+        services.AddScoped<IUserService<TUser>, UserService<TUser>>();
+        
         return services.ConfigureWicServices<long, TUser>(config);
     }
 
     public static IServiceCollection ConfigureWicServices<TKey, TUser>(this IServiceCollection services, JwtConfig config)
-        where TKey : IEquatable<TKey> where TUser : UserBase<TKey>, new()
+        where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
     {
         return services.ConfigureWicServices<TKey, TUser, JwtConfig>(config);
     }
@@ -38,13 +44,15 @@ public static class ConfigurationHelper
     /// <param name="config">An instance of <typeparamref name="TConfig"/> mapped from your Configuration file</param>
     /// <returns>The same <see cref="IServiceCollection"/> that called this method</returns>
     public static IServiceCollection ConfigureWicServices<TKey, TUser, TConfig>(this IServiceCollection services, TConfig config) 
-        where TConfig : JwtConfig where TKey : IEquatable<TKey> where TUser : UserBase<TKey>, new()
+        where TConfig : JwtConfig where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
     {
         services.AddHttpContextAccessor();
         services.AddSingleton(config);
         services.AddSingleton<IJwtInvalidator, JwtInvalidator>();
+
         services.AddScoped<IJwtService<TKey, TUser>, JwtService<TKey, TUser, TConfig>>();
         services.AddScoped<IUserService<TKey, TUser>, UserService<TKey, TUser>>();
+        
         return services;
     }
 }

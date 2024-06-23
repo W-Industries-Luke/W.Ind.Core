@@ -18,7 +18,7 @@ public abstract class AuditUserClaimBase<TUser>
 /// <typeparam name="TUserKey">The data type of your <c>User</c> entity's Primary Key</typeparam>
 public abstract class AuditUserClaimBase<TUserKey, TUser> 
     : IdentityUserClaim<TUserKey>, IAuditable<TUserKey, TUser>, IEntity<int> 
-    where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// Derived from <see cref="IAuditable"/>
@@ -47,15 +47,6 @@ public abstract class AuditUserClaimBase<TUserKey, TUser>
     /// </remarks>
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public TUser? CreatedBy { get; set; }
-
-    /// <summary>
-    /// Implemented from <see cref="IAuditable"/>
-    /// </summary>
-    /// <remarks>
-    /// Defined with the [<see cref="ForeignKeyAttribute"/>] so there's no need to configure for each entity
-    /// </remarks>
-    [ForeignKey(nameof(ModifiedBy))]
-    public TUserKey? ModifiedById { get; set; }
 
     /// <summary>
     /// Implemented from <see cref="IAuditable"/>

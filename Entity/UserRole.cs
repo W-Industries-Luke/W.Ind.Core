@@ -19,7 +19,7 @@ public class UserRole<TUser>
 /// </remarks>
 public class UserRole<TKey, TUser> 
     : AuditUserRoleBase<TKey, TUser>, ISoftDelete, IAuditable<TKey, TUser>, IJoinTable
-    where TKey : IEquatable<TKey> where TUser : UserBase<TKey> 
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey> 
 {
     /// <summary>
     /// <para>

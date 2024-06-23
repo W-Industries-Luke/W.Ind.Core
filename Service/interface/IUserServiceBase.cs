@@ -16,7 +16,8 @@ public interface IUserServiceBase<TUser> : IUserServiceBase<long, TUser> where T
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public interface IUserServiceBase<TKey, TUser> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public interface IUserServiceBase<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
     Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterAsync(UserRegistration dto);
 
@@ -34,9 +35,16 @@ public interface IUserServiceBase<TKey, TUser> where TUser : UserBase<TKey>, new
     /// <exception cref="ArgumentNullException">Thrown when either the Email or Password is <see langword="null"/></exception>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="Microsoft.AspNetCore.Identity.UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when either the Email or UserName is taken</exception>
-    Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) where TUserRegistration : class, IUserRegistration;
+    Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) 
+        where TUserRegistration : class, IUserRegistration;
 
     Task<LoginResponse> ValidateLoginAsync(LoginRequest dto);
+
+    Task<LoginResponse<TTokenResponse>> ValidateLoginAsync<TTokenResponse>(LoginRequest dto)
+        where TTokenResponse : class, ITokenResponse, new();
+
+    Task<TLoginResponse> ValidateLoginAsync<TLoginResponse, TTokenResponse>(LoginRequest dto)
+        where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new();
 
     /// <summary>
     /// An <see langword="async"/> method that validates a <typeparamref name="TLoginRequest"/>
@@ -52,5 +60,5 @@ public interface IUserServiceBase<TKey, TUser> where TUser : UserBase<TKey>, new
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="Microsoft.AspNetCore.Identity.UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the user has been locked out</exception>
     Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse, TTokenResponse>(TLoginRequest dto)
-        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : ITokenResponse, new();
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new();
 }

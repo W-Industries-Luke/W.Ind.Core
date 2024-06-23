@@ -30,7 +30,9 @@ public abstract class UserServiceBase<TUser> : UserServiceBase<long, TUser> wher
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUser> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public abstract class UserServiceBase<TKey, TUser> 
+    : IUserServiceBase<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// A <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="UserManager{TUser}"/> within derived <see langword="class"/> implementation
@@ -123,9 +125,9 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
 
     public virtual async Task<LoginResponse> ValidateLoginAsync(LoginRequest dto)
     {
-        var response = await ValidateLoginAsync<TokenResponse>(dto) as LoginResponse;
+        LoginResponse<TokenResponse> response = await ValidateLoginAsync<TokenResponse>(dto);
 
-        return response!;
+        return LoginResponse.FromGenericType(response);
     }
 
     public virtual async Task<LoginResponse<TTokenResponse>> ValidateLoginAsync<TTokenResponse>(LoginRequest dto)
@@ -135,7 +137,7 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
     }
 
     public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginResponse, TTokenResponse>(LoginRequest dto)
-        where TLoginResponse : class, ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new()
+        where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new()
     {
         return await ValidateLoginAsync<LoginRequest, TLoginResponse, TTokenResponse>(dto);
     }
@@ -154,7 +156,7 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
     /// <exception cref="ObjectDisposedException">Thrown when the <see cref="_userManager"/> has already been disposed</exception>
     /// <exception cref="ValidationException">Thrown when the user has been locked out</exception>
     public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse, TTokenResponse>(TLoginRequest dto)
-        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : ITokenResponse, new()
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new()
     {
         TLoginResponse response = new TLoginResponse();
         try
@@ -170,6 +172,8 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
                 {
                     response = new TLoginResponse { LockedOut = true };
                 }
+
+                return response;
             }
 
             response.NotFound = true;
@@ -180,6 +184,17 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
         catch (ObjectDisposedException) { throw; }
         catch (ValidationException) { throw; }
         catch (Exception) { throw; }
+    }
+
+    protected virtual async Task<LoginResponse> ValidatePasswordAsync(TUser user, LoginRequest dto)
+    {
+        return await ValidatePasswordAsync<LoginRequest, LoginResponse>(user, dto);
+    }
+
+    protected virtual async Task<TLoginResponse> ValidatePasswordAsync<TLoginRequest, TLoginResponse>(TUser user, TLoginRequest dto)
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse, new()
+    {
+        return await ValidatePasswordAsync<TLoginRequest, TLoginResponse, TokenResponse>(user, dto);
     }
 
     /// <summary>
@@ -193,7 +208,7 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
     /// <exception cref="ObjectDisposedException">Thrown when the <see cref="_userManager"/> has already been disposed</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="user"/> is <see langword="null"/></exception>
     protected virtual async Task<TLoginResponse> ValidatePasswordAsync<TLoginRequest, TLoginResponse, TTokenResponse>(TUser user, TLoginRequest dto)
-        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse: ITokenResponse, new()
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new()
     {
         SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
         TLoginResponse response = new TLoginResponse();
@@ -204,8 +219,17 @@ public abstract class UserServiceBase<TKey, TUser> : IUserServiceBase<TKey, TUse
 
             response = new TLoginResponse { Success = true };
 
-            response.AccessToken = _jwtService.UseBearerToken ? _jwtService.GenerateAccessToken<TTokenResponse>(user, AccessTokenExpiration(dto.RememberMe)) : default(TTokenResponse?);
-            response.RefreshToken = _jwtService.UseRefreshToken ? _jwtService.GenerateRefreshToken<TTokenResponse>() : default(TTokenResponse?);
+            if (_jwtService.UseBearerToken)
+            {
+                var bearerToken = _jwtService.GenerateAccessToken<TTokenResponse>(user, AccessTokenExpiration(dto.RememberMe));
+                response.Tokens.Add(bearerToken);
+            }
+
+            if (_jwtService.UseRefreshToken)
+            {
+                var refreshToken = _jwtService.GenerateRefreshToken<TTokenResponse>();
+                response.Tokens.Add(refreshToken);
+            }
 
             return response;
         }

@@ -38,7 +38,7 @@ public abstract class RefreshTokenBase<TUser>
 /// <typeparam name="TUser">The <see langword="type"/> of your User entity (PK <see langword="type"/> of <see cref="long"/>)</typeparam>
 public abstract class RefreshTokenBase<TKey, TUser>
     : RefreshTokenBase<TKey, TUser, TKey>, IEntity<TKey> 
-    where TKey: IEquatable<TKey> where TUser : UserBase<TKey>;
+    where TKey: struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
 /// <summary>
 /// Defines a refresh token entity <see langword="class"/> where the Refresh Token's Primary Key <see langword="type"/> doesn't match your User entity's Primary key <see langword="type"/>
@@ -53,7 +53,7 @@ public abstract class RefreshTokenBase<TKey, TUser>
 /// <typeparam name="TUserKey">The Primary Key <see langword="type"/> of the User entity</typeparam>
 public abstract class RefreshTokenBase<TKey, TUser, TUserKey> 
     : EntityBase<TKey>, IEntity<TKey> 
-    where TKey : IEquatable<TKey> where TUserKey : IEquatable<TUserKey> where TUser : UserBase<TUserKey>
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// The <see langword="string"/> token value

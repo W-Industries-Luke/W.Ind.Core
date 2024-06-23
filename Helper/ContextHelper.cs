@@ -10,6 +10,25 @@ namespace W.Ind.Core.Helper;
 /// </summary>
 public static class ContextHelper
 {
+    public static EntityTypeBuilder<TEntity> ConfigureAudit<TEntity>(this EntityTypeBuilder<TEntity> builder, string tableName = "", TemporalConfig? config = null)
+        where TEntity : class, IAuditable, new()
+    {
+        return builder.ConfigureAudit<TEntity, User>(tableName, config);
+    }
+
+    public static EntityTypeBuilder<TEntity> ConfigureAudit<TEntity, TUser>(this EntityTypeBuilder<TEntity> builder, string tableName = "", TemporalConfig? config = null)
+        where TEntity : class, IAuditable<TUser>, new() where TUser : UserBase<long>, new()
+    {
+        return builder.ConfigureAudit<TEntity, TUser, long>(tableName, config);
+    }
+
+    public static EntityTypeBuilder<TEntity> ConfigureAudit<TEntity, TUser, TKey>(this EntityTypeBuilder<TEntity> builder, string tableName = "", TemporalConfig? config = null)
+        where TEntity : class, IAuditable<TKey, TUser>, new() where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
+    {
+        new AuditConfiguration<TEntity, TUser, TKey>(tableName, config).Configure(builder);
+        return builder;
+    }
+
     /// <summary>
     /// A <see langword="static"/> method that configures a temporal table based off generic type <typeparamref name="TEntity"/>.
     /// </summary>
@@ -102,14 +121,16 @@ public static class ContextHelper
         }
     }
 
-    public static void HandleAudit(this IEnumerable<EntityEntry<IAuditable>> entires, long currentUser)
+    public static void HandleAudit<TAuditable>(this IEnumerable<EntityEntry<TAuditable>> entries, long currentUser)
+        where TAuditable : class, IAuditable<long, User>
     {
-        entires.HandleAudit(currentUser);
+        entries.HandleAudit<TAuditable, User>(currentUser);
     }
 
-    public static void HandleAudit<TUser>(this IEnumerable<EntityEntry<IAuditable<long, TUser>>> entries, long currentUser) where TUser : UserBase<long>
+    public static void HandleAudit<TAuditable, TUser>(this IEnumerable<EntityEntry<TAuditable>> entries, long currentUser)
+        where TUser : UserBase<long> where TAuditable : class, IAuditable<long, TUser>
     {
-        entries.HandleAudit<long, TUser>(currentUser);
+        entries.HandleAudit<TAuditable, long, TUser>(currentUser);
     }
 
     /// <summary>
@@ -131,8 +152,8 @@ public static class ContextHelper
     /// </remarks>
     /// <param name="entries"><see cref="ChangeTracker.Entries{IAuditable}()"/></param>
     /// <param name="currentUser"><see cref="UserService{TUser,TKey}.GetCurrent"/></param>
-    public static void HandleAudit<TKey, TUser>(this IEnumerable<EntityEntry<IAuditable<TKey, TUser>>> entries, TKey currentUser)
-        where TKey : IEquatable<TKey> where TUser : UserBase<TKey>
+    public static void HandleAudit<TAuditable, TKey, TUser>(this IEnumerable<EntityEntry<TAuditable>> entries, TKey currentUser)
+        where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey> where TAuditable : class, IAuditable<TKey, TUser>
     {
         var now = DateTime.UtcNow;
 
@@ -142,7 +163,7 @@ public static class ContextHelper
             {
                 case EntityState.Modified:
                     entry.Entity.ModifiedOn = now;
-                    entry.Entity.ModifiedById = currentUser;
+                    entry.Property<TKey>("ModifiedById").CurrentValue = currentUser;
                     break;
                 case EntityState.Added:
                     entry.Entity.CreatedOn = now;
@@ -225,7 +246,7 @@ public static class ContextHelper
     /// <param name="key"><see langword="string"/> instance of a Primary Key value</param>
     /// <returns></returns>
     /// <exception cref="FormatException">Thrown when the Primary Key <see langword="type"/> is neither Integer based, nor <see langword="string"/>/<see cref="Guid"/></exception>
-    public static TKey ParsePrimaryKey<TKey>(string key) where TKey : IEquatable<TKey> 
+    public static TKey ParsePrimaryKey<TKey>(string key) where TKey : struct, IEquatable<TKey> 
     {
         var type = typeof(TKey);
         if (GenericTypeHelper.IsIntegerType<TKey>())
