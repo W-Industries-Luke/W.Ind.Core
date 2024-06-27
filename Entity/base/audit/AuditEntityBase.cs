@@ -3,11 +3,11 @@
 namespace W.Ind.Core.Entity;
 
 public abstract class AuditEntityBase 
-    : AuditEntityBase<User>, IAuditable, IEntity;
+    : AuditEntityBase<CoreUser>, IAuditable, IEntity;
 
 public abstract class AuditEntityBase<TUser> 
     : AuditEntityBase<long, TUser>, IAuditable<TUser>, IEntity 
-    where TUser : UserBase<long>;
+    where TUser : UserBase;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="EntityBase{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>

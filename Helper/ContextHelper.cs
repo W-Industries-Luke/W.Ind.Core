@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Linq.Expressions;
 using System.Text.Json;
 using W.Ind.Core.Config;
 
@@ -13,11 +14,11 @@ public static class ContextHelper
     public static EntityTypeBuilder<TEntity> ConfigureAudit<TEntity>(this EntityTypeBuilder<TEntity> builder, string tableName = "", TemporalConfig? config = null)
         where TEntity : class, IAuditable, new()
     {
-        return builder.ConfigureAudit<TEntity, User>(tableName, config);
+        return builder.ConfigureAudit<TEntity, CoreUser>(tableName, config);
     }
 
     public static EntityTypeBuilder<TEntity> ConfigureAudit<TEntity, TUser>(this EntityTypeBuilder<TEntity> builder, string tableName = "", TemporalConfig? config = null)
-        where TEntity : class, IAuditable<TUser>, new() where TUser : UserBase<long>, new()
+        where TEntity : class, IAuditable<TUser>, new() where TUser : UserBase, new()
     {
         return builder.ConfigureAudit<TEntity, TUser, long>(tableName, config);
     }
@@ -26,6 +27,88 @@ public static class ContextHelper
         where TEntity : class, IAuditable<TKey, TUser>, new() where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
     {
         new AuditConfiguration<TEntity, TUser, TKey>(tableName, config).Configure(builder);
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> FilterDeleted<TEntity>(this EntityTypeBuilder<TEntity> builder)
+        where TEntity : class, ISoftDelete
+    {
+        builder.HasQueryFilter(entity => !entity.IsDeleted);
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> BuildIndexes<TEntity>(this EntityTypeBuilder<TEntity> builder, Action<IndexBuilder> configure, params Expression<Func<TEntity, object?>>[] indexExpressions)
+        where TEntity : class
+    {
+        foreach (var expression in indexExpressions) 
+        {
+            var indexBuilder = builder.HasIndex(expression);
+            configure(indexBuilder);
+        }
+
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> OneToOne<TEntity, TRelated>(this EntityTypeBuilder<TEntity> builder, Expression<Func<TEntity, TRelated?>> hasOneExpression, Action<ReferenceReferenceBuilder<TEntity, TRelated>>? configure = null, Expression<Func<TRelated, TEntity?>>? withOneExpression = null)
+        where TEntity: class where TRelated : class
+    {
+        if (hasOneExpression == null) { throw new ArgumentNullException(nameof(hasOneExpression)); }
+        
+        var hasOne = builder.HasOne(hasOneExpression);
+        var withOne = withOneExpression == null ? hasOne.WithOne() : hasOne.WithOne(withOneExpression);
+
+        configure?.Invoke(withOne);
+
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> OneToMany<TEntity, TRelated>(this EntityTypeBuilder<TEntity> builder, Expression<Func<TEntity, TRelated?>> hasOneExpression, Action<ReferenceCollectionBuilder<TRelated, TEntity>>? configure = null, Expression<Func<TRelated, IEnumerable<TEntity>?>>? withManyExpression = null)
+        where TEntity : class where TRelated : class
+    {
+        if (hasOneExpression == null) { throw new ArgumentNullException(nameof(hasOneExpression)); }
+
+        var hasOne = builder.HasOne(hasOneExpression);
+        var withMany = withManyExpression == null ? hasOne.WithMany() : hasOne.WithMany(withManyExpression);
+
+        configure?.Invoke(withMany);
+
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> ManyToOne<TEntity, TRelated>(this EntityTypeBuilder<TEntity> builder, Expression<Func<TEntity, IEnumerable<TRelated>?>> hasManyExpression, Action<ReferenceCollectionBuilder<TEntity, TRelated>>? configure = null, Expression<Func<TRelated, TEntity?>>? withOneExpression = null) 
+        where TEntity : class where TRelated : class
+    {
+        if (hasManyExpression == null) { throw new ArgumentNullException(nameof(hasManyExpression)); }
+
+        var hasMany = builder.HasMany(hasManyExpression);
+        var withOne = withOneExpression == null ? hasMany.WithOne() : hasMany.WithOne(withOneExpression);
+
+        configure?.Invoke(withOne);
+
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> ManyToMany<TEntity, TRelated>(this EntityTypeBuilder<TEntity> builder, Expression<Func<TEntity, IEnumerable<TRelated>?>> hasManyExpression, Action<CollectionCollectionBuilder<TRelated, TEntity>>? configure = null, Expression<Func<TRelated, IEnumerable<TEntity>?>>? withManyExpression = null)
+        where TEntity : class where TRelated : class
+    {
+        if (hasManyExpression == null) { throw new ArgumentNullException(nameof(hasManyExpression)); }
+
+        var hasMany = builder.HasMany(hasManyExpression);
+        var withMany = withManyExpression == null ? hasMany.WithMany() : hasMany.WithMany(withManyExpression);
+
+        configure?.Invoke(withMany);
+
+        return builder;
+    }
+
+    public static EntityTypeBuilder<TEntity> CompositeKey<TEntity>(this EntityTypeBuilder<TEntity> builder, Expression<Func<TEntity, object?>> keysExpression, Action<KeyBuilder>? configure = null)
+        where TEntity : class, IJoinTable
+    {
+        if (keysExpression == null) { throw new ArgumentNullException(nameof(keysExpression)); }
+
+        var keyBuilder = builder.HasKey(keysExpression);
+        configure?.Invoke(keyBuilder);
+
         return builder;
     }
 
@@ -122,13 +205,13 @@ public static class ContextHelper
     }
 
     public static void HandleAudit<TAuditable>(this IEnumerable<EntityEntry<TAuditable>> entries, long currentUser)
-        where TAuditable : class, IAuditable<long, User>
+        where TAuditable : class, IAuditable<long, CoreUser>
     {
-        entries.HandleAudit<TAuditable, User>(currentUser);
+        entries.HandleAudit<TAuditable, CoreUser>(currentUser);
     }
 
     public static void HandleAudit<TAuditable, TUser>(this IEnumerable<EntityEntry<TAuditable>> entries, long currentUser)
-        where TUser : UserBase<long> where TAuditable : class, IAuditable<long, TUser>
+        where TUser : UserBase where TAuditable : class, IAuditable<long, TUser>
     {
         entries.HandleAudit<TAuditable, long, TUser>(currentUser);
     }
@@ -204,7 +287,7 @@ public static class ContextHelper
     }
 
     /// <summary>
-    /// A <see langword="static"/> method that reads, dererializes, and returns data from JSON files.
+    /// DEPRECIATED: A <see langword="static"/> method that reads, dererializes, and returns data from JSON files.
     /// </summary>
     /// <remarks>
     /// <para>The file path is relative to the startup project directory while referenced inside <see cref="DbContext.OnModelCreating(ModelBuilder)"/>.</para>
@@ -228,12 +311,32 @@ public static class ContextHelper
     /// <exception cref="DirectoryNotFoundException">Thrown when <paramref name="filePath"/> points to any non-existent directory</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown when method caller doesn't have read permissions for the specified file</exception>
     /// <exception cref="NotSupportedException"></exception>
+    [Obsolete("ContextHelper.GetFromJsonFile is Depreciated. Use SeedFromJson method instead.")]
     public static TEntity GetFromJsonFile<TEntity>(string filePath) where TEntity : class
     {
         if (String.IsNullOrWhiteSpace(filePath)) { throw new ArgumentException("File Path Empty"); }
         var jsonData = File.ReadAllText(filePath);
-        var deserialized = JsonSerializer.Deserialize<TEntity>(jsonData);
-        return deserialized!;
+        return JsonSerializer.Deserialize<TEntity>(jsonData)!;
+    }
+
+    public static EntityTypeBuilder<TEntity> SeedFromJson<TEntity>(this EntityTypeBuilder<TEntity> builder, string jsonRef, bool isFile = true) where TEntity : class 
+    {
+        if (String.IsNullOrWhiteSpace(jsonRef)) { throw new ArgumentNullException($"JSON Seeding Error - {typeof(TEntity).Name}: The JSON string reference was null"); }
+
+        string jsonString = isFile ? File.ReadAllText(jsonRef) : jsonRef;
+        List<TEntity>? deserialized = JsonSerializer.Deserialize<List<TEntity>>(jsonString);
+
+        builder.AddSeedData(deserialized);
+
+        return builder;
+    }
+
+    public static void AddSeedData<TEntity, TData>(this EntityTypeBuilder<TEntity> builder, TData? data) 
+        where TEntity : class where TData : List<TEntity>
+    {
+        if (data == null) { throw new InvalidCastException($"JSON Seeding Error - {typeof(TEntity).Name}: Deserialized seed data was null"); }
+
+        builder.HasData(data);
     }
 
     /// <summary>

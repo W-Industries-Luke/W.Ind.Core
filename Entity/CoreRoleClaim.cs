@@ -11,15 +11,15 @@
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class RoleClaim : RoleClaim<User>, ISoftDelete, IAuditable;
+public class CoreRoleClaim : CoreRoleClaim<CoreUser>, ISoftDelete, IAuditable;
 
-public class RoleClaim<TUser>: RoleClaim<long, TUser>, ISoftDelete, IAuditable<long, TUser> where TUser : UserBase<long>;
+public class CoreRoleClaim<TUser>: CoreRoleClaim<long, TUser>, ISoftDelete, IAuditable<long, TUser> where TUser : UserBase;
 
-public class RoleClaim<TKey, TUser> 
-    : RoleClaim<TKey, TUser, TKey>, ISoftDelete, IAuditable<TKey, TUser>
+public class CoreRoleClaim<TKey, TUser> 
+    : CoreRoleClaim<TKey, TUser, TKey>, ISoftDelete, IAuditable<TKey, TUser>
     where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
-public class RoleClaim<TKey, TUser, TUserKey> 
+public class CoreRoleClaim<TKey, TUser, TUserKey> 
     : AuditRoleClaimBase<TKey, TUser, TUserKey>, ISoftDelete, IAuditable<TUserKey, TUser> 
     where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
@@ -27,7 +27,7 @@ public class RoleClaim<TKey, TUser, TUserKey>
     /// <para>
     /// Implemented from <see cref="ISoftDelete"/>
     /// </para>
-    /// Adds an <c>IsDeleted</c> flag to the <c>RoleClaim</c> table
+    /// Adds an <c>IsDeleted</c> flag to the <c>CoreRoleClaim</c> table
     /// </summary>
     /// <remarks>
     /// See <see cref="ContextHelper.HandleSoftDelete(IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{ISoftDelete}})"/> for usage

@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 namespace W.Ind.Core.Entity;
 
 public abstract class AuditRoleClaimBase 
-    : AuditRoleClaimBase<User>, IAuditable, IEntity<int>;
+    : AuditRoleClaimBase<CoreUser>, IAuditable, IEntity<int>;
 
 public abstract class AuditRoleClaimBase<TUser> 
     : AuditRoleClaimBase<long, TUser>, IAuditable<TUser>, IEntity<int>
-    where TUser : UserBase<long>;
+    where TUser : UserBase;
 
 public abstract class AuditRoleClaimBase<TRoleKey, TUser> 
     : AuditRoleClaimBase<TRoleKey, TUser, TRoleKey>, IAuditable<TRoleKey, TUser>, IEntity<int>

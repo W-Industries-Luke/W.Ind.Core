@@ -11,11 +11,11 @@
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class UserClaim : UserClaim<User>, ISoftDelete, IAuditable;
+public class CoreUserClaim : CoreUserClaim<CoreUser>, ISoftDelete, IAuditable;
 
-public class UserClaim<TUser> : UserClaim<long, TUser> where TUser : UserBase<long>;
+public class CoreUserClaim<TUser> : CoreUserClaim<long, TUser> where TUser : UserBase;
 
-public class UserClaim<TUserKey, TUser> 
+public class CoreUserClaim<TUserKey, TUser> 
     : AuditUserClaimBase<TUserKey, TUser>, ISoftDelete 
     where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey> 
 {
@@ -23,7 +23,7 @@ public class UserClaim<TUserKey, TUser>
     /// <para>
     /// Implemented from <see cref="ISoftDelete"/>
     /// </para>
-    /// Adds an <c>IsDeleted</c> flag to the <c>UserClaim</c> table
+    /// Adds an <c>IsDeleted</c> flag to the <c>CoreUserClaim</c> table
     /// </summary>
     /// <remarks>
     /// See <see cref="ContextHelper.HandleSoftDelete(IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{ISoftDelete}})"/> for usage

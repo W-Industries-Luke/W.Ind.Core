@@ -3,18 +3,19 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using W.Ind.Core.Enum;
 
 namespace W.Ind.Core.Service;
 
 public abstract class JwtServiceBase 
-    : JwtServiceBase<User>
+    : JwtServiceBase<CoreUser>
 {
     public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
 }
 
 public abstract class JwtServiceBase<TUser> 
     : JwtServiceBase<long, TUser> 
-    where TUser : UserBase<long>
+    where TUser : UserBase
 {
     public JwtServiceBase(JwtConfig jwtConfig) : base(jwtConfig) { }
 }
@@ -61,6 +62,39 @@ public abstract class JwtServiceBase<TKey, TUser, TConfig>
     }
 
     /// <summary>
+    /// Returns a <see cref="ClaimsPrincipal"/> instance retreived from <paramref name="token"/>
+    /// </summary>
+    /// <param name="token"><see langword="string"/> JWT Access Token</param>
+    /// <returns><see cref="ClaimsPrincipal"/> from passed <paramref name="token"/></returns>
+    /// <exception cref="SecurityTokenException">Thrown when the validated <see cref="SecurityToken"/> is <see langword="null"/> or invalid</exception>
+    public virtual ClaimsPrincipal GetPrincipalFromToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = _jwtConfig.ValidateAudience,
+            ValidateIssuer = _jwtConfig.ValidateIssuer,
+            ValidateIssuerSigningKey = _jwtConfig.ValidateIssuerSigningKey,
+            ValidAudience = _jwtConfig.Audience,
+            ValidIssuer = _jwtConfig.Issuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.SecretKey))
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        SecurityToken securityToken;
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+        if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new SecurityTokenException("Invalid token");
+        }
+
+        return principal;
+    }
+
+    protected virtual DateTime AccessTokenExpiry(bool rememberMe = false) => rememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddMinutes(30);
+
+    /// <summary>
     /// Configures and returns an Access Token for JWT validation
     /// </summary>
     /// <remarks>
@@ -80,7 +114,11 @@ public abstract class JwtServiceBase<TKey, TUser, TConfig>
     protected virtual JwtSecurityToken ConfigureAccessToken(TUser user, DateTime expires)
     {        
         Claim[] claims = GetUserClaims(user);
-        
+        return ConfigureAccessToken(claims, expires);
+    }
+
+    protected virtual JwtSecurityToken ConfigureAccessToken(IEnumerable<Claim> claims, DateTime expires) 
+    {
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.SecretKey));
         SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -90,6 +128,7 @@ public abstract class JwtServiceBase<TKey, TUser, TConfig>
             claims: claims,
             expires: expires,
             signingCredentials: creds);
+
     }
 
     /// <summary>
@@ -106,13 +145,12 @@ public abstract class JwtServiceBase<TKey, TUser, TConfig>
     /// <exception cref="NullReferenceException">Thrown when either <paramref name="user"/> or <c>user.Id</c> is <see langword="null"/></exception>
     protected virtual Claim[] GetUserClaims(TUser user)
     {
-        // TODO: Create a claims service (to include claims from non-user entities)
         // Add claims here
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? user.Email!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.NameId, user!.Id!.ToString()!)
+            new Claim(CoreClaimTypes.UserId, user.Id.ToString()!),
+            new Claim(CoreClaimTypes.UserEmail, user.Email!)
         };
 
         return claims;

@@ -2,7 +2,7 @@
 
 namespace W.Ind.Core.Entity;
 
-public class UserToken : UserToken<long>, ISoftDelete;
+public class CoreUserToken : CoreUserToken<long>, ISoftDelete;
 
 /// <summary>
 /// Concrete core entity <see langword="class"/> that can be used as an <see cref="IdentityUserToken{TKey}"/>
@@ -12,7 +12,7 @@ public class UserToken : UserToken<long>, ISoftDelete;
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class UserToken<TUserKey> : IdentityUserToken<TUserKey>, ISoftDelete where TUserKey : IEquatable<TUserKey>
+public class CoreUserToken<TUserKey> : IdentityUserToken<TUserKey>, ISoftDelete where TUserKey : IEquatable<TUserKey>
 {
     /// <summary>
     /// <para>

@@ -1,10 +1,10 @@
 ﻿namespace W.Ind.Core.Entity;
 
-public class UserRole : UserRole<User>, ISoftDelete, IAuditable, IJoinTable;
+public class CoreUserRole : CoreUserRole<CoreUser>, ISoftDelete, IAuditable, IJoinTable;
 
-public class UserRole<TUser> 
-    : UserRole<long, TUser>, ISoftDelete, IAuditable<TUser>, IJoinTable
-    where TUser : UserBase<long>;
+public class CoreUserRole<TUser> 
+    : CoreUserRole<long, TUser>, ISoftDelete, IAuditable<TUser>, IJoinTable
+    where TUser : UserBase;
 
 /// <summary>
 /// Concrete core entity <see langword="class"/> that can be used as an <see cref="Microsoft.AspNetCore.Identity.IdentityUserLogin{TKey}"/>
@@ -17,7 +17,7 @@ public class UserRole<TUser>
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class UserRole<TKey, TUser> 
+public class CoreUserRole<TKey, TUser> 
     : AuditUserRoleBase<TKey, TUser>, ISoftDelete, IAuditable<TKey, TUser>, IJoinTable
     where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey> 
 {

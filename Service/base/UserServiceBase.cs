@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using W.Ind.Core.Dto;
+using W.Ind.Core.Repository;
 
 namespace W.Ind.Core.Service;
 
-public abstract class UserServiceBase : UserServiceBase<User>
+public abstract class UserServiceBase : UserServiceBase<CoreUser>
 {
-    public UserServiceBase(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtService)
+    public UserServiceBase(UserManager<CoreUser> userManager, SignInManager<CoreUser> signInManager, IJwtService jwtService)
     : base(userManager, signInManager, jwtService) { }
 
 }
 
-public abstract class UserServiceBase<TUser> : UserServiceBase<long, TUser> where TUser : UserBase<long>, new()
+public abstract class UserServiceBase<TUser> : UserServiceBase<long, TUser> where TUser : UserBase, new()
 {
     public UserServiceBase(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser> jwtService)
         : base(userManager, signInManager, jwtService) { }
@@ -62,7 +63,7 @@ public abstract class UserServiceBase<TKey, TUser>
     /// <code>
     /// <see langword="using"/> <see cref="Microsoft.Extensions.DependencyInjection"/>;
     /// 
-    /// builder.Services.AddIdentity&lt;<see cref="User"/>, <see cref="Role"/>&gt;(...);
+    /// builder.Services.AddIdentity&lt;<see cref="CoreUser"/>, <see cref="CoreRole"/>&gt;(...);
     /// </code>
     /// </example>
     /// </param>
@@ -73,7 +74,7 @@ public abstract class UserServiceBase<TKey, TUser>
     /// <code>
     /// <see langword="using"/> <see cref="Microsoft.Extensions.DependencyInjection"/>;
     /// 
-    /// builder.Services.AddIdentity&lt;<see cref="User"/>, <see cref="Role"/>&gt;(...);
+    /// builder.Services.AddIdentity&lt;<see cref="CoreUser"/>, <see cref="CoreRole"/>&gt;(...);
     /// </code>
     /// </example>
     /// </param>
@@ -133,13 +134,13 @@ public abstract class UserServiceBase<TKey, TUser>
     public virtual async Task<LoginResponse<TTokenResponse>> ValidateLoginAsync<TTokenResponse>(LoginRequest dto)
         where TTokenResponse : class, ITokenResponse, new()
     {
-        return await ValidateLoginAsync<LoginResponse<TTokenResponse>, TTokenResponse>(dto);
+        return await ValidateLoginAsync<LoginRequest, LoginResponse<TTokenResponse>, TTokenResponse>(dto);
     }
 
-    public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginResponse, TTokenResponse>(LoginRequest dto)
-        where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new()
+    public virtual async Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse>(TLoginRequest dto)
+        where TLoginRequest: class, ILoginRequest where TLoginResponse : ILoginResponse<TokenResponse>, new()
     {
-        return await ValidateLoginAsync<LoginRequest, TLoginResponse, TTokenResponse>(dto);
+        return await ValidateLoginAsync<TLoginRequest, TLoginResponse, TokenResponse>(dto);
     }
 
     /// <summary>
@@ -216,20 +217,9 @@ public abstract class UserServiceBase<TKey, TUser>
         if (signInResult.Succeeded)
         {
             await _userManager.ResetAccessFailedCountAsync(user);
-
-            response = new TLoginResponse { Success = true };
-
-            if (_jwtService.UseBearerToken)
-            {
-                var bearerToken = _jwtService.GenerateAccessToken<TTokenResponse>(user, AccessTokenExpiration(dto.RememberMe));
-                response.Tokens.Add(bearerToken);
-            }
-
-            if (_jwtService.UseRefreshToken)
-            {
-                var refreshToken = _jwtService.GenerateRefreshToken<TTokenResponse>();
-                response.Tokens.Add(refreshToken);
-            }
+            
+            var bearerTokenResponse = _jwtService.GenerateAccessToken<TTokenResponse>(user, dto.RememberMe);
+            response = new TLoginResponse { Success = true, Tokens = new List<TTokenResponse> { bearerTokenResponse } };
 
             return response;
         }

@@ -11,16 +11,15 @@
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class User 
-    : User<User>, ISoftDelete, IAuditable, IEntity<long>;
+public class CoreUser 
+    : AuditUserBase, ISoftDelete, IAuditable<CoreUser>, IEntity<long>
+{
+    public bool IsDeleted { get; set; }
+}
 
-public class User<TUser> 
-    : User<long, TUser>, ISoftDelete, IAuditable<TUser>, IEntity<long> 
-    where TUser : UserBase<long>;
-
-public class User<TKey, TUser> 
-    : AuditUserBase<TKey, TUser>, ISoftDelete, IAuditable<TKey, TUser>, IEntity<TKey>
-    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>
+public class CoreUser<TKey> 
+    : AuditUserBase<TKey, CoreUser<TKey>>, ISoftDelete, IAuditable<TKey, CoreUser<TKey>>, IEntity<TKey>
+    where TKey : struct, IEquatable<TKey> // where TUser : UserBase<TKey>
 {
     /// <summary>
     /// <para>Implemented from <see cref="ISoftDelete"/></para>

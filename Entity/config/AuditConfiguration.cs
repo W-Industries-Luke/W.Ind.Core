@@ -4,12 +4,12 @@ using W.Ind.Core.Config;
 namespace W.Ind.Core.Entity;
 
 public class AuditConfiguration<TEntity> 
-    : AuditConfiguration<TEntity, User> 
-    where TEntity : class, IAuditable<long, User>, new();
+    : AuditConfiguration<TEntity, CoreUser> 
+    where TEntity : class, IAuditable<long, CoreUser>, new();
 
 public class AuditConfiguration<TEntity, TUser> 
     : AuditConfiguration<TEntity, TUser, long> 
-    where TEntity : class, IAuditable<long, TUser>, new() where TUser : UserBase<long>;
+    where TEntity : class, IAuditable<long, TUser>, new() where TUser : UserBase;
 
 public class AuditConfiguration<TEntity, TUser, TUserKey> 
     : IEntityTypeConfiguration<TEntity> 
@@ -29,7 +29,6 @@ public class AuditConfiguration<TEntity, TUser, TUserKey>
             .HasForeignKey(entity => entity.CreatedById).IsRequired()
             .OnDelete(DeleteBehavior.NoAction);
 
-        // TODO: Figure out Modified ID Shadow Property or another way to get nullable modified id on here
         builder.HasOne(entity => entity.ModifiedBy).WithMany()
             .HasForeignKey("ModifiedById")
             .OnDelete(DeleteBehavior.NoAction);

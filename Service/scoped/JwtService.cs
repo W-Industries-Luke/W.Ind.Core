@@ -1,17 +1,19 @@
 ﻿using W.Ind.Core.Dto;
 using W.Ind.Core.Config;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using W.Ind.Core.Enum;
 
 namespace W.Ind.Core.Service;
 
-public class JwtService : JwtService<User>, IJwtService
+public class JwtService : JwtService<CoreUser>, IJwtService
 {
     public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
 }
 
 public class JwtService<TUser> 
     : JwtService<long, TUser>, IJwtService<TUser>
-    where TUser : UserBase<long>, new()
+    where TUser : UserBase, new()
 {
     public JwtService(JwtConfig jwtConfig, IJwtInvalidator jwtInvalidator) : base(jwtConfig, jwtInvalidator) { }
 }
@@ -40,7 +42,7 @@ public class JwtService<TKey, TUser>
 /// The <see langword="type"/> of your JWT Configuration Options DTO
 /// </typeparam>
 public class JwtService<TKey, TUser, TConfig> 
-    : JwtServiceBase<TKey, TUser, TConfig>, IJwtService<TKey, TUser> 
+    : JwtServiceBase<TKey, TUser, TConfig>, IJwtService<TKey, TUser, TConfig> 
     where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey> where TConfig : JwtConfig
 {
     /// <summary>
@@ -61,6 +63,11 @@ public class JwtService<TKey, TUser, TConfig>
         _jwtInvalidator = jwtInvalidator;
     }
 
+    public virtual TokenResponse GenerateAccessToken(TUser user, bool rememberMe = false)
+    {
+        return GenerateAccessToken<TokenResponse>(user);
+    }
+
     /// <summary>
     /// Generates an Access Token for JWT validation with the given <typeparamref name="TUser"/>
     /// </summary>
@@ -78,28 +85,37 @@ public class JwtService<TKey, TUser, TConfig>
     /// <exception cref="ArgumentNullException">Thrown if the generated <see cref="JwtSecurityToken"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Thrown if the generated token is not of type <see cref="JwtSecurityToken"/></exception>
     /// <exception cref="Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException">Thrown if encryption fails for any reason</exception>
-    public virtual TTokenResponse GenerateAccessToken<TTokenResponse>(TUser user, DateTime expires) 
+    public virtual TTokenResponse GenerateAccessToken<TTokenResponse>(TUser user, bool rememberMe = false) 
         where TTokenResponse : ITokenResponse, new()
     {
-        JwtSecurityToken token = ConfigureAccessToken(user, expires);
+        Claim[] claims = GetUserClaims(user);
 
-        return new TTokenResponse { Token = new JwtSecurityTokenHandler().WriteToken(token), Expires = expires, TokenType = Enum.TokenTypes.Access };
+        return GenerateAccessToken<TTokenResponse>(claims, rememberMe);
     }
 
-    public virtual TokenResponse GenerateAccessToken(TUser user, DateTime expires)
+    public virtual TokenResponse GenerateAccessToken(IEnumerable<Claim> claims, bool rememberMe = false)
     {
-        return GenerateAccessToken<TokenResponse>(user, expires);
+        return GenerateAccessToken<TokenResponse>(claims, rememberMe);
     }
 
-    public virtual TTokenResponse GenerateRefreshToken<TTokenResponse>() 
-        where TTokenResponse : ITokenResponse, new()
+    public virtual TTokenResponse GenerateAccessToken<TTokenResponse>(IEnumerable<Claim> claims, bool rememberMe = false)
+        where TTokenResponse: ITokenResponse, new()
     {
-        return new TTokenResponse { Token = Guid.NewGuid().ToString(), Expires = DateTime.UtcNow.AddDays(7), TokenType = Enum.TokenTypes.Refresh };
+        DateTime expires = AccessTokenExpiry(rememberMe);
+        JwtSecurityToken token = ConfigureAccessToken(claims, expires);
+
+        return new TTokenResponse { Token = new JwtSecurityTokenHandler().WriteToken(token), Expires = expires, TokenType = Enum.CoreTokenTypes.Access };
     }
 
-    public virtual TokenResponse GenerateRefreshToken() 
+    public virtual TKey GetUserIdFromToken(string token)
     {
-        return GenerateRefreshToken<TokenResponse>();
+        var invalid = _jwtInvalidator.IsTokenInvalid(token);
+
+        if (invalid) { throw new InvalidOperationException(); }
+
+        ClaimsPrincipal principal = GetPrincipalFromToken(token);
+        Claim idClaim = principal.Claims.First(claim => claim.Type == CoreClaimTypes.UserId);
+        return ContextHelper.ParsePrimaryKey<TKey>(idClaim.Value);
     }
 
     /// <summary>
@@ -132,8 +148,4 @@ public class JwtService<TKey, TUser, TConfig>
         }
         return true;
     }
-
-    public virtual bool UseBearerToken { get { return _jwtConfig.UseBearerToken; } }
-
-    public virtual bool UseRefreshToken { get { return _jwtConfig.UseRefreshToken; } }
 }

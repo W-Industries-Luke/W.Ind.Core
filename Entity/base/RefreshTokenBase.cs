@@ -3,25 +3,25 @@
 namespace W.Ind.Core.Entity;
 
 /// <summary>
-/// Defines the <see langword="default"/> Refresh Token entity who's PK is <see langword="type"/> <see cref="long"/> and references the default <see cref="W.Ind.Core.Entity.User"/> entity
+/// Defines the <see langword="default"/> Refresh Token entity who's PK is <see langword="type"/> <see cref="long"/> and references the default <see cref="W.Ind.Core.Entity.CoreUser"/> entity
 /// </summary>
 /// <remarks>
 /// See <see cref="RefreshTokenBase{TKey, TUser, TUserKey}"/> for full implementation
 /// </remarks>
 public abstract class RefreshTokenBase 
-    : RefreshTokenBase<User>;
+    : RefreshTokenBase<CoreUser>, IRefreshToken, IEntity;
 
 /// <summary>
 /// Defines a refresh token entity <see langword="class"/> whose PK <see langword="type"/> is generic
 /// </summary>
 /// <remarks>
 /// <para>
-/// Refresh Token will use default <see cref="W.Ind.Core.Entity.User"/> class for navigation
+/// Refresh Token will use default <see cref="W.Ind.Core.Entity.CoreUser"/> class for navigation
 /// </para>
 /// </remarks>
 /// <typeparam name="TKey">The Primary Key <see langword="type"/> of this entity</typeparam>
 public abstract class RefreshTokenBase<TUser> 
-    : RefreshTokenBase<long, TUser> where TUser : UserBase<long>;
+    : RefreshTokenBase<long, TUser>, IRefreshToken<TUser>, IEntity where TUser : UserBase;
 
 /// <summary>
 /// Defines a refresh token entity <see langword="class"/> where the User entity's PK <see langword="type"/> is <see cref="long"/>
@@ -37,7 +37,7 @@ public abstract class RefreshTokenBase<TUser>
 /// <typeparam name="TKey">The Primary Key <see langword="type"/> of your Refresh Token entity</typeparam>
 /// <typeparam name="TUser">The <see langword="type"/> of your User entity (PK <see langword="type"/> of <see cref="long"/>)</typeparam>
 public abstract class RefreshTokenBase<TKey, TUser>
-    : RefreshTokenBase<TKey, TUser, TKey>, IEntity<TKey> 
+    : RefreshTokenBase<TKey, TUser, TKey>, IRefreshToken<TKey, TUser>, IEntity<TKey> 
     where TKey: struct, IEquatable<TKey> where TUser : UserBase<TKey>;
 
 /// <summary>
@@ -52,7 +52,7 @@ public abstract class RefreshTokenBase<TKey, TUser>
 /// <typeparam name="TUser">The <see langword="type"/> of the User entity (Derives from <see cref="UserBase{TKey}"/>)</typeparam>
 /// <typeparam name="TUserKey">The Primary Key <see langword="type"/> of the User entity</typeparam>
 public abstract class RefreshTokenBase<TKey, TUser, TUserKey> 
-    : EntityBase<TKey>, IEntity<TKey> 
+    : EntityBase<TKey>, IRefreshToken<TKey, TUser, TUserKey>, IEntity<TKey> 
     where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
@@ -71,7 +71,7 @@ public abstract class RefreshTokenBase<TKey, TUser, TUserKey>
     /// The Foreign Key of the User entity
     /// </summary>
     [Required]
-    public TKey UserId { get; set; }
+    public TUserKey UserId { get; set; }
     
     /// <summary>
     /// The Navigation property pointing towards the User entity

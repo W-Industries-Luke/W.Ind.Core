@@ -1,10 +1,11 @@
-﻿using W.Ind.Core.Dto;
+﻿using Microsoft.AspNetCore.Identity;
+using W.Ind.Core.Dto;
 
 namespace W.Ind.Core.Service;
 
-public interface IUserServiceBase : IUserServiceBase<User>;
+public interface IUserServiceBase : IUserServiceBase<CoreUser>;
 
-public interface IUserServiceBase<TUser> : IUserServiceBase<long, TUser> where TUser : UserBase<long>, new();
+public interface IUserServiceBase<TUser> : IUserServiceBase<long, TUser> where TUser : UserBase, new();
 
 /// <summary>
 /// Base <see langword="interface"/> implemented by <see langword="abstract"/> <see langword="class"/> <see cref="UserServiceBase{TUser,TKey}"/>
@@ -19,7 +20,7 @@ public interface IUserServiceBase<TUser> : IUserServiceBase<long, TUser> where T
 public interface IUserServiceBase<TKey, TUser> 
     where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
-    Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterAsync(UserRegistration dto);
+    Task<IdentityResult> RegisterAsync(UserRegistration dto);
 
     /// <summary>
     /// An <see langword="async"/> method that adds a new <typeparamref name="TUser"/> to the System
@@ -35,16 +36,13 @@ public interface IUserServiceBase<TKey, TUser>
     /// <exception cref="ArgumentNullException">Thrown when either the Email or Password is <see langword="null"/></exception>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="Microsoft.AspNetCore.Identity.UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when either the Email or UserName is taken</exception>
-    Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) 
+    Task<IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) 
         where TUserRegistration : class, IUserRegistration;
 
     Task<LoginResponse> ValidateLoginAsync(LoginRequest dto);
 
-    Task<LoginResponse<TTokenResponse>> ValidateLoginAsync<TTokenResponse>(LoginRequest dto)
-        where TTokenResponse : class, ITokenResponse, new();
-
-    Task<TLoginResponse> ValidateLoginAsync<TLoginResponse, TTokenResponse>(LoginRequest dto)
-        where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new();
+    Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse>(TLoginRequest dto)
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TokenResponse>, new();
 
     /// <summary>
     /// An <see langword="async"/> method that validates a <typeparamref name="TLoginRequest"/>

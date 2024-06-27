@@ -1,12 +1,14 @@
-﻿using W.Ind.Core.Dto;
+﻿using System.Security.Claims;
+using W.Ind.Core.Config;
+using W.Ind.Core.Dto;
 namespace W.Ind.Core.Service;
 
 public interface IJwtService
-    : IJwtService<User>;
+    : IJwtService<CoreUser>;
 
 public interface IJwtService<TUser>
     : IJwtService<long, TUser>
-    where TUser : UserBase<long>, new();
+    where TUser : UserBase, new();
 
 /// <summary>
 /// An injectible (scoped) service to handle JWT-related functions
@@ -21,9 +23,24 @@ public interface IJwtService<TUser>
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public interface IJwtService<TKey, TUser> 
+public interface IJwtService<TKey, TUser> : IJwtService<TKey, TUser, JwtConfig>
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>;
+
+public interface IJwtService<TKey, TUser, TConfig>
     where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
+    where TConfig : JwtConfig
 {
+    ClaimsPrincipal GetPrincipalFromToken(string token);
+
+    TKey GetUserIdFromToken(string token);
+
+    TokenResponse GenerateAccessToken(TUser user, bool rememberMe = false);
+
+    TokenResponse GenerateAccessToken(IEnumerable<Claim> claims, bool rememberMe = false);
+
+    TTokenResponse GenerateAccessToken<TTokenResponse>(IEnumerable<Claim> claims, bool rememberMe = false)
+            where TTokenResponse : ITokenResponse, new();
+
     /// <summary>
     /// Generates a JSON Web Token for the given <typeparamref name="TUser"/>
     /// </summary>
@@ -41,15 +58,8 @@ public interface IJwtService<TKey, TUser>
     /// <exception cref="ArgumentNullException">Thrown if the generated <see cref="System.IdentityModel.Tokens.Jwt.JwtSecurityToken"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Thrown if the generated token is not of type <see cref="System.IdentityModel.Tokens.Jwt.JwtSecurityToken"/></exception>
     /// <exception cref="Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException">Thrown if encryption ever fails</exception>
-    TTokenResponse GenerateAccessToken<TTokenResponse>(TUser user, DateTime expires) 
+    TTokenResponse GenerateAccessToken<TTokenResponse>(TUser user, bool rememberMe = false)
         where TTokenResponse : ITokenResponse, new();
-
-    TokenResponse GenerateAccessToken(TUser user, DateTime expires);
-
-    TTokenResponse GenerateRefreshToken<TTokenResponse>()
-        where TTokenResponse : ITokenResponse, new();
-
-    TokenResponse GenerateRefreshToken();
 
     /// <summary>
     /// Invalidates <paramref name="token"/>
@@ -68,9 +78,4 @@ public interface IJwtService<TKey, TUser>
     /// <para><see langword="false"/>, if <paramref name="token"/> is valid</para>
     /// </returns>
     bool IsTokenInvalid(string? token);
-
-
-    bool UseBearerToken { get; }
-
-    bool UseRefreshToken { get; }
 }

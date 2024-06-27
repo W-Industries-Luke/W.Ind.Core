@@ -4,7 +4,7 @@ namespace W.Ind.Core.Dto;
 
 public class TokenResponse : ITokenResponse
 {
-    public TokenTypes TokenType { get; set; }
+    public CoreTokenTypes TokenType { get; set; }
     public string Token { get; set; } = String.Empty;
     public DateTime? Expires { get; set; } = null;
 }

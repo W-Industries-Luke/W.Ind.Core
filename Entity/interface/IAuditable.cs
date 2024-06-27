@@ -15,9 +15,9 @@ namespace W.Ind.Core.Entity;
 /// Derive from this <see langword="interface"/> for further customization
 /// </para>
 /// </remarks>
-public interface IAuditable : IAuditable<User>, IAuditable<long, User>;
+public interface IAuditable : IAuditable<CoreUser>, IAuditable<long, CoreUser>;
 
-public interface IAuditable<TUser> : IAuditable<long, TUser> where TUser : UserBase<long>;
+public interface IAuditable<TUser> : IAuditable<long, TUser> where TUser : UserBase;
 
 
 /// <summary>

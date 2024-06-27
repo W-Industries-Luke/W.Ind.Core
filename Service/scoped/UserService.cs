@@ -4,13 +4,13 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace W.Ind.Core.Service;
 
-public class UserService : UserService<User>, IUserService
+public class UserService : UserService<CoreUser>, IUserService
 {
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService<User> jwtService, IHttpContextAccessor contextAccessor)
+    public UserService(UserManager<CoreUser> userManager, SignInManager<CoreUser> signInManager, IJwtService jwtService, IHttpContextAccessor contextAccessor)
         : base(userManager, signInManager, jwtService, contextAccessor) { }
 }
 
-public class UserService<TUser> : UserService<long, TUser>, IUserService<TUser> where TUser : UserBase<long>, new()
+public class UserService<TUser> : UserService<long, TUser>, IUserService<TUser> where TUser : UserBase, new()
 {
     public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser> jwtService, IHttpContextAccessor contextAccessor)
         : base(userManager, signInManager, jwtService, contextAccessor) { }
@@ -58,7 +58,7 @@ public class UserService<TKey, TUser>
     /// <code>
     /// <see langword="using"/> <see cref="Microsoft.Extensions.DependencyInjection"/>;
     /// 
-    /// builder.Services.AddIdentity&lt;<see cref="User"/>, <see cref="Role"/>&gt;(...);
+    /// builder.Services.AddIdentity&lt;<see cref="CoreUser"/>, <see cref="CoreRole"/>&gt;(...);
     /// </code>
     /// </example>
     /// </param>
@@ -75,6 +75,23 @@ public class UserService<TKey, TUser>
         _contextAccessor = contextAccessor;
     }
 
+    public virtual TKey GetCurrent() 
+    {
+        TKey result;
+        string? retrievedClaim = _contextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(a => a.Type == JwtRegisteredClaimNames.NameId)?.Value;
+
+        if (retrievedClaim == null)
+        {
+            result = GetSystem();
+        }
+        else
+        {
+            result = ContextHelper.ParsePrimaryKey<TKey>(retrievedClaim);
+        }
+
+        return result;
+    }
+
     /// <summary>
     /// Gets the ID of the current user making this request
     /// </summary>
@@ -85,14 +102,14 @@ public class UserService<TKey, TUser>
     /// <returns>A User ID</returns>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="ArgumentNullException">Thrown when GetSystem() fails</exception>
-    public virtual async Task<TKey> GetCurrent() 
+    public virtual async Task<TKey> GetCurrentAsync() 
     {
         TKey result;
         string? retrievedClaim = _contextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(a => a.Type == JwtRegisteredClaimNames.NameId)?.Value;
 
         if (retrievedClaim == null) 
         {
-            result = await GetSystem();
+            result = await GetSystemAsync();
         }
         else
         {
@@ -100,6 +117,22 @@ public class UserService<TKey, TUser>
         }
 
         return result;
+    }
+
+    public virtual TKey GetSystem(string? systemUserName = null) 
+    {
+        if (String.IsNullOrWhiteSpace(systemUserName))
+        {
+            systemUserName = "SYSTEM";
+        }
+
+        var user = _userManager.FindByNameAsync(systemUserName).Result;
+        if (user != null)
+        {
+            return user.Id;
+        }
+
+        throw new InvalidOperationException($"System UserName \"${systemUserName}\" Not Found");
     }
 
     /// <summary>
@@ -112,12 +145,13 @@ public class UserService<TKey, TUser>
     /// <returns>System User's ID</returns>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="systemUserName"/> is <see langword="null"/> or empty when invoking <c>_userManager.FindByNameAsync</c></exception>
-    public virtual async Task<TKey> GetSystem(string? systemUserName = null)
+    public virtual async Task<TKey> GetSystemAsync(string? systemUserName = null)
     {
         if (String.IsNullOrWhiteSpace(systemUserName))
         {
             systemUserName = "SYSTEM";
         }
+
         var user = await _userManager.FindByNameAsync(systemUserName);
         if (user != null) 
         {

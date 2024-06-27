@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 namespace W.Ind.Core.Entity;
 
 public abstract class AuditBase 
-    : AuditBase<User>, IAuditable;
+    : AuditBase<CoreUser>, IAuditable;
 
 public abstract class AuditBase<TUser> 
     : AuditBase<long, TUser>, IAuditable<TUser> 
-    where TUser : UserBase<long>;
+    where TUser : UserBase;
 
 public abstract class AuditBase<TUserKey, TUser> 
     : IAuditable<TUserKey, TUser> 

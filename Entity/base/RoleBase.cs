@@ -2,7 +2,7 @@
 
 namespace W.Ind.Core.Entity;
 
-public abstract class RoleBase : RoleBase<long>;
+public abstract class RoleBase : RoleBase<long>, IEntity;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that inherits from <see cref="IdentityRole{TKey}"/> 

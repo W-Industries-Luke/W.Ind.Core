@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 namespace W.Ind.Core.Entity;
 
 public abstract class AuditUserRoleBase 
-    : AuditUserRoleBase<User>, IAuditable;
+    : AuditUserRoleBase<CoreUser>, IAuditable;
 
 public abstract class AuditUserRoleBase<TUser> 
     : AuditUserRoleBase<long, TUser>, IAuditable<TUser>
-    where TUser : UserBase<long>;
+    where TUser : UserBase;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityUserRole{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>

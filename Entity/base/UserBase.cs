@@ -2,7 +2,7 @@
 
 namespace W.Ind.Core.Entity;
 
-public abstract class UserBase : UserBase<long>;
+public abstract class UserBase : UserBase<long>, IEntity;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that inherits from <see cref="IdentityUser{TKey}"/> 

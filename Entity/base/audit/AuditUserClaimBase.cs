@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 namespace W.Ind.Core.Entity;
 
 public abstract class AuditUserClaimBase 
-    : AuditUserClaimBase<User>, IAuditable, IEntity<int>;
+    : AuditUserClaimBase<CoreUser>, IAuditable, IEntity<int>;
 
 public abstract class AuditUserClaimBase<TUser> 
     : AuditUserClaimBase<long, TUser>, IAuditable<long, TUser>, IEntity<int>
-    where TUser : UserBase<long>;
+    where TUser : UserBase;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityUserClaim{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>

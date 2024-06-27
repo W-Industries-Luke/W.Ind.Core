@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 namespace W.Ind.Core.Entity;
 
 public abstract class AuditRoleBase 
-    : AuditRoleBase<User>, IAuditable, IEntity;
+    : AuditRoleBase<CoreUser>, IAuditable, IEntity;
 
 public abstract class AuditRoleBase<TUser> 
     : AuditRoleBase<long, TUser>, IAuditable<long, TUser>, IEntity
-    where TUser : UserBase<long>;
+    where TUser : UserBase;
 
 /// <summary>
 /// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="RoleBase{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>

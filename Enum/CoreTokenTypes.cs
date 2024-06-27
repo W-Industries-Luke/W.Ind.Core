@@ -1,6 +1,6 @@
 ﻿namespace W.Ind.Core.Enum;
 
-public enum TokenTypes
+public enum CoreTokenTypes
 {
     Access,
     Refresh,

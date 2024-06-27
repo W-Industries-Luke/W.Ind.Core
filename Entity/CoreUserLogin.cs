@@ -2,7 +2,7 @@
 
 namespace W.Ind.Core.Entity;
 
-public class UserLogin : UserLogin<long>, ISoftDelete;
+public class CoreUserLogin : CoreUserLogin<long>, ISoftDelete;
 
 /// <summary>
 /// Core entity <see langword="type"/> that can be used as an <see cref="IdentityUserLogin{TKey}"/>
@@ -12,7 +12,7 @@ public class UserLogin : UserLogin<long>, ISoftDelete;
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class UserLogin<TKey> : IdentityUserLogin<TKey>, ISoftDelete where TKey : struct, IEquatable<TKey>
+public class CoreUserLogin<TKey> : IdentityUserLogin<TKey>, ISoftDelete where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// <para>
