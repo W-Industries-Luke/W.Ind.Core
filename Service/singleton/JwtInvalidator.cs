@@ -46,7 +46,7 @@ public class JwtInvalidator : IJwtInvalidator
     /// Calls <see cref="GC.SuppressFinalize(object)"/> so further abstraction is still an option
     /// </para>
     /// </remarks>
-    public void Dispose()
+    public virtual void Dispose()
     {
         _cleanupTimer?.Change(Timeout.Infinite, 0);
         _cleanupTimer?.Dispose();
@@ -65,7 +65,7 @@ public class JwtInvalidator : IJwtInvalidator
     /// <para>Time it takes until the <paramref name="token"/> naturally expires</para>
     /// </param>
     /// <returns>Treat as <see langword="void"/></returns>
-    public void InvalidateToken(string token, TimeSpan expiry)
+    public virtual void InvalidateToken(string token, TimeSpan expiry)
     {
         var expirationTime = DateTime.UtcNow.Add(expiry);
         _invalidTokens.TryAdd(GetCacheKey(token), expirationTime);
@@ -79,7 +79,7 @@ public class JwtInvalidator : IJwtInvalidator
     /// </remarks>
     /// <param name="token"><see langword="string"/> JSON Web Token</param>
     /// <returns><see langword="true"/> if the <paramref name="token"/> is invalid</returns>
-    public bool IsTokenInvalid(string token)
+    public virtual bool IsTokenInvalid(string token)
     {
         return _invalidTokens.ContainsKey(GetCacheKey(token));
     }

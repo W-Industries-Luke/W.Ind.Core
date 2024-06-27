@@ -13,7 +13,7 @@
 	<PackageId>W.Ind.Core</PackageId>
 	<PackageProjectUrl>https://github.com/W-Industries-Luke/W.Ind.Core</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/W-Industries-Luke/W.Ind.Core</RepositoryUrl>
-	<Version>0.9.95</Version>
+	<Version>1.0.0</Version>
 	<Authors>W. Industries; Luke Weaver</Authors>
 	<Company>W. Industries</Company>
 	<Description>A set of helpful services and derived classes to seamlessly integrate with EF Core 8 and AspNetCore Identity. Create an IdentityDbContext out of the box with simplified ModelBuilder options for temporal tables to simplify audit logging.</Description>
@@ -21,12 +21,32 @@
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<License>https://opensource.org/licenses/MIT</License>
 	<Copyright>Copyright (c) 2024 W. Industries</Copyright>
+	<PackageReleaseNotes>
+	  v1.0.0
+	  - Hotfix issues
+	  - Repackaged to include new namespaces
+	  v0.9.99
+	  - Refactored core services/helpers/base types
+	  - Implemented default generic type inheritence accross most types in package
+	  - Done for both extensibility and to reduce required type params when necessary
+	  - Corresponding interfaces also implement generic type inheritence
+	  - Implemented Core RefreshToken entity with extensible base types
+	  - Implemented abstract RepositoryBase&lt;TEntity&gt; class for working with the DbContext in relation to TEntity
+	  - Implemented abstract RefreshTokenRepositoryBase&lt;TRefreshToken&gt; class for defining methods specific to refresh tokens along with base repository methods
+	  - Added ContextHelper methods for building entities more readably and efficiently
+	  - Refactored ConfigurationHelper.ConfigureWicServices to have multiple generic type overloads for extensibility
+	  - Created GuidKey wrapper classes for entities/services/repositories that reference an entity with a PK type of Guid using generic type inheritence
+	  - Added custom claim type names via 'CoreClaimTypes'
+	  - Implemented Entity Type Configuration class 'AuditConfiguration' for automatic configuration of IAuditable properties
+	  - Forward: Major documentation updates required
+	  - Forward: Sandbox repository coming to show various implementations for more specific scenarios
+  </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="docs\**" />
     <EmbeddedResource Remove="docs\**" />
-	<None Include="README.md" Pack="true" PackagePath="" />
+	<None Include="nuget/README.md" Pack="true" PackagePath="/" />
     <None Remove="docs\**" />
   </ItemGroup>
 

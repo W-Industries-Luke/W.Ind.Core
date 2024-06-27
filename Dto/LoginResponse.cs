@@ -6,17 +6,18 @@
 /// <remarks>
 /// Deriving from this <see langword="class"/> allows you to return more data from a Login
 /// </remarks>
-public class LoginResponse: ILoginResponse
+public class LoginResponse : LoginResponse<TokenResponse>, ILoginResponse, ILoginResponse<TokenResponse> 
 {
-    /// <summary>
-    /// JSON Web Token value
-    /// </summary>
-    public string? Token { get; set; }
+    public static LoginResponse FromGenericType(LoginResponse<TokenResponse> dto)
+    {
+        return new LoginResponse { Success = dto.Success, LockedOut = dto.LockedOut, NotAllowed = dto.NotAllowed, NotFound = dto.NotFound, Tokens = dto.Tokens };
+    }
+}
 
-    /// <summary>
-    /// JSON Web Token expiration date
-    /// </summary>
-    public DateTime? Expires { get; set; }
+public class LoginResponse<TTokenResponse> : ILoginResponse<TTokenResponse> 
+    where TTokenResponse : ITokenResponse, new()
+{
+    public List<TTokenResponse> Tokens { get; set; } = new List<TTokenResponse>();
 
     /// <summary>
     /// Indicates whether or not the JSON Web Token was successfully generated
@@ -32,4 +33,9 @@ public class LoginResponse: ILoginResponse
     /// Indicates whether or not the User is allow to login
     /// </summary>
     public bool NotAllowed { get; set; }
+
+    /// <summary>
+    /// Indicates whether or not a User with the given UserName/Email was found
+    /// </summary>
+    public bool NotFound { get; set; }
 }

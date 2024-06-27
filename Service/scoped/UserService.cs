@@ -4,6 +4,18 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace W.Ind.Core.Service;
 
+public class UserService : UserService<CoreUser>, IUserService
+{
+    public UserService(UserManager<CoreUser> userManager, SignInManager<CoreUser> signInManager, IJwtService jwtService, IHttpContextAccessor contextAccessor)
+        : base(userManager, signInManager, jwtService, contextAccessor) { }
+}
+
+public class UserService<TUser> : UserService<long, TUser>, IUserService<TUser> where TUser : UserBase, new()
+{
+    public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser> jwtService, IHttpContextAccessor contextAccessor)
+        : base(userManager, signInManager, jwtService, contextAccessor) { }
+}
+
 /// <summary>
 /// A <see langword="class"/> derived from <see cref="UserServiceBase{TUser,TKey}"/> and <see cref="IUserService{TUser,TKey}"/> 
 /// </summary>
@@ -17,7 +29,9 @@ namespace W.Ind.Core.Service;
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserService<TUser, TKey> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public class UserService<TKey, TUser> 
+    : UserServiceBase<TKey, TUser>, IUserService<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
     /// <summary>
     /// <see langword="protected"/> <see langword="readonly"/> field used to access <see cref="HttpContext"/> within derived classes
@@ -44,7 +58,7 @@ public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserServi
     /// <code>
     /// <see langword="using"/> <see cref="Microsoft.Extensions.DependencyInjection"/>;
     /// 
-    /// builder.Services.AddIdentity&lt;<see cref="User"/>, <see cref="Role"/>&gt;(...);
+    /// builder.Services.AddIdentity&lt;<see cref="CoreUser"/>, <see cref="CoreRole"/>&gt;(...);
     /// </code>
     /// </example>
     /// </param>
@@ -55,10 +69,27 @@ public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserServi
     /// <param name="contextAccessor">
     /// <para><see cref="IHttpContextAccessor"/> instance</para>
     /// </param>
-    public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TUser, TKey> jwtService, IHttpContextAccessor contextAccessor) 
+    public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager, IJwtService<TKey, TUser> jwtService, IHttpContextAccessor contextAccessor) 
         : base(userManager, signInManager, jwtService)
     {
         _contextAccessor = contextAccessor;
+    }
+
+    public virtual TKey GetCurrent() 
+    {
+        TKey result;
+        string? retrievedClaim = _contextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(a => a.Type == JwtRegisteredClaimNames.NameId)?.Value;
+
+        if (retrievedClaim == null)
+        {
+            result = GetSystem();
+        }
+        else
+        {
+            result = ContextHelper.ParsePrimaryKey<TKey>(retrievedClaim);
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -71,14 +102,14 @@ public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserServi
     /// <returns>A User ID</returns>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="ArgumentNullException">Thrown when GetSystem() fails</exception>
-    public virtual async Task<TKey> GetCurrent() 
+    public virtual async Task<TKey> GetCurrentAsync() 
     {
         TKey result;
         string? retrievedClaim = _contextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(a => a.Type == JwtRegisteredClaimNames.NameId)?.Value;
 
         if (retrievedClaim == null) 
         {
-            result = await GetSystem();
+            result = await GetSystemAsync();
         }
         else
         {
@@ -86,6 +117,22 @@ public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserServi
         }
 
         return result;
+    }
+
+    public virtual TKey GetSystem(string? systemUserName = null) 
+    {
+        if (String.IsNullOrWhiteSpace(systemUserName))
+        {
+            systemUserName = "SYSTEM";
+        }
+
+        var user = _userManager.FindByNameAsync(systemUserName).Result;
+        if (user != null)
+        {
+            return user.Id;
+        }
+
+        throw new InvalidOperationException($"System UserName \"${systemUserName}\" Not Found");
     }
 
     /// <summary>
@@ -98,12 +145,13 @@ public class UserService<TUser, TKey> : UserServiceBase<TUser, TKey>, IUserServi
     /// <returns>System User's ID</returns>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="systemUserName"/> is <see langword="null"/> or empty when invoking <c>_userManager.FindByNameAsync</c></exception>
-    public virtual async Task<TKey> GetSystem(string? systemUserName = null)
+    public virtual async Task<TKey> GetSystemAsync(string? systemUserName = null)
     {
         if (String.IsNullOrWhiteSpace(systemUserName))
         {
             systemUserName = "SYSTEM";
         }
+
         var user = await _userManager.FindByNameAsync(systemUserName);
         if (user != null) 
         {
