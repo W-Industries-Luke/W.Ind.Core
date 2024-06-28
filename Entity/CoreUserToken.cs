@@ -1,23 +1,24 @@
-﻿namespace W.Ind.Core.Entity;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace W.Ind.Core.Entity;
+
+public class CoreUserToken : CoreUserToken<long>, ISoftDelete;
 
 /// <summary>
-/// Concrete core entity <see langword="class"/> that can be used as an <see cref="Microsoft.AspNetCore.Identity.IdentityUserClaim{TKey}"/>
+/// Concrete core entity <see langword="class"/> that can be used as an <see cref="IdentityUserToken{TKey}"/>
 /// </summary>
 /// <remarks>
-/// <para>
-/// Inherits from <see langword="abstract"/> <see cref="AuditUserClaimBase{TRoleKey}"/> which implements <see cref="IAuditable"/>
-/// </para>
 /// <para>
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class UserClaim : AuditUserClaimBase<long>, ISoftDelete, IAuditable
+public class CoreUserToken<TUserKey> : IdentityUserToken<TUserKey>, ISoftDelete where TUserKey : IEquatable<TUserKey>
 {
     /// <summary>
     /// <para>
     /// Implemented from <see cref="ISoftDelete"/>
     /// </para>
-    /// Adds an <c>IsDeleted</c> flag to the <c>UserClaim</c> table
+    /// Adds an <c>IsDeleted</c> flag to the <c>UserToken</c> table
     /// </summary>
     /// <remarks>
     /// See <see cref="ContextHelper.HandleSoftDelete(IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{ISoftDelete}})"/> for usage

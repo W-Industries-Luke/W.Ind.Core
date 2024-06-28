@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -15,7 +14,7 @@ public static class TokenHelper
     /// </summary>
     /// <param name="context">The current <see cref="HttpContext"/></param>
     /// <returns><see langword="string"/> JWT value (if present)</returns>
-    public static string? GetBearerToken(this HttpContext context) 
+    public static string? GetAccessToken(this HttpContext context) 
     {
         return context.Request.Headers[HeaderNames.Authorization].ToString().Split(" ").LastOrDefault();
     }
@@ -34,7 +33,7 @@ public static class TokenHelper
     {
         // Default 30 minutes
         TimeSpan tokenExpiry = DateTime.UtcNow.AddMinutes(30) - DateTime.UtcNow;
-        DateTime? getExpiration = GetTokenExpiration(token);
+        DateTime? getExpiration = GetAccessTokenExpiration(token);
 
         if (getExpiration.HasValue)
         {
@@ -51,7 +50,7 @@ public static class TokenHelper
     /// <returns>The expiration date of <paramref name="token"/></returns>
     /// <exception cref="InvalidOperationException">Thrown when <paramref name="token"/> is unreadable</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="token" /> is too long</exception>
-    public static DateTime? GetTokenExpiration(string token)
+    public static DateTime? GetAccessTokenExpiration(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
