@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using W.Ind.Core.Config;
 
 namespace W.Ind.Core.Helper;
@@ -11,6 +12,35 @@ namespace W.Ind.Core.Helper;
 /// </remarks>
 public static class ConfigurationHelper
 {
+    public static IServiceCollection ConfigureWicServices(this IServiceCollection services, JwtConfig config)
+    {
+        services.TryAddCore(config);
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IUserService, UserService>();
+        
+        return services;
+    }
+
+    public static IServiceCollection ConfigureWicServices<TUser>(this IServiceCollection services, JwtConfig config)
+        where TUser : UserBase, new()
+    {
+        services.TryAddCore(config);
+        services.AddScoped<IJwtService<TUser>, JwtService<TUser>>();
+        services.AddScoped<IUserService<TUser>, UserService<TUser>>();
+
+        return services;
+    }
+
+    public static IServiceCollection ConfigureWicServices<TKey, TUser>(this IServiceCollection services, JwtConfig config)
+        where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
+    {
+        services.TryAddCore(config);
+        services.AddScoped<IJwtService<TKey, TUser>, JwtService<TKey, TUser>>();
+        services.AddScoped<IUserService<TKey, TUser>, UserService<TKey, TUser>>();
+
+        return services;
+    }
+
     /// <summary>
     /// A <see langword="static"/> extension method used to configure <see cref="Core"/> services in one method
     /// </summary>
@@ -20,14 +50,21 @@ public static class ConfigurationHelper
     /// <param name="services"><c>builder.Services</c></param>
     /// <param name="config">An instance of <typeparamref name="TConfig"/> mapped from your Configuration file</param>
     /// <returns>The same <see cref="IServiceCollection"/> that called this method</returns>
-    public static IServiceCollection ConfigureWicServices<TConfig, TUser, TKey>(this IServiceCollection services, TConfig config) 
-        where TConfig : JwtConfig where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+    public static IServiceCollection ConfigureWicServices<TKey, TUser, TConfig>(this IServiceCollection services, TConfig config) 
+        where TConfig : JwtConfig where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>, new()
+    {
+        services.TryAddCore(config);
+        services.AddScoped<IJwtService<TKey, TUser, TConfig>, JwtService<TKey, TUser, TConfig>>();
+        services.AddScoped<IUserService<TKey, TUser>, UserService<TKey, TUser>>();
+        
+        return services;
+    }
+
+    private static void TryAddCore<TConfig>(this IServiceCollection services, TConfig config)
+        where TConfig : JwtConfig
     {
         services.AddHttpContextAccessor();
-        services.AddSingleton(config);
-        services.AddSingleton<IJwtInvalidator, JwtInvalidator>();
-        services.AddScoped<IJwtService<TUser, TKey>, JwtService<TUser, TKey, TConfig>>();
-        services.AddScoped<IUserService<TUser, TKey>, UserService<TUser, TKey>>();
-        return services;
+        services.TryAddSingleton<IJwtInvalidator, JwtInvalidator>();
+        services.TryAddSingleton(config);
     }
 }

@@ -11,7 +11,20 @@
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class Role : AuditRoleBase<long>, ISoftDelete, IAuditable, IEntity<long>
+public class CoreRole 
+    : CoreRole<CoreUser>, ISoftDelete, IAuditable, IEntity;
+
+public class CoreRole<TUser> 
+    : CoreRole<long, TUser>, ISoftDelete, IAuditable<TUser>, IEntity 
+    where TUser : UserBase;
+
+public class CoreRole<TKey, TUser> 
+    : CoreRole<TKey, TUser, TKey>, ISoftDelete, IAuditable<TKey, TUser>, IEntity<TKey> 
+    where TKey : struct, IEquatable<TKey> where TUser : UserBase<TKey>;
+
+public class CoreRole<TKey, TUser, TUserKey> 
+    : AuditRoleBase<TKey, TUser, TUserKey>, ISoftDelete, IAuditable<TUserKey, TUser> , IEntity<TKey> 
+    where TKey : struct, IEquatable<TKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
 {
     /// <summary>
     /// <para>Implemented from <see cref="ISoftDelete"/></para>

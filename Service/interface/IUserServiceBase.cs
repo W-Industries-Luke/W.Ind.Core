@@ -1,6 +1,11 @@
-﻿using W.Ind.Core.Dto;
+﻿using Microsoft.AspNetCore.Identity;
+using W.Ind.Core.Dto;
 
 namespace W.Ind.Core.Service;
+
+public interface IUserServiceBase : IUserServiceBase<CoreUser>;
+
+public interface IUserServiceBase<TUser> : IUserServiceBase<long, TUser> where TUser : UserBase, new();
 
 /// <summary>
 /// Base <see langword="interface"/> implemented by <see langword="abstract"/> <see langword="class"/> <see cref="UserServiceBase{TUser,TKey}"/>
@@ -12,31 +17,10 @@ namespace W.Ind.Core.Service;
 /// <typeparam name="TKey">
 /// The data type of <typeparamref name="TUser"/>'s Primary Key
 /// </typeparam>
-public interface IUserServiceBase<TUser, TKey> where TUser : UserBase<TKey>, new() where TKey : IEquatable<TKey>
+public interface IUserServiceBase<TKey, TUser> 
+    where TUser : UserBase<TKey>, new() where TKey : struct, IEquatable<TKey>
 {
-    /// <summary>
-    /// An <see langword="async"/> method to validate if <paramref name="email"/> is unique to the system
-    /// </summary>
-    /// <remarks>
-    /// Will <see langword="throw"/> <see cref="System.ComponentModel.DataAnnotations.ValidationException"/> or <see cref="ArgumentNullException"/> on fail
-    /// </remarks>
-    /// <param name="email">The email value to validate</param>
-    /// <returns>Treat as <see langword="void"/></returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="email"/> is <see langword="null"/></exception>
-    /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when <paramref name="email"/> is in use</exception>
-    Task EnsureUniqueEmailAsync(string email);
-
-    /// <summary>
-    /// An <see langword="async"/> method to validate if <paramref name="name"/> is unique to the system
-    /// </summary>
-    /// <remarks>
-    /// Will <see langword="throw"/> <see cref="System.ComponentModel.DataAnnotations.ValidationException"/> on fail
-    /// </remarks>
-    /// <param name="name">The UserName value to validate</param>
-    /// <returns>Treat as <see langword="void"/></returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/> is <see langword="null"/></exception>
-    /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when <paramref name="name"/> is in use</exception>
-    Task EnsureUniqueNameAsync(string name);
+    Task<IdentityResult> RegisterAsync(UserRegistration dto);
 
     /// <summary>
     /// An <see langword="async"/> method that adds a new <typeparamref name="TUser"/> to the System
@@ -52,7 +36,13 @@ public interface IUserServiceBase<TUser, TKey> where TUser : UserBase<TKey>, new
     /// <exception cref="ArgumentNullException">Thrown when either the Email or Password is <see langword="null"/></exception>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="Microsoft.AspNetCore.Identity.UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when either the Email or UserName is taken</exception>
-    Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) where TUserRegistration : class, IUserRegistration;
+    Task<IdentityResult> RegisterAsync<TUserRegistration>(TUserRegistration dto) 
+        where TUserRegistration : class, IUserRegistration;
+
+    Task<LoginResponse> ValidateLoginAsync(LoginRequest dto);
+
+    Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse>(TLoginRequest dto)
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TokenResponse>, new();
 
     /// <summary>
     /// An <see langword="async"/> method that validates a <typeparamref name="TLoginRequest"/>
@@ -67,6 +57,6 @@ public interface IUserServiceBase<TUser, TKey> where TUser : UserBase<TKey>, new
     /// <exception cref="ArgumentNullException">Thrown when UserName or Password is <see langword="null"/> or empty</exception>
     /// <exception cref="ObjectDisposedException">Thrown when <see cref="Microsoft.AspNetCore.Identity.UserManager{TUser}"/> instance has already been disposed</exception>
     /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the user has been locked out</exception>
-    Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse>(TLoginRequest dto)
-        where TLoginRequest : class, ILoginRequest where TLoginResponse : class, ILoginResponse, new();
+    Task<TLoginResponse> ValidateLoginAsync<TLoginRequest, TLoginResponse, TTokenResponse>(TLoginRequest dto)
+        where TLoginRequest : class, ILoginRequest where TLoginResponse : ILoginResponse<TTokenResponse>, new() where TTokenResponse : class, ITokenResponse, new();
 }

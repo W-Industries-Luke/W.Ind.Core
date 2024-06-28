@@ -11,13 +11,16 @@
 /// Implements <see cref="ISoftDelete"/>, which is the only property defined here
 /// </para>
 /// </remarks>
-public class User : AuditUserBase<long>, ISoftDelete, IAuditable, IEntity<long>
+public class CoreUser 
+    : AuditUserBase, ISoftDelete, IAuditable<CoreUser>, IEntity<long>
 {
-    /// <summary>
-    /// Default Constructor
-    /// </summary>
-    public User() { }
+    public bool IsDeleted { get; set; }
+}
 
+public class CoreUser<TKey> 
+    : AuditUserBase<TKey, CoreUser<TKey>>, ISoftDelete, IAuditable<TKey, CoreUser<TKey>>, IEntity<TKey>
+    where TKey : struct, IEquatable<TKey> // where TUser : UserBase<TKey>
+{
     /// <summary>
     /// <para>Implemented from <see cref="ISoftDelete"/></para>
     /// <para>Adds an <c>IsDeleted</c> flag to the <c>User</c> table</para>
@@ -26,4 +29,5 @@ public class User : AuditUserBase<long>, ISoftDelete, IAuditable, IEntity<long>
     /// See <see cref="ContextHelper.HandleSoftDelete(IEnumerable{Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry{ISoftDelete}})"/> for usage
     /// </remarks>
     public bool IsDeleted { get; set; }
+
 }
