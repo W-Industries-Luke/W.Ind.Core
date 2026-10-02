@@ -13,7 +13,9 @@ There is no test project.
 
 ## Rules
 
-The conventions for this repo are in `.claude/rules/`. Read the ones that apply before editing:
+The conventions for this repo are in `.claude/rules/`. Read the ones that apply before editing. They describe how new and touched code should look; some existing code predates them, and each file says where. Don't rewrite untouched code to match, and don't make a breaking change to satisfy a rule outside a major version.
+
+Formatting and style preferences that tooling can check are in `.editorconfig`.
 
 - `csharp-style.md`: formatting, naming and language usage for all `.cs` files
 - `project-layout.md`: folders, namespaces and the generic overload ladder

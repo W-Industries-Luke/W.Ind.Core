@@ -2,19 +2,29 @@
 
 ## Remotes
 
-- `origin`: GitHub, `W-Industries-Luke/W.Ind.Core`. Public; nuget.org links here.
-- `devops`: Azure DevOps, `W-Industries/W.Ind.Core`. Work items and the original pipeline.
-- The two are kept in step with sync branches and PRs ("Merge Devops master into GitHub master").
+- `origin` (GitHub, `W-Industries-Luke/W.Ind.Core`) is the single source of truth. nuget.org links here, and issues, PRs and releases live here.
+- `devops` (Azure DevOps) is a legacy mirror. Don't push to it or open sync PRs against it. Work that exists only there is brought over once and reviewed like any other change.
 
 ## Branches
 
-- Long-lived promotion branches: `Dev` → `Review` → `Staging` → `master`. `Integration` and `Test` also exist on DevOps.
-- Work branches are named for the work item: `19-Implement-Base-Repository`, `4-Update-Namespace`, `BUG-CoreUser-Table-Always-Created`. Title-Case words joined by hyphens.
-- Changes reach `master` through a pull request.
+- `master` is always releasable. There are no promotion branches; `Dev`, `Review`, `Staging`, `Integration` and `Test` are legacy and not used.
+- Work happens on short-lived branches off `master`, named `<type>/<short-description>` in lowercase with hyphens: `fix/missing-auth-header-401`, `feat/save-changes-interceptor`, `chore/claude-rules`, `maintenance/1.0.1`.
+- Changes reach `master` only through a pull request with CI passing. Squash-merge, so `master` has one commit per change.
+- Delete the branch after it merges.
 
 ## Commits
 
-- Subject in the past tense: "Updated Copyright tag", "Added refresh token entity".
-- Reference the issue or PR number in the subject: `Story #4 - Updated Namespace`, `Refactor done (#3)`.
-- List several changes as `- ` bullets after the subject.
-- Release commits point to the release notes: "View Release notes for v0.9.99 for full details".
+- Subject: imperative mood, under about 70 characters, no trailing full stop: "Add refresh token repository", "Fix 500 on missing Authorization header".
+- Body, when needed: what changed and why, wrapped at about 72 characters. Lists use `- ` bullets in the body, never in the subject.
+- One logical change per commit. Don't commit work-in-progress checkpoints to a shared branch.
+- Reference the issue in the body or PR (`Fixes #12`), not as a subject prefix.
+
+## Pull requests
+
+- The description says what changed, why, and how it was verified.
+- Call out any public API change and whether it is breaking.
+- A release PR updates the version, `CHANGELOG.md` and both READMEs together.
+
+## Releases
+
+- Tag the merge commit `vX.Y.Z` and create a GitHub Release from the changelog entry. See `packaging.md`.

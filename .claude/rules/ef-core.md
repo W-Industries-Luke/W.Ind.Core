@@ -11,49 +11,48 @@ paths:
 ## Entities
 
 - Every entity implements `IEntity<TKey>` (an `Id` property). The default key type is `long`.
-- Entities derive from a base class: `EntityBase`, `AuditEntityBase`, `UserBase`, `RoleBase`, `RefreshTokenBase`.
-- Identity entities derive from the matching `Identity*<TKey>` type.
+- Entities derive from a base class: `EntityBase`, `AuditEntityBase`, `UserBase`, `RoleBase`, `RefreshTokenBase`. Identity entities derive from the matching `Identity*<TKey>` type.
 - Soft delete: implement `ISoftDelete` (`bool IsDeleted`).
 - Auditing: implement `IAuditable<TKey, TUser>`: `CreatedOn`, `ModifiedOn`, `CreatedById`, `CreatedBy`, `ModifiedBy`, `Timestamp`.
-  - `ModifiedById` is a shadow property, referred to by the string `"ModifiedById"`.
   - Audit navigations are nullable and use `DeleteBehavior.NoAction`.
   - `Timestamp` is a `byte[]` row version.
-- Date handling: implement `IStartDate`, `IEndDate` or `IEnterredDate` (all derive from `IDate`) to have `DateTime` properties converted to UTC on save.
-- Join entities implement `IJoinTable`.
-- Mapping uses data annotations on the entity (`[Required]`, `[ForeignKey]`, `[Timestamp]`, `[DeleteBehavior]`) plus the fluent helpers below.
+  - `ModifiedById` is a shadow property. Refer to it through a single constant, never a repeated string literal.
+- Collection navigations are `ICollection<T>` initialised to `[]`. Reference navigations are nullable unless the relationship is required and always loaded.
+- Store instants as UTC. Prefer `DateTimeOffset` for new timestamp properties; the existing `DateTime` audit columns stay, since changing them alters consumers' schemas.
 
 ## Model configuration
 
-`ContextHelper` holds extension methods on `EntityTypeBuilder<TEntity>` that return the builder so they chain:
+- Mapping that belongs to the package goes in `IEntityTypeConfiguration<T>` classes under `Entity/config/` (like `AuditConfiguration`), with a chainable `EntityTypeBuilder<TEntity>` extension that applies it:
 
-```cs
-builder.Entity<Contact>().ConfigureAudit().FilterDeleted()
-    .OneToMany(c => c.Reference, c => c.HasForeignKey(fk => fk.ReferenceId));
-```
+  ```cs
+  builder.Entity<Contact>().ConfigureAudit().FilterDeleted();
+  ```
 
-- `ConfigureAudit` applies `AuditConfiguration` and makes the table temporal.
-- `FilterDeleted` adds the `!IsDeleted` query filter.
-- `OneToOne`, `OneToMany`, `ManyToOne`, `ManyToMany`, `CompositeKey`, `BuildIndexes` wrap the relationship and key builders.
-- `SeedFromJson` seeds with `HasData` from a JSON file.
+- Use fluent configuration for relationships, keys, indexes and delete behaviour. Keep data annotations to validation-style attributes (`[Required]`, `[MaxLength]`). Mapping attributes on interface members (`[ForeignKey]`, `[Timestamp]` in `IAuditable`) are not read by EF from the interface, so don't add more; `AuditConfiguration` is what applies them.
+- Don't add thin wrappers over EF's own relationship API. The existing `OneToOne`/`OneToMany`/`ManyToOne`/`ManyToMany` helpers stay, but new configuration uses `HasOne`/`HasMany` directly.
+- Soft-delete filter: `FilterDeleted` adds `!IsDeleted`. When the package targets EF Core 10, give the filter a name (`HasQueryFilter("SoftDelete", ...)`) so consumers can add their own filters and disable this one selectively. On EF Core 8 an entity has one filter, and a second `HasQueryFilter` call replaces it.
+- Seeding: `SeedFromJson` (`HasData`) is for static reference data only, because it is baked into migrations. Don't seed users or secrets with it. On EF Core 9 and later, use `UseSeeding`/`UseAsyncSeeding` for anything else.
 
 ## Temporal tables
 
-- Period columns default to `SysStartTime` and `SysEndTime`.
-- The history table is `{EntityName}-History`.
-- `TemporalConfig` overrides the names.
-- The provider is SQL Server.
+- Period columns default to `SysStartTime` and `SysEndTime`; the history table is `{EntityName}-History`; `TemporalConfig` overrides the names.
+- Temporal tables are SQL Server only. Anything provider-specific stays behind the SQL Server dependency and out of types a non-SQL Server consumer would need.
 
 ## Saving
 
-Consuming contexts override `SaveChanges` and `SaveChangesAsync` and call the `ChangeTracker` helpers before `base.SaveChanges`:
+Audit, soft-delete and UTC handling run when changes are saved.
 
-- `HandleSoftDelete` turns a delete of an `ISoftDelete` entity into an update that sets `IsDeleted`.
-- `HandleAudit` sets `CreatedOn`/`CreatedById` on insert and `ModifiedOn`/`ModifiedById` on update, using `DateTime.UtcNow` and the current user id from `IUserService`.
-- `ParseUtcDates` converts `IDate` properties to UTC.
+- New work implements this as a `SaveChangesInterceptor` (override `SavingChanges` and `SavingChangesAsync`) that consumers register with `AddInterceptors`. One registration covers both the sync and async paths and every context.
+- The existing `ChangeTracker` helpers (`HandleSoftDelete`, `HandleAudit`, `ParseUtcDates`) stay supported for consumers who override `SaveChanges` themselves. Such a context must override both `SaveChanges(bool)` and `SaveChangesAsync(bool, CancellationToken)`, or one path skips auditing.
+- Take the current time from `TimeProvider` and the current user from an injected service. Set both once per save, not per entry.
+- Find properties by interface and cast, not by reflection over property names, on the save path.
 
 ## Repositories
 
-- `RepositoryBase<TEntity, TKey>` takes a `DbContext` and exposes `_context` and `_dbSet` to derived classes.
-- Operations: `Get(predicate)`, `GetById`, `Create`, `Update`, `Delete`, each with an `Async` twin.
-- `Get` returns an un-enumerated `IQueryable<TEntity>`.
+- `RepositoryBase<TEntity, TKey>` takes a `DbContext` and gives derived classes the context and the `DbSet`.
+- Async methods take a `CancellationToken` and pass it to EF.
+- Async methods return materialised results (`Task<TEntity?>`, `Task<List<TEntity>>`). Only synchronous query methods return `IQueryable<TEntity>`; there is nothing to await in building a query. `GetAsync` returning `Task<IQueryable<T>>` is legacy.
+- Look up by key with `FindAsync` or `FirstOrDefaultAsync` and return `null` when missing, rather than letting `First` throw.
+- Read-only queries use `AsNoTracking()`.
 - Write operations take `bool saveChanges = false`; the caller decides when to save.
+- New operations are async only. Don't add a synchronous twin.
