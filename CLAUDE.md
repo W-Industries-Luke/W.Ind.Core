@@ -13,9 +13,7 @@ There is no test project.
 
 ## Rules
 
-The conventions for this repo are in `.claude/rules/`. Read the ones that apply before editing. They describe how new and touched code should look; some existing code predates them, and each file says where. Don't rewrite untouched code to match, and don't make a breaking change to satisfy a rule outside a major version.
-
-Formatting and style preferences that tooling can check are in `.editorconfig`.
+The conventions for this repo are in `.claude/rules/`. Read the ones that apply before editing or reviewing. Formatting and style preferences that tooling can check are in `.editorconfig`.
 
 - `csharp-style.md`: formatting, naming and language usage for all `.cs` files
 - `project-layout.md`: folders, namespaces and the generic overload ladder
@@ -23,3 +21,13 @@ Formatting and style preferences that tooling can check are in `.editorconfig`.
 - `ef-core.md`: entities, auditing, soft delete and model configuration
 - `packaging.md`: the csproj, versioning and releases
 - `git.md`: branches, commits and pull requests
+
+## Applying the rules
+
+This holds for writing code and for reviewing it:
+
+- The rules describe how new and changed code should look. Apply them to the lines a change adds or modifies.
+- Some existing code predates a rule, and each file says where. That code is not a violation. Don't rewrite it, or ask for it to be rewritten, as part of an unrelated change.
+- Compatibility outranks style. Outside a major version, never remove, rename or change the signature or behaviour of a public or protected member to satisfy a rule. A change that does so is a defect, whatever its reason.
+- `packaging.md` lists targets that are not in place yet. Their absence is not a violation.
+- When two rules seem to conflict, the more specific file wins over `csharp-style.md`.

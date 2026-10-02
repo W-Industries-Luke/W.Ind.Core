@@ -9,6 +9,8 @@ paths:
 
 # Packaging
 
+Some of this describes where the project is heading rather than where it is. See "Not yet in place" at the end before treating a gap as a violation.
+
 ## Targets and dependencies
 
 - Target the .NET versions Microsoft currently supports, LTS first (`net8.0;net10.0` while both are in support). Drop a target only in a major version.
@@ -24,7 +26,7 @@ paths:
 - Symbols: `.snupkg` with Source Link (`PublishRepositoryUrl`, `EmbedUntrackedSources`, and `ContinuousIntegrationBuild` in CI). This replaces `IncludeSource`.
 - API compatibility: `EnablePackageValidation` with `PackageValidationBaselineVersion` set to the last release. A minor or patch release must pass it with no suppressions.
 - Pack explicitly with `dotnet pack -c Release` rather than on every build (`GeneratePackageOnBuild`).
-- CI builds with warnings as errors. Don't add `NoWarn` to get there.
+- A change must not add compiler warnings. Don't add `NoWarn` to hide them. Once the existing backlog is cleared, CI builds with warnings as errors.
 
 ## Metadata and docs
 
@@ -36,7 +38,17 @@ paths:
 
 - Semantic Versioning. Patch: fixes, no API change. Minor: additions only. Major: anything that removes, renames or changes behaviour consumers rely on.
 - Deprecate before removing: `[Obsolete]` in a minor release, removal in the next major.
-- Release notes go in `CHANGELOG.md` (Keep a Changelog format) and the GitHub Release. `PackageReleaseNotes` holds the current version's notes or a link to the changelog, not the whole history.
+- Release notes go in `CHANGELOG.md` (Keep a Changelog format) and the GitHub Release. `PackageReleaseNotes` holds the current version's notes or a link to the changelog, not the whole history. Until `CHANGELOG.md` exists, add the new version's notes at the top of `PackageReleaseNotes`.
 - A release is a `vX.Y.Z` tag on `master`. The tag triggers the GitHub Actions workflow that builds, tests, packs and pushes to nuget.org. Don't push packages from a developer machine.
 - Publish with nuget.org Trusted Publishing (`NuGet/login` exchanging the workflow's OIDC token for a short-lived key), not a long-lived API key in repo secrets.
 - Deprecate a bad release on nuget.org and point to the fix; don't unlist it.
+
+## Not yet in place
+
+These rules are targets. Their absence in the repo today is not a defect in an unrelated change, but a change must not move further from them, and work that touches the area should adopt them.
+
+- Multi-targeting (the project targets `net8.0` only).
+- Source Link, package validation and explicit `dotnet pack` (the csproj still uses `IncludeSource` and `GeneratePackageOnBuild`).
+- `CHANGELOG.md`.
+- The GitHub Actions build and release workflows, and Trusted Publishing.
+- A test project.

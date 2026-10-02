@@ -29,13 +29,13 @@ paths:
 - Constructors on public, inheritable types stay explicit. Primary constructors are fine on sealed or internal types.
 - State that derived classes need is exposed as a `protected` get-only property, not a field. Existing `protected readonly _field` members stay as they are until 2.0, because renaming them breaks consumers.
 - Instance methods on services, repositories and middleware are `public virtual` or `protected virtual` so consumers can override them.
-- Make a class `sealed` when it isn't meant to be derived from.
+- Public services, repositories, entities, DTOs and middleware stay open for inheritance; that is the point of the package. Seal internal types.
 - Extension methods on `IServiceCollection` and `EntityTypeBuilder<T>` return the builder so calls chain.
 - Groups of constants go in a `static class`. `CoreClaimTypes` is a struct today; leave it until 2.0.
 
 ## Async
 
-- Every public async method takes `CancellationToken cancellationToken = default` as its last parameter and passes it to every call it awaits. Existing methods don't; add the parameter as an overload, since changing a signature is breaking.
+- Every new public async method takes `CancellationToken cancellationToken = default` as its last parameter and passes it to every call it awaits. Existing methods don't. Adding it to them changes their signatures and the interfaces consumers implement, so that waits for 2.0.
 - A method is async only if it awaits real I/O. Don't wrap synchronous work in `Task.FromResult` or `Task.Run` to make an `Async` twin.
 - Don't block on async code with `.Result`, `.Wait()` or `.GetAwaiter().GetResult()`.
 - `ConfigureAwait(false)` is not used: the package only runs under ASP.NET Core, which has no synchronization context.
@@ -53,7 +53,7 @@ paths:
 ## Exceptions
 
 - Throw the most specific BCL type: `ArgumentNullException`, `ArgumentException`, `InvalidOperationException`, `FormatException`.
-- The first argument of `ArgumentNullException` and `ArgumentException` overloads that take one is the parameter name, via `nameof`, not a message.
+- Pass the parameter name with `nameof`. `ArgumentNullException(paramName)` takes it first; `ArgumentException(message, paramName)` takes it second. Don't pass a message where the name belongs.
 - Never throw `NullReferenceException`, `InvalidCastException` or `Exception` yourself.
 - Don't write `catch (Exception) { throw; }`. Catch only what you handle.
 - A member that must be overridden is `abstract`, not `virtual` with a body that throws `NotImplementedException`.

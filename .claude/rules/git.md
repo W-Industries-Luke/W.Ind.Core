@@ -9,7 +9,7 @@
 
 - `master` is always releasable. There are no promotion branches; `Dev`, `Review`, `Staging`, `Integration` and `Test` are legacy and not used.
 - Work happens on short-lived branches off `master`, named `<type>/<short-description>` in lowercase with hyphens: `fix/missing-auth-header-401`, `feat/save-changes-interceptor`, `chore/claude-rules`, `maintenance/1.0.1`.
-- Changes reach `master` only through a pull request with CI passing. Squash-merge, so `master` has one commit per change.
+- Changes reach `master` only through a pull request, with every check passing. Squash-merge, so `master` has one commit per change.
 - Delete the branch after it merges.
 
 ## Commits
@@ -23,7 +23,7 @@
 
 - The description says what changed, why, and how it was verified.
 - Call out any public API change and whether it is breaking.
-- A release PR updates the version, `CHANGELOG.md` and both READMEs together.
+- A release PR updates the version, the release notes and both READMEs together.
 
 ## Releases
 

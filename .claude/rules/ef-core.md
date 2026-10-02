@@ -18,7 +18,7 @@ paths:
   - `Timestamp` is a `byte[]` row version.
   - `ModifiedById` is a shadow property. Refer to it through a single constant, never a repeated string literal.
 - Collection navigations are `ICollection<T>` initialised to `[]`. Reference navigations are nullable unless the relationship is required and always loaded.
-- Store instants as UTC. Prefer `DateTimeOffset` for new timestamp properties; the existing `DateTime` audit columns stay, since changing them alters consumers' schemas.
+- Store instants in UTC. The audit columns and the `IDate` handling use `DateTime`; stay consistent with them rather than mixing in `DateTimeOffset`.
 
 ## Model configuration
 
@@ -45,14 +45,14 @@ Audit, soft-delete and UTC handling run when changes are saved.
 - New work implements this as a `SaveChangesInterceptor` (override `SavingChanges` and `SavingChangesAsync`) that consumers register with `AddInterceptors`. One registration covers both the sync and async paths and every context.
 - The existing `ChangeTracker` helpers (`HandleSoftDelete`, `HandleAudit`, `ParseUtcDates`) stay supported for consumers who override `SaveChanges` themselves. Such a context must override both `SaveChanges(bool)` and `SaveChangesAsync(bool, CancellationToken)`, or one path skips auditing.
 - Take the current time from `TimeProvider` and the current user from an injected service. Set both once per save, not per entry.
-- Find properties by interface and cast, not by reflection over property names, on the save path.
+- On the save path, reach properties through the interface, not through reflection. `UtcDateHelper` predates this.
 
 ## Repositories
 
 - `RepositoryBase<TEntity, TKey>` takes a `DbContext` and gives derived classes the context and the `DbSet`.
 - Async methods take a `CancellationToken` and pass it to EF.
 - Async methods return materialised results (`Task<TEntity?>`, `Task<List<TEntity>>`). Only synchronous query methods return `IQueryable<TEntity>`; there is nothing to await in building a query. `GetAsync` returning `Task<IQueryable<T>>` is legacy.
-- Look up by key with `FindAsync` or `FirstOrDefaultAsync` and return `null` when missing, rather than letting `First` throw.
+- New lookups use `FindAsync` or `FirstOrDefaultAsync` and return `null` when nothing matches. `GetById` and `GetByIdAsync` throw instead; changing that is a behaviour change for 2.0.
 - Read-only queries use `AsNoTracking()`.
 - Write operations take `bool saveChanges = false`; the caller decides when to save.
 - New operations are async only. Don't add a synchronous twin.
