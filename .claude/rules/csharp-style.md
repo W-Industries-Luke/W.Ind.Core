@@ -5,7 +5,7 @@ paths:
 
 # C# style
 
-`.editorconfig` at the repo root is the source of truth for formatting and the style preferences below. This file covers what it can't express. Where existing code predates a rule, the rule applies to new and touched code; don't reformat untouched files in the same change.
+The rules here that a machine can check are enforced through `.editorconfig` and `eng/lint.ps1`; `linting.md` maps each rule to its check. Where existing code predates a rule, the rule applies to new and touched code; don't reformat untouched files in the same change.
 
 ## Files and formatting
 
@@ -20,7 +20,7 @@ paths:
 - Interfaces: `I` prefix. Abstract base classes: `Base` suffix. Async methods: `Async` suffix.
 - Default concrete entities: `Core` prefix (`CoreUser`). `Guid`-keyed wrappers: `GuidKey` prefix.
 - Configuration classes: `Config` suffix (`JwtConfig`). DTOs carry no suffix (`LoginRequest`).
-- Generic type parameters: descriptive `T` names (`TKey`, `TUser`, `TEntity`).
+- Generic type parameters: descriptive names starting with `T` (`TKey`, `TUser`, `TEntity`).
 - Static classes of extension methods: name them for what they extend (`ServiceCollectionExtensions`, `EntityTypeBuilderExtensions`). The existing `*Helper` classes keep their names because they are public API.
 - Private fields: `_camelCase`.
 
@@ -44,7 +44,7 @@ paths:
 
 - Use the `string` keyword everywhere, including static members: `string.Empty`, `string.IsNullOrWhiteSpace`.
 - Use `var` when the type is obvious from the right-hand side, the explicit type otherwise.
-- Null checks use `is null` and `is not null`.
+- Null checks use `is null` and `is not null`. The exception is inside an expression tree, such as an EF query lambda, where the compiler only allows `== null`.
 - Guard arguments with the throw helpers: `ArgumentNullException.ThrowIfNull(x)`, `ArgumentException.ThrowIfNullOrWhiteSpace(x)`, `ArgumentOutOfRangeException.ThrowIfNegative(x)`.
 - Use collection expressions (`[]`, `[a, b]`) for collection initialisation.
 - Use `required` and `init` for values that must be set at construction, instead of defaulting to `string.Empty`.

@@ -1,0 +1,12 @@
+P:System.DateTime.Now;Use an injected TimeProvider (GetUtcNow) instead. See .claude/rules/csharp-style.md.
+P:System.DateTime.UtcNow;Use an injected TimeProvider (GetUtcNow) instead. See .claude/rules/csharp-style.md.
+P:System.DateTime.Today;Use an injected TimeProvider (GetUtcNow) instead. See .claude/rules/csharp-style.md.
+P:System.DateTimeOffset.Now;Use an injected TimeProvider (GetUtcNow) instead. See .claude/rules/csharp-style.md.
+P:System.DateTimeOffset.UtcNow;Use an injected TimeProvider (GetUtcNow) instead. See .claude/rules/csharp-style.md.
+P:System.Threading.Tasks.Task`1.Result;Don't block on async code; await it. See .claude/rules/csharp-style.md.
+M:System.Threading.Tasks.Task.Wait;Don't block on async code; await it. See .claude/rules/csharp-style.md.
+M:System.Threading.Tasks.Task.Wait(System.Int32);Don't block on async code; await it. See .claude/rules/csharp-style.md.
+M:System.Threading.Tasks.Task.Wait(System.TimeSpan);Don't block on async code; await it. See .claude/rules/csharp-style.md.
+M:System.Threading.Tasks.Task.Wait(System.Threading.CancellationToken);Don't block on async code; await it. See .claude/rules/csharp-style.md.
+M:System.Runtime.CompilerServices.TaskAwaiter.GetResult;Don't block on async code; await it. See .claude/rules/csharp-style.md.
+M:System.Runtime.CompilerServices.TaskAwaiter`1.GetResult;Don't block on async code; await it. See .claude/rules/csharp-style.md.

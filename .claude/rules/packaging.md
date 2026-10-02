@@ -24,7 +24,7 @@ Some of this describes where the project is heading rather than where it is. See
 
 - `GenerateDocumentationFile` stays on; the XML file ships in the package.
 - Symbols: `.snupkg` with Source Link (`PublishRepositoryUrl`, `EmbedUntrackedSources`, and `ContinuousIntegrationBuild` in CI). This replaces `IncludeSource`.
-- API compatibility: `EnablePackageValidation` with `PackageValidationBaselineVersion` set to the last release. A minor or patch release must pass it with no suppressions.
+- API compatibility: `EnablePackageValidation` with `PackageValidationBaselineVersion` set to the last version published on nuget.org. A minor or patch release must pass it with no suppressions. Raise the baseline in the first change after each release.
 - Pack explicitly with `dotnet pack -c Release` rather than on every build (`GeneratePackageOnBuild`).
 - A change must not add compiler warnings. Don't add `NoWarn` to hide them. Once the existing backlog is cleared, CI builds with warnings as errors.
 
@@ -48,7 +48,7 @@ Some of this describes where the project is heading rather than where it is. See
 These rules are targets. Their absence in the repo today is not a defect in an unrelated change, but a change must not move further from them, and work that touches the area should adopt them.
 
 - Multi-targeting (the project targets `net8.0` only).
-- Source Link, package validation and explicit `dotnet pack` (the csproj still uses `IncludeSource` and `GeneratePackageOnBuild`).
+- Source Link and explicit `dotnet pack` (the csproj still uses `IncludeSource` and `GeneratePackageOnBuild`).
 - `CHANGELOG.md`.
-- The GitHub Actions build and release workflows, and Trusted Publishing.
+- The GitHub Actions release workflow and Trusted Publishing. (The lint workflow exists.)
 - A test project.

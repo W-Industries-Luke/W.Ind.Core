@@ -19,7 +19,7 @@ public abstract class AuditEntityBase
 /// <para>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</para>
 /// <para>Inherits from <see cref="AuditEntityBase{TKey, TUser}"/> where <c>TKey</c> is defaulted to <see cref="long"/></para>
 /// </remarks>
-/// <typeparam name="TUser">The User entity (PK <see langword="type"/> is the same as <typeparamref name="TKey"/>)</typeparam>
+/// <typeparam name="TUser">The User entity (PK <see langword="type"/> is the same as <c>TKey</c>)</typeparam>
 public abstract class AuditEntityBase<TUser> 
     : AuditEntityBase<long, TUser>, IAuditable<TUser>, IEntity 
     where TUser : UserBase;
