@@ -4,7 +4,12 @@
 /// Concrete DTO <see langword="class"/> containing response data from Login
 /// </summary>
 /// <remarks>
-/// Deriving from this <see langword="class"/> allows you to return more data from a Login
+/// <para>
+/// Implements <see cref="ILoginResponse"/>
+/// </para>
+/// <para>
+/// Generic type parameter defaulted to <see cref="TokenResponse"/>
+/// </para>
 /// </remarks>
 public class LoginResponse : LoginResponse<TokenResponse>, ILoginResponse, ILoginResponse<TokenResponse> 
 {
@@ -14,9 +19,16 @@ public class LoginResponse : LoginResponse<TokenResponse>, ILoginResponse, ILogi
     }
 }
 
+/// <summary>
+/// Concrete DTO <see langword="class"/> containing response data from Login
+/// </summary>
+/// <typeparam name="TTokenResponse">Implements <see cref="ITokenResponse"/> for returning different types of tokens generically</typeparam>
 public class LoginResponse<TTokenResponse> : ILoginResponse<TTokenResponse> 
     where TTokenResponse : ITokenResponse, new()
 {
+    /// <summary>
+    /// Stores a list of different types of tokens to be returned on login success
+    /// </summary>
     public List<TTokenResponse> Tokens { get; set; } = new List<TTokenResponse>();
 
     /// <summary>
