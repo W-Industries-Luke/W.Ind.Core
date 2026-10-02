@@ -4,6 +4,9 @@ public interface ILoginResponse : ILoginResponse<TokenResponse>;
 
 public interface ILoginResponse<TTokenResponse>
 {
+    /// <summary>
+    /// Stores a list of different types of tokens to be returned on login success
+    /// </summary>
     List<TTokenResponse> Tokens { get; set; }
 
     /// <summary>

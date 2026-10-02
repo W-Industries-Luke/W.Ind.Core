@@ -11,6 +11,13 @@ public abstract class AuditRoleClaimBase<TUser>
     : AuditRoleClaimBase<long, TUser>, IAuditable<TUser>, IEntity<int>
     where TUser : UserBase;
 
+
+/// <summary>
+/// An <see langword="abstract"/> <see langword="class"/> that both inherits from <see cref="IdentityRoleClaim{TKey}"/> and implements the <see cref="IAuditable"/> <see langword="interface"/>
+/// </summary>
+/// <remarks>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</remarks>
+/// <typeparam name="TRoleKey">The data type of your <c>Role</c> entity's Primary Key</typeparam>
+/// <typeparam name="TUser">Your User entity (Derived from <see cref="UserBase{TKey}"/>)</typeparam>
 public abstract class AuditRoleClaimBase<TRoleKey, TUser> 
     : AuditRoleClaimBase<TRoleKey, TUser, TRoleKey>, IAuditable<TRoleKey, TUser>, IEntity<int>
     where TRoleKey : struct, IEquatable<TRoleKey> where TUser : UserBase<TRoleKey>;
@@ -20,6 +27,8 @@ public abstract class AuditRoleClaimBase<TRoleKey, TUser>
 /// </summary>
 /// <remarks>Used to define repetitive boilerplate properties outside of the actual entity <see langword="class"/> file</remarks>
 /// <typeparam name="TRoleKey">The data type of your <c>Role</c> entity's Primary Key</typeparam>
+/// <typeparam name="TUser">Your User entity (Derived from <see cref="UserBase{TKey}"/>)</typeparam>
+/// <typeparam name="TUserKey">The PK <see langword="type"/> of your User entity</typeparam>
 public abstract class AuditRoleClaimBase<TRoleKey, TUser, TUserKey> 
     : IdentityRoleClaim<TRoleKey>, IAuditable<TUserKey, TUser>, IEntity<int> 
     where TRoleKey : struct, IEquatable<TRoleKey> where TUserKey : struct, IEquatable<TUserKey> where TUser : UserBase<TUserKey>
